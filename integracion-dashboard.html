@@ -73,15 +73,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
     
+<!-- Sistema de variables CSS (Fase 1 refactor) -->
+<link rel="stylesheet" href="css/variables.css">
 <style>
+    /* Variables locales mapeadas al sistema global para compatibilidad */
     :root {
-        --primary: #C2185B;        /* Rosa principal de EstadísticaMente */
-        --secondary: #F8BBD0;      /* Rosa claro de EstadísticaMente */
-        --accent: #4361ee;         /* Azul acento */
-        --success: #28a745;
-        --warning: #ffc107;
-        --danger: #dc3545;
-        --dark-pink: #A0154B;      /* Rosa oscuro */
+        --primary: var(--em-primary, #C2185B);
+        --secondary: var(--em-primary-light, #F8BBD0);
+        --accent: var(--em-accent, #4361ee);
+        --success: var(--em-success, #28a745);
+        --warning: var(--em-warning, #ffc107);
+        --danger: var(--em-danger, #dc3545);
+        --dark-pink: var(--em-primary-dark, #A0154B);
     }
     
     body {

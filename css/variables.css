@@ -1,0 +1,286 @@
+/**
+ * EstadísticaMente - Design Tokens
+ * ================================
+ * Sistema de variables CSS para mantener consistencia visual.
+ * 
+ * USO: Reemplazar valores hardcodeados gradualmente por estas variables.
+ * IMPORTANTE: No eliminar valores antiguos hasta verificar que todo funciona.
+ */
+
+:root {
+    /* ===========================
+       COLORES PRIMARIOS
+       =========================== */
+    
+    /* Rosa Principal - Color de marca */
+    --em-primary: #C2185B;
+    --em-primary-dark: #A0154B;
+    --em-primary-light: #F8BBD0;
+    --em-primary-lighter: #FCE4EC;
+    --em-primary-bg: #f8f0f5;
+    
+    /* Azul Accent - Acciones secundarias */
+    --em-accent: #4361ee;
+    --em-accent-dark: #3a56d4;
+    --em-accent-darker: #3046c4;
+    --em-accent-light: #667eea;
+    
+    /* ===========================
+       COLORES DE ESTADO
+       =========================== */
+    
+    --em-success: #28a745;
+    --em-success-dark: #218838;
+    --em-success-light: #d4edda;
+    
+    --em-warning: #ffc107;
+    --em-warning-dark: #e0a800;
+    --em-warning-light: #fff3cd;
+    
+    --em-danger: #dc3545;
+    --em-danger-dark: #c82333;
+    --em-danger-light: #f8d7da;
+    
+    --em-info: #2196F3;
+    --em-info-dark: #1976D2;
+    --em-info-light: #e3f2fd;
+    
+    /* ===========================
+       COLORES NEUTROS
+       =========================== */
+    
+    --em-white: #ffffff;
+    --em-black: #000000;
+    
+    /* Grises - Del más claro al más oscuro */
+    --em-gray-50: #f8f9fa;
+    --em-gray-100: #f1f3f5;
+    --em-gray-200: #e9ecef;
+    --em-gray-300: #dee2e6;
+    --em-gray-400: #ced4da;
+    --em-gray-500: #adb5bd;
+    --em-gray-600: #6c757d;
+    --em-gray-700: #495057;
+    --em-gray-800: #343a40;
+    --em-gray-900: #212529;
+    
+    /* Texto */
+    --em-text-primary: #333333;
+    --em-text-secondary: #666666;
+    --em-text-muted: #999999;
+    --em-text-light: #cccccc;
+    
+    /* Fondos */
+    --em-bg-page: #f8f9fa;
+    --em-bg-card: #ffffff;
+    --em-bg-input: #ffffff;
+    --em-bg-hover: #f0f0f0;
+    
+    /* Bordes */
+    --em-border-light: #e9ecef;
+    --em-border-default: #dee2e6;
+    --em-border-dark: #ced4da;
+    
+    /* ===========================
+       TIPOGRAFIA
+       =========================== */
+    
+    /* Familias de fuentes */
+    --em-font-display: 'Patrick Hand', cursive;    /* Títulos grandes */
+    --em-font-heading: 'Comic Neue', cursive;      /* Subtítulos y botones */
+    --em-font-body: 'Open Sans', sans-serif;       /* Texto general */
+    
+    /* Tamaños de fuente */
+    --em-text-xs: 0.75rem;      /* 12px */
+    --em-text-sm: 0.875rem;     /* 14px */
+    --em-text-base: 1rem;       /* 16px */
+    --em-text-lg: 1.125rem;     /* 18px */
+    --em-text-xl: 1.25rem;      /* 20px */
+    --em-text-2xl: 1.5rem;      /* 24px */
+    --em-text-3xl: 1.875rem;    /* 30px */
+    --em-text-4xl: 2.25rem;     /* 36px */
+    
+    /* Pesos de fuente */
+    --em-font-normal: 400;
+    --em-font-medium: 500;
+    --em-font-semibold: 600;
+    --em-font-bold: 700;
+    
+    /* Altura de línea */
+    --em-leading-tight: 1.25;
+    --em-leading-normal: 1.5;
+    --em-leading-relaxed: 1.625;
+    
+    /* ===========================
+       ESPACIADO
+       =========================== */
+    
+    --em-space-0: 0;
+    --em-space-1: 0.25rem;      /* 4px */
+    --em-space-2: 0.5rem;       /* 8px */
+    --em-space-3: 0.75rem;      /* 12px */
+    --em-space-4: 1rem;         /* 16px */
+    --em-space-5: 1.25rem;      /* 20px */
+    --em-space-6: 1.5rem;       /* 24px */
+    --em-space-8: 2rem;         /* 32px */
+    --em-space-10: 2.5rem;      /* 40px */
+    --em-space-12: 3rem;        /* 48px */
+    --em-space-16: 4rem;        /* 64px */
+    
+    /* ===========================
+       BORDES Y RADIOS
+       =========================== */
+    
+    --em-radius-none: 0;
+    --em-radius-sm: 4px;
+    --em-radius-md: 8px;
+    --em-radius-lg: 12px;
+    --em-radius-xl: 16px;
+    --em-radius-2xl: 20px;
+    --em-radius-full: 9999px;
+    --em-radius-circle: 50%;
+    
+    /* Anchos de borde */
+    --em-border-width-1: 1px;
+    --em-border-width-2: 2px;
+    --em-border-width-3: 3px;
+    --em-border-width-4: 4px;
+    
+    /* ===========================
+       SOMBRAS
+       =========================== */
+    
+    --em-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --em-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --em-shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --em-shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.15);
+    --em-shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.2);
+    --em-shadow-2xl: 0 15px 35px rgba(0, 0, 0, 0.2);
+    
+    /* Sombras de color */
+    --em-shadow-primary: 0 4px 15px rgba(194, 24, 91, 0.3);
+    --em-shadow-primary-lg: 0 6px 20px rgba(194, 24, 91, 0.4);
+    --em-shadow-accent: 0 4px 12px rgba(67, 97, 238, 0.3);
+    --em-shadow-success: 0 4px 12px rgba(40, 167, 69, 0.3);
+    --em-shadow-danger: 0 4px 12px rgba(220, 53, 69, 0.3);
+    
+    /* ===========================
+       TRANSICIONES
+       =========================== */
+    
+    --em-transition-fast: 150ms ease;
+    --em-transition-normal: 300ms ease;
+    --em-transition-slow: 500ms ease;
+    
+    /* Propiedades específicas */
+    --em-transition-colors: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+    --em-transition-transform: transform 300ms ease;
+    --em-transition-opacity: opacity 300ms ease;
+    --em-transition-shadow: box-shadow 300ms ease;
+    --em-transition-all: all 300ms ease;
+    
+    /* ===========================
+       Z-INDEX
+       =========================== */
+    
+    --em-z-dropdown: 100;
+    --em-z-sticky: 500;
+    --em-z-fixed: 1000;
+    --em-z-modal-backdrop: 9000;
+    --em-z-modal: 9500;
+    --em-z-popover: 10000;
+    --em-z-tooltip: 10500;
+    --em-z-chat: 10000;
+    --em-z-chat-window: 10001;
+    
+    /* ===========================
+       BREAKPOINTS (para referencia en JS)
+       =========================== */
+    
+    --em-breakpoint-sm: 480px;
+    --em-breakpoint-md: 768px;
+    --em-breakpoint-lg: 1024px;
+    --em-breakpoint-xl: 1200px;
+    --em-breakpoint-2xl: 1400px;
+    
+    /* ===========================
+       COMPONENTES ESPECIFICOS
+       =========================== */
+    
+    /* Botones */
+    --em-btn-padding-x: 1.25rem;
+    --em-btn-padding-y: 0.75rem;
+    --em-btn-padding-x-sm: 1rem;
+    --em-btn-padding-y-sm: 0.5rem;
+    --em-btn-padding-x-lg: 1.5rem;
+    --em-btn-padding-y-lg: 1rem;
+    --em-btn-radius: var(--em-radius-md);
+    --em-btn-font-size: var(--em-text-base);
+    
+    /* Inputs */
+    --em-input-padding-x: 0.75rem;
+    --em-input-padding-y: 0.625rem;
+    --em-input-radius: var(--em-radius-md);
+    --em-input-border: var(--em-border-width-2) solid var(--em-primary-light);
+    --em-input-focus-border: var(--em-primary);
+    --em-input-focus-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1);
+    
+    /* Cards */
+    --em-card-padding: var(--em-space-6);
+    --em-card-radius: var(--em-radius-lg);
+    --em-card-shadow: var(--em-shadow-md);
+    --em-card-border: var(--em-border-width-1) solid var(--em-border-light);
+    
+    /* Header */
+    --em-header-height: 80px;
+    --em-header-padding: var(--em-space-4);
+    --em-header-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    /* Footer */
+    --em-footer-padding: var(--em-space-6);
+    --em-footer-bg: var(--em-primary);
+    
+    /* Chat */
+    --em-chat-avatar-size: 60px;
+    --em-chat-window-width: 350px;
+    --em-chat-window-height: 500px;
+}
+
+/* ===========================
+   UTILIDADES BASADAS EN VARIABLES
+   =========================== */
+
+/* Colores de fondo */
+.em-bg-primary { background-color: var(--em-primary) !important; }
+.em-bg-primary-light { background-color: var(--em-primary-light) !important; }
+.em-bg-accent { background-color: var(--em-accent) !important; }
+.em-bg-success { background-color: var(--em-success) !important; }
+.em-bg-warning { background-color: var(--em-warning) !important; }
+.em-bg-danger { background-color: var(--em-danger) !important; }
+.em-bg-white { background-color: var(--em-white) !important; }
+.em-bg-gray { background-color: var(--em-gray-50) !important; }
+
+/* Colores de texto */
+.em-text-primary { color: var(--em-primary) !important; }
+.em-text-accent { color: var(--em-accent) !important; }
+.em-text-success { color: var(--em-success) !important; }
+.em-text-warning { color: var(--em-warning) !important; }
+.em-text-danger { color: var(--em-danger) !important; }
+.em-text-white { color: var(--em-white) !important; }
+.em-text-muted { color: var(--em-text-muted) !important; }
+
+/* Bordes */
+.em-border-primary { border-color: var(--em-primary) !important; }
+.em-border-accent { border-color: var(--em-accent) !important; }
+
+/* Sombras */
+.em-shadow-sm { box-shadow: var(--em-shadow-sm) !important; }
+.em-shadow-md { box-shadow: var(--em-shadow-md) !important; }
+.em-shadow-lg { box-shadow: var(--em-shadow-lg) !important; }
+.em-shadow-primary { box-shadow: var(--em-shadow-primary) !important; }
+
+/* Radios */
+.em-rounded-sm { border-radius: var(--em-radius-sm) !important; }
+.em-rounded-md { border-radius: var(--em-radius-md) !important; }
+.em-rounded-lg { border-radius: var(--em-radius-lg) !important; }
+.em-rounded-full { border-radius: var(--em-radius-full) !important; }

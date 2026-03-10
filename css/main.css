@@ -1,0 +1,46 @@
+/**
+ * EstadísticaMente - Main CSS
+ * ===========================
+ * Archivo principal que importa todos los estilos.
+ * 
+ * ORDEN DE IMPORTACION:
+ * 1. Variables (tokens de diseño)
+ * 2. Base (reset, tipografía)
+ * 3. Layouts (header, footer, grids)
+ * 4. Components (botones, cards, forms)
+ * 5. Pages (estilos específicos por página)
+ */
+
+/* Variables y Tokens */
+@import url('./variables.css');
+
+/* 
+ * NOTA: Los siguientes imports se activarán conforme se vayan creando los archivos.
+ * Por ahora, los estilos existentes en styles.css siguen funcionando.
+ */
+
+/* Base - Descomentar cuando esté listo
+@import url('./base.css');
+*/
+
+/* Layouts - Descomentar cuando estén listos
+@import url('./layouts/header.css');
+@import url('./layouts/footer.css');
+@import url('./layouts/grid.css');
+*/
+
+/* Components - Descomentar cuando estén listos
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/forms.css');
+@import url('./components/modals.css');
+@import url('./components/tables.css');
+@import url('./components/chatbot.css');
+*/
+
+/* Pages - Descomentar cuando estén listos
+@import url('./pages/login.css');
+@import url('./pages/nivel-primario.css');
+@import url('./pages/dashboard.css');
+@import url('./pages/juegos.css');
+*/
