@@ -1,0 +1,360 @@
+/**
+ * EstadísticaMente - Tables Component
+ * ====================================
+ * Estilos unificados para tablas.
+ */
+
+/* ===========================
+   TABLA BASE
+   =========================== */
+
+.em-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-sm);
+    background-color: var(--em-white);
+}
+
+.em-table th,
+.em-table td {
+    padding: var(--em-space-3) var(--em-space-4);
+    text-align: left;
+    border-bottom: var(--em-border-width-1) solid var(--em-border-light);
+}
+
+.em-table th {
+    font-weight: var(--em-font-semibold);
+    background-color: var(--em-gray-50);
+    color: var(--em-text-primary);
+}
+
+.em-table tbody tr:hover {
+    background-color: var(--em-gray-50);
+}
+
+/* ===========================
+   VARIANTES
+   =========================== */
+
+/* Tabla con bordes */
+.em-table--bordered {
+    border: var(--em-border-width-1) solid var(--em-border-default);
+}
+
+.em-table--bordered th,
+.em-table--bordered td {
+    border: var(--em-border-width-1) solid var(--em-border-light);
+}
+
+/* Tabla striped */
+.em-table--striped tbody tr:nth-child(even) {
+    background-color: var(--em-gray-50);
+}
+
+/* Tabla compacta */
+.em-table--compact th,
+.em-table--compact td {
+    padding: var(--em-space-2) var(--em-space-3);
+    font-size: var(--em-text-xs);
+}
+
+/* Tabla con header fijo */
+.em-table-wrapper--sticky {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.em-table-wrapper--sticky .em-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Tabla responsive */
+.em-table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ===========================
+   TABLA DE FRECUENCIA (Específica del proyecto)
+   =========================== */
+
+.tabla-frecuencia {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--em-space-4) 0;
+    background-color: var(--em-white);
+    border-radius: var(--em-radius-md);
+    overflow: hidden;
+    box-shadow: var(--em-shadow-sm);
+}
+
+.tabla-frecuencia th,
+.tabla-frecuencia td {
+    padding: var(--em-space-3);
+    text-align: center;
+    border: var(--em-border-width-1) solid var(--em-primary-light);
+    font-family: var(--em-font-body);
+}
+
+.tabla-frecuencia th {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+    font-weight: var(--em-font-semibold);
+    font-family: var(--em-font-heading);
+}
+
+.tabla-frecuencia tbody tr:hover {
+    background-color: var(--em-primary-lighter);
+}
+
+.tabla-frecuencia tbody tr:nth-child(even) {
+    background-color: var(--em-gray-50);
+}
+
+/* Fila de totales */
+.tabla-frecuencia tfoot tr {
+    background-color: var(--em-primary-light);
+    font-weight: var(--em-font-bold);
+}
+
+.tabla-frecuencia tfoot td {
+    border-top: var(--em-border-width-2) solid var(--em-primary);
+}
+
+/* Input dentro de tabla */
+.tabla-frecuencia input {
+    width: 100%;
+    max-width: 100px;
+    padding: var(--em-space-2);
+    border: var(--em-border-width-2) solid var(--em-border-default);
+    border-radius: var(--em-radius-sm);
+    text-align: center;
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-sm);
+    transition: var(--em-transition-all);
+}
+
+.tabla-frecuencia input:focus {
+    border-color: var(--em-primary);
+    outline: none;
+    box-shadow: var(--em-input-focus-shadow);
+}
+
+/* Botón eliminar fila */
+.tabla-frecuencia .delete-row {
+    background-color: var(--em-danger);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-circle);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: var(--em-transition-all);
+    font-size: var(--em-text-sm);
+}
+
+.tabla-frecuencia .delete-row:hover {
+    background-color: var(--em-danger-dark);
+    transform: scale(1.1);
+}
+
+/* ===========================
+   TABLA DE RESULTADOS ESTADÍSTICOS
+   =========================== */
+
+.tabla-resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--em-space-4) 0;
+}
+
+.tabla-resultados th,
+.tabla-resultados td {
+    padding: var(--em-space-3) var(--em-space-4);
+    text-align: left;
+    border-bottom: var(--em-border-width-1) solid var(--em-border-light);
+}
+
+.tabla-resultados th {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+    font-weight: var(--em-font-semibold);
+}
+
+.tabla-resultados .valor {
+    font-weight: var(--em-font-bold);
+    color: var(--em-primary);
+    font-family: var(--em-font-heading);
+}
+
+.tabla-resultados .descripcion {
+    color: var(--em-text-secondary);
+    font-size: var(--em-text-sm);
+}
+
+/* ===========================
+   TABLA DE DASHBOARD
+   =========================== */
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: var(--em-space-4);
+    text-align: left;
+    border-bottom: var(--em-border-width-1) solid var(--em-border-light);
+}
+
+.dashboard-table th {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-semibold);
+    position: sticky;
+    top: 0;
+}
+
+.dashboard-table tbody tr:hover {
+    background-color: var(--em-primary-lighter);
+}
+
+.dashboard-table tbody tr:nth-child(even) {
+    background-color: var(--em-gray-50);
+}
+
+/* Celda con badge */
+.dashboard-table .badge {
+    display: inline-block;
+    padding: var(--em-space-1) var(--em-space-2);
+    border-radius: var(--em-radius-full);
+    font-size: var(--em-text-xs);
+    font-weight: var(--em-font-medium);
+}
+
+.dashboard-table .badge--success {
+    background-color: var(--em-success-light);
+    color: var(--em-success-dark);
+}
+
+.dashboard-table .badge--warning {
+    background-color: var(--em-warning-light);
+    color: var(--em-warning-dark);
+}
+
+.dashboard-table .badge--danger {
+    background-color: var(--em-danger-light);
+    color: var(--em-danger-dark);
+}
+
+/* ===========================
+   TABLA RESPONSIVE MOBILE
+   =========================== */
+
+@media (max-width: 768px) {
+    .em-table-responsive .em-table,
+    .em-table-responsive .tabla-frecuencia,
+    .em-table-responsive .dashboard-table {
+        min-width: 600px;
+    }
+    
+    /* Versión card para mobile */
+    .em-table--card {
+        display: block;
+    }
+    
+    .em-table--card thead {
+        display: none;
+    }
+    
+    .em-table--card tbody,
+    .em-table--card tr,
+    .em-table--card td {
+        display: block;
+    }
+    
+    .em-table--card tr {
+        background-color: var(--em-white);
+        border-radius: var(--em-radius-md);
+        margin-bottom: var(--em-space-3);
+        padding: var(--em-space-3);
+        box-shadow: var(--em-shadow-sm);
+    }
+    
+    .em-table--card td {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--em-space-2) 0;
+        border-bottom: var(--em-border-width-1) solid var(--em-border-light);
+    }
+    
+    .em-table--card td:last-child {
+        border-bottom: none;
+    }
+    
+    .em-table--card td::before {
+        content: attr(data-label);
+        font-weight: var(--em-font-semibold);
+        color: var(--em-text-secondary);
+    }
+}
+
+/* ===========================
+   ESTADOS DE TABLA
+   =========================== */
+
+/* Fila seleccionada */
+.em-table tr.selected,
+.tabla-frecuencia tr.selected {
+    background-color: var(--em-info-light) !important;
+}
+
+/* Fila con error */
+.em-table tr.error,
+.tabla-frecuencia tr.error {
+    background-color: var(--em-danger-light) !important;
+}
+
+/* Fila con éxito */
+.em-table tr.success,
+.tabla-frecuencia tr.success {
+    background-color: var(--em-success-light) !important;
+}
+
+/* Tabla vacía */
+.em-table-empty {
+    text-align: center;
+    padding: var(--em-space-8);
+    color: var(--em-text-muted);
+}
+
+.em-table-empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--em-space-4);
+    opacity: 0.5;
+}
+
+/* Loading */
+.em-table-loading {
+    position: relative;
+    min-height: 200px;
+}
+
+.em-table-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 3px solid var(--em-gray-200);
+    border-top-color: var(--em-primary);
+    border-radius: var(--em-radius-circle);
+    animation: em-spin 1s linear infinite;
+}

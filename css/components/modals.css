@@ -1,0 +1,399 @@
+/**
+ * EstadísticaMente - Modals Component
+ * ====================================
+ * Sistema unificado de modales.
+ */
+
+/* ===========================
+   OVERLAY
+   =========================== */
+
+.em-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: var(--em-z-modal-backdrop);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--em-space-4);
+    animation: em-fadeIn var(--em-transition-fast);
+}
+
+.em-modal-overlay.active,
+.em-modal-overlay.show {
+    display: flex;
+}
+
+/* ===========================
+   MODAL BASE
+   =========================== */
+
+.em-modal {
+    background-color: var(--em-white);
+    border-radius: var(--em-radius-lg);
+    box-shadow: var(--em-shadow-2xl);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: em-scaleIn var(--em-transition-normal);
+}
+
+/* Tamaños */
+.em-modal--sm {
+    max-width: 400px;
+}
+
+.em-modal--lg {
+    max-width: 700px;
+}
+
+.em-modal--xl {
+    max-width: 900px;
+}
+
+.em-modal--full {
+    max-width: calc(100vw - var(--em-space-8));
+    max-height: calc(100vh - var(--em-space-8));
+}
+
+/* ===========================
+   PARTES DEL MODAL
+   =========================== */
+
+.em-modal__header {
+    padding: var(--em-space-4) var(--em-space-6);
+    background: linear-gradient(135deg, var(--em-primary) 0%, var(--em-primary-dark) 100%);
+    color: var(--em-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.em-modal__title {
+    margin: 0;
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    font-weight: var(--em-font-bold);
+}
+
+.em-modal__close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: var(--em-radius-circle);
+    color: var(--em-white);
+    font-size: var(--em-text-xl);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.em-modal__close:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.em-modal__body {
+    padding: var(--em-space-6);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.em-modal__footer {
+    padding: var(--em-space-4) var(--em-space-6);
+    background-color: var(--em-gray-50);
+    border-top: var(--em-border-width-1) solid var(--em-border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--em-space-3);
+}
+
+/* ===========================
+   VARIANTES DE MODAL
+   =========================== */
+
+/* Modal de éxito */
+.em-modal--success .em-modal__header {
+    background: linear-gradient(135deg, var(--em-success) 0%, var(--em-success-dark) 100%);
+}
+
+/* Modal de peligro */
+.em-modal--danger .em-modal__header {
+    background: linear-gradient(135deg, var(--em-danger) 0%, var(--em-danger-dark) 100%);
+}
+
+/* Modal de info */
+.em-modal--info .em-modal__header {
+    background: linear-gradient(135deg, var(--em-accent) 0%, var(--em-accent-dark) 100%);
+}
+
+/* Modal sin header */
+.em-modal--no-header .em-modal__body {
+    border-radius: var(--em-radius-lg) var(--em-radius-lg) 0 0;
+}
+
+/* ===========================
+   COMPATIBILIDAD CON CLASES EXISTENTES
+   =========================== */
+
+/* modal-overlay (index.html, nivelinicial.html) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: var(--em-z-modal-backdrop);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: em-fadeIn var(--em-transition-fast);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+/* modal-container */
+.modal-container {
+    background-color: var(--em-white);
+    border-radius: var(--em-radius-2xl);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: em-scaleIn var(--em-transition-normal);
+    box-shadow: var(--em-shadow-2xl);
+}
+
+/* modal-header */
+.modal-header {
+    background: linear-gradient(135deg, var(--em-primary) 0%, var(--em-primary-dark) 100%);
+    color: var(--em-white);
+    padding: var(--em-space-6);
+    text-align: center;
+    position: relative;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-2xl);
+}
+
+.modal-header p {
+    margin: var(--em-space-2) 0 0 0;
+    opacity: 0.9;
+    font-size: var(--em-text-sm);
+}
+
+/* close-modal button */
+.close-modal {
+    position: absolute;
+    top: var(--em-space-3);
+    right: var(--em-space-3);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: var(--em-radius-circle);
+    color: var(--em-white);
+    font-size: var(--em-text-xl);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.close-modal:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* modal-body */
+.modal-body {
+    padding: var(--em-space-6);
+}
+
+/* modal-footer */
+.modal-footer {
+    padding: var(--em-space-4) var(--em-space-6);
+    background-color: var(--em-gray-50);
+    border-top: var(--em-border-width-1) solid var(--em-border-light);
+    text-align: center;
+}
+
+/* help-content (modal de ayuda) */
+.help-content {
+    padding: var(--em-space-4);
+}
+
+.help-section {
+    margin-bottom: var(--em-space-6);
+}
+
+.help-section h3 {
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-3);
+    font-family: var(--em-font-heading);
+}
+
+.help-section ul {
+    padding-left: var(--em-space-5);
+}
+
+.help-section li {
+    margin-bottom: var(--em-space-2);
+    color: var(--em-text-secondary);
+}
+
+/* Pasos de explicación en modal */
+.paso-explicacion {
+    background-color: var(--em-gray-50);
+    padding: var(--em-space-4);
+    border-radius: var(--em-radius-md);
+    margin-bottom: var(--em-space-4);
+    border-left: var(--em-border-width-4) solid var(--em-accent);
+}
+
+.paso-explicacion .paso-numero {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    background-color: var(--em-accent);
+    color: var(--em-white);
+    border-radius: var(--em-radius-circle);
+    margin-right: var(--em-space-2);
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-bold);
+    font-size: var(--em-text-sm);
+}
+
+.paso-explicacion .paso-titulo {
+    font-weight: var(--em-font-semibold);
+    color: var(--em-accent);
+    font-family: var(--em-font-heading);
+}
+
+.paso-explicacion .paso-descripcion {
+    margin-top: var(--em-space-2);
+    color: var(--em-text-secondary);
+    font-size: var(--em-text-sm);
+    line-height: var(--em-leading-relaxed);
+}
+
+/* Fórmula matemática en modal */
+.formula-container {
+    background-color: var(--em-white);
+    padding: var(--em-space-4);
+    border-radius: var(--em-radius-md);
+    text-align: center;
+    margin: var(--em-space-4) 0;
+    border: var(--em-border-width-2) dashed var(--em-primary-light);
+}
+
+.formula {
+    font-family: 'Times New Roman', serif;
+    font-size: var(--em-text-xl);
+    color: var(--em-text-primary);
+}
+
+/* ===========================
+   DIALOG NATIVO MEJORADO
+   =========================== */
+
+dialog.em-dialog {
+    border: none;
+    border-radius: var(--em-radius-lg);
+    box-shadow: var(--em-shadow-2xl);
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+}
+
+dialog.em-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .em-modal,
+    .modal-container {
+        width: 95%;
+        max-width: none;
+        max-height: 90vh;
+        margin: var(--em-space-4);
+    }
+    
+    .em-modal__header,
+    .modal-header {
+        padding: var(--em-space-4);
+    }
+    
+    .em-modal__body,
+    .modal-body {
+        padding: var(--em-space-4);
+    }
+    
+    .em-modal__footer,
+    .modal-footer {
+        padding: var(--em-space-3) var(--em-space-4);
+        flex-direction: column;
+    }
+    
+    .em-modal__footer .em-btn,
+    .modal-footer .em-btn {
+        width: 100%;
+    }
+}
+
+/* ===========================
+   ANIMACIONES
+   =========================== */
+
+@keyframes modal-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.em-modal--slide-in {
+    animation: modal-slide-in var(--em-transition-normal);
+}
+
+@keyframes modal-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.em-modal--slide-up {
+    animation: modal-slide-up var(--em-transition-normal);
+}

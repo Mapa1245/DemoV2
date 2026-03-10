@@ -17,9 +17,16 @@
 /* Base - Reset, tipografía, utilidades */
 @import url('./base.css');
 
+/* Components - Elementos reutilizables */
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/forms.css');
+@import url('./components/chatbot.css');
+@import url('./components/tables.css');
+@import url('./components/modals.css');
+
 /* 
  * NOTA: Los siguientes imports se activarán conforme se vayan creando los archivos.
- * Por ahora, los estilos existentes en styles.css siguen funcionando.
  */
 
 /* Layouts - Descomentar cuando estén listos

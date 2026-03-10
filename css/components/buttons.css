@@ -1,0 +1,737 @@
+/**
+ * EstadísticaMente - Buttons Component
+ * =====================================
+ * Sistema unificado de botones.
+ * 
+ * CLASES DISPONIBLES:
+ * - .em-btn                 → Botón base
+ * - .em-btn--primary        → Rosa principal
+ * - .em-btn--secondary      → Rosa claro
+ * - .em-btn--accent         → Azul
+ * - .em-btn--success        → Verde
+ * - .em-btn--danger         → Rojo
+ * - .em-btn--warning        → Amarillo
+ * - .em-btn--outline        → Solo borde
+ * - .em-btn--ghost          → Sin fondo
+ * - .em-btn--sm             → Pequeño
+ * - .em-btn--lg             → Grande
+ * - .em-btn--block          → Ancho completo
+ * - .em-btn--icon           → Solo icono (circular)
+ */
+
+/* ===========================
+   BOTON BASE
+   =========================== */
+
+.em-btn {
+    /* Display */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--em-space-2);
+    
+    /* Tamaño */
+    padding: var(--em-btn-padding-y) var(--em-btn-padding-x);
+    min-height: 44px; /* Accesibilidad - área táctil mínima */
+    
+    /* Tipografía */
+    font-family: var(--em-font-heading);
+    font-size: var(--em-btn-font-size);
+    font-weight: var(--em-font-bold);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    
+    /* Apariencia */
+    background-color: var(--em-gray-200);
+    color: var(--em-text-primary);
+    border: var(--em-border-width-2) solid transparent;
+    border-radius: var(--em-btn-radius);
+    
+    /* Interacción */
+    cursor: pointer;
+    user-select: none;
+    transition: var(--em-transition-all);
+    
+    /* Eliminar estilos por defecto */
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.em-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--em-shadow-md);
+}
+
+.em-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--em-shadow-sm);
+}
+
+.em-btn:focus-visible {
+    outline: 2px solid var(--em-accent);
+    outline-offset: 2px;
+}
+
+.em-btn:disabled,
+.em-btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ===========================
+   VARIANTES DE COLOR
+   =========================== */
+
+/* Primary - Rosa principal */
+.em-btn--primary {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+    border-color: var(--em-primary);
+}
+
+.em-btn--primary:hover {
+    background-color: var(--em-primary-dark);
+    border-color: var(--em-primary-dark);
+    box-shadow: var(--em-shadow-primary);
+}
+
+/* Secondary - Rosa claro */
+.em-btn--secondary {
+    background-color: var(--em-primary-light);
+    color: var(--em-text-primary);
+    border-color: var(--em-primary-light);
+}
+
+.em-btn--secondary:hover {
+    background-color: #f48fb1;
+    border-color: #f48fb1;
+    color: var(--em-white);
+}
+
+/* Accent - Azul */
+.em-btn--accent {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+    border-color: var(--em-accent);
+}
+
+.em-btn--accent:hover {
+    background-color: var(--em-accent-dark);
+    border-color: var(--em-accent-dark);
+    box-shadow: var(--em-shadow-accent);
+}
+
+/* Success - Verde */
+.em-btn--success {
+    background-color: var(--em-success);
+    color: var(--em-white);
+    border-color: var(--em-success);
+}
+
+.em-btn--success:hover {
+    background-color: var(--em-success-dark);
+    border-color: var(--em-success-dark);
+    box-shadow: var(--em-shadow-success);
+}
+
+/* Danger - Rojo */
+.em-btn--danger {
+    background-color: var(--em-danger);
+    color: var(--em-white);
+    border-color: var(--em-danger);
+}
+
+.em-btn--danger:hover {
+    background-color: var(--em-danger-dark);
+    border-color: var(--em-danger-dark);
+    box-shadow: var(--em-shadow-danger);
+}
+
+/* Warning - Amarillo */
+.em-btn--warning {
+    background-color: var(--em-warning);
+    color: var(--em-text-primary);
+    border-color: var(--em-warning);
+}
+
+.em-btn--warning:hover {
+    background-color: var(--em-warning-dark);
+    border-color: var(--em-warning-dark);
+}
+
+/* ===========================
+   VARIANTES DE ESTILO
+   =========================== */
+
+/* Outline - Solo borde */
+.em-btn--outline {
+    background-color: transparent;
+    border-width: var(--em-border-width-2);
+}
+
+.em-btn--outline.em-btn--primary {
+    color: var(--em-primary);
+    border-color: var(--em-primary);
+}
+
+.em-btn--outline.em-btn--primary:hover {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+}
+
+.em-btn--outline.em-btn--accent {
+    color: var(--em-accent);
+    border-color: var(--em-accent);
+}
+
+.em-btn--outline.em-btn--accent:hover {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+}
+
+.em-btn--outline.em-btn--success {
+    color: var(--em-success);
+    border-color: var(--em-success);
+}
+
+.em-btn--outline.em-btn--success:hover {
+    background-color: var(--em-success);
+    color: var(--em-white);
+}
+
+.em-btn--outline.em-btn--danger {
+    color: var(--em-danger);
+    border-color: var(--em-danger);
+}
+
+.em-btn--outline.em-btn--danger:hover {
+    background-color: var(--em-danger);
+    color: var(--em-white);
+}
+
+/* Ghost - Sin fondo ni borde */
+.em-btn--ghost {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.em-btn--ghost:hover {
+    background-color: var(--em-gray-100);
+    box-shadow: none;
+}
+
+.em-btn--ghost.em-btn--primary {
+    color: var(--em-primary);
+}
+
+.em-btn--ghost.em-btn--primary:hover {
+    background-color: var(--em-primary-lighter);
+}
+
+.em-btn--ghost.em-btn--accent {
+    color: var(--em-accent);
+}
+
+.em-btn--ghost.em-btn--accent:hover {
+    background-color: var(--em-info-light);
+}
+
+/* ===========================
+   TAMAÑOS
+   =========================== */
+
+/* Pequeño */
+.em-btn--sm {
+    padding: var(--em-btn-padding-y-sm) var(--em-btn-padding-x-sm);
+    font-size: var(--em-text-sm);
+    min-height: 36px;
+    border-radius: var(--em-radius-sm);
+}
+
+/* Grande */
+.em-btn--lg {
+    padding: var(--em-btn-padding-y-lg) var(--em-btn-padding-x-lg);
+    font-size: var(--em-text-lg);
+    min-height: 52px;
+    border-radius: var(--em-radius-lg);
+}
+
+/* Extra grande */
+.em-btn--xl {
+    padding: var(--em-space-5) var(--em-space-8);
+    font-size: var(--em-text-xl);
+    min-height: 60px;
+    border-radius: var(--em-radius-lg);
+}
+
+/* ===========================
+   MODIFICADORES DE LAYOUT
+   =========================== */
+
+/* Ancho completo */
+.em-btn--block {
+    display: flex;
+    width: 100%;
+}
+
+/* Icono circular */
+.em-btn--icon {
+    padding: var(--em-space-3);
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: var(--em-radius-circle);
+}
+
+.em-btn--icon.em-btn--sm {
+    padding: var(--em-space-2);
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.em-btn--icon.em-btn--lg {
+    padding: var(--em-space-4);
+    min-width: 52px;
+    min-height: 52px;
+}
+
+/* ===========================
+   BOTONES CON ICONO
+   =========================== */
+
+.em-btn__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.em-btn--sm .em-btn__icon {
+    width: 16px;
+    height: 16px;
+}
+
+.em-btn--lg .em-btn__icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Icono como imagen */
+.em-btn__icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.em-btn--lg .em-btn__icon-img {
+    width: 32px;
+    height: 32px;
+}
+
+/* ===========================
+   ESTADOS ESPECIALES
+   =========================== */
+
+/* Loading */
+.em-btn--loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.em-btn--loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: var(--em-radius-circle);
+    animation: em-spin 0.75s linear infinite;
+}
+
+.em-btn--loading.em-btn--primary::after,
+.em-btn--loading.em-btn--accent::after,
+.em-btn--loading.em-btn--success::after,
+.em-btn--loading.em-btn--danger::after {
+    border-color: var(--em-white);
+    border-right-color: transparent;
+}
+
+/* Activo/Seleccionado */
+.em-btn--active,
+.em-btn.active {
+    transform: scale(1.05);
+    box-shadow: var(--em-shadow-md);
+}
+
+.em-btn--active.em-btn--primary {
+    background-color: var(--em-primary-dark);
+}
+
+.em-btn--active.em-btn--secondary {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+}
+
+/* ===========================
+   GRUPOS DE BOTONES
+   =========================== */
+
+.em-btn-group {
+    display: inline-flex;
+    gap: 0;
+}
+
+.em-btn-group .em-btn {
+    border-radius: 0;
+}
+
+.em-btn-group .em-btn:first-child {
+    border-radius: var(--em-btn-radius) 0 0 var(--em-btn-radius);
+}
+
+.em-btn-group .em-btn:last-child {
+    border-radius: 0 var(--em-btn-radius) var(--em-btn-radius) 0;
+}
+
+.em-btn-group .em-btn:not(:last-child) {
+    border-right-width: 1px;
+}
+
+/* Grupo vertical */
+.em-btn-group--vertical {
+    flex-direction: column;
+}
+
+.em-btn-group--vertical .em-btn:first-child {
+    border-radius: var(--em-btn-radius) var(--em-btn-radius) 0 0;
+}
+
+.em-btn-group--vertical .em-btn:last-child {
+    border-radius: 0 0 var(--em-btn-radius) var(--em-btn-radius);
+}
+
+.em-btn-group--vertical .em-btn:not(:last-child) {
+    border-right-width: 2px;
+    border-bottom-width: 1px;
+}
+
+/* ===========================
+   COMPATIBILIDAD CON CLASES EXISTENTES
+   =========================== */
+
+/* 
+ * Las siguientes clases mapean los estilos antiguos a los nuevos.
+ * Esto permite una migración gradual sin romper el código existente.
+ * 
+ * IMPORTANTE: Estas clases se pueden eliminar una vez que se complete
+ * la migración de todos los componentes.
+ */
+
+/* level-btn → em-btn */
+.level-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--em-space-2);
+    padding: var(--em-space-6) var(--em-space-4);
+    min-width: 200px;
+    max-width: 250px;
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    font-weight: var(--em-font-bold);
+    border: none;
+    border-radius: var(--em-radius-xl);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+    box-shadow: var(--em-shadow-sm);
+    color: var(--em-text-primary);
+}
+
+.level-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--em-shadow-lg);
+}
+
+.level-btn:active {
+    transform: translateY(-2px);
+}
+
+.level-btn.primary {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+}
+
+.level-btn.secondary {
+    background-color: var(--em-primary-light);
+}
+
+/* back-btn → em-btn--primary con icono */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--em-space-2);
+    padding: var(--em-space-3) var(--em-space-5);
+    background-color: var(--em-primary);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-md);
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-bold);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.back-btn:hover {
+    background-color: var(--em-primary-dark);
+    transform: scale(1.05);
+}
+
+/* load-btn → em-btn con variantes */
+.load-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--em-space-2);
+    padding: var(--em-space-3) var(--em-space-5);
+    border: none;
+    border-radius: var(--em-radius-lg);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-lg);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.load-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--em-shadow-md);
+}
+
+.load-btn.primary {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+}
+
+.load-btn.secondary {
+    background-color: var(--em-primary-light);
+    color: var(--em-text-primary);
+}
+
+.load-btn.blue {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+}
+
+/* function-btn → em-btn--accent block */
+.function-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--em-space-3);
+    width: 100%;
+    padding: var(--em-space-4) var(--em-space-5);
+    background-color: var(--em-primary-light);
+    color: var(--em-text-primary);
+    border: none;
+    border-radius: var(--em-radius-lg);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-lg);
+    text-align: left;
+    cursor: pointer;
+    transition: var(--em-transition-all);
+    margin-bottom: var(--em-space-3);
+}
+
+.function-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--em-shadow-md);
+}
+
+/* option-btn → em-btn con estado activo */
+.option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--em-space-2);
+    width: 120px;
+    height: 100px;
+    padding: var(--em-space-3);
+    border: none;
+    border-radius: var(--em-radius-md);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-base);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.option-btn:hover {
+    transform: scale(1.02);
+}
+
+.option-btn.active {
+    transform: scale(1.05);
+    box-shadow: var(--em-shadow-md);
+}
+
+.option-btn.primary {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+}
+
+.option-btn.secondary {
+    background-color: var(--em-primary);
+    color: var(--em-white);
+}
+
+/* help-btn → em-btn--primary absoluto */
+.help-btn {
+    position: absolute;
+    right: var(--em-space-8);
+    top: var(--em-space-8);
+    padding: var(--em-space-3) var(--em-space-5);
+    background-color: var(--em-primary);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-lg);
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-semibold);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.help-btn:hover {
+    background-color: var(--em-primary-dark);
+}
+
+/* final-btn → em-btn--accent lg */
+.final-btn {
+    padding: var(--em-space-4) var(--em-space-8);
+    min-width: 250px;
+    background-color: var(--em-accent);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-lg);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.final-btn:hover {
+    background-color: var(--em-accent-dark);
+    transform: translateY(-2px);
+}
+
+/* resource-btn → em-btn--outline--accent */
+.resource-btn {
+    padding: var(--em-space-3) var(--em-space-5);
+    background-color: var(--em-white);
+    color: var(--em-accent);
+    border: var(--em-border-width-2) solid var(--em-accent);
+    border-radius: var(--em-radius-md);
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-base);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.resource-btn:hover {
+    background-color: var(--em-accent);
+    color: var(--em-white);
+}
+
+/* cycle-btn (juegos.html) */
+.cycle-btn {
+    padding: var(--em-space-4) var(--em-space-8);
+    min-width: 200px;
+    border: none;
+    border-radius: var(--em-radius-lg);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    font-weight: var(--em-font-bold);
+    color: var(--em-white);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+    box-shadow: var(--em-shadow-sm);
+}
+
+.cycle-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--em-shadow-lg);
+}
+
+.cycle-btn.active {
+    transform: scale(1.05);
+    box-shadow: var(--em-shadow-md);
+}
+
+.cycle-btn.primary {
+    background-color: var(--em-primary);
+}
+
+.cycle-btn.secondary {
+    background-color: var(--em-accent);
+}
+
+.cycle-btn.tertiary {
+    background-color: var(--em-success);
+}
+
+/* game-btn (juegos.html) */
+.game-btn {
+    width: 100%;
+    padding: var(--em-space-2) var(--em-space-4);
+    background-color: var(--em-accent);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-md);
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-bold);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+}
+
+.game-btn:hover {
+    background-color: var(--em-accent-dark);
+    transform: scale(1.03);
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .em-btn--lg {
+        padding: var(--em-btn-padding-y) var(--em-btn-padding-x);
+        font-size: var(--em-text-base);
+        min-height: 48px;
+    }
+    
+    .level-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .help-btn {
+        position: static;
+        margin: var(--em-space-4) auto;
+        display: block;
+    }
+    
+    .final-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .cycle-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
