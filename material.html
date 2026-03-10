@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstadísticaMente - Material Teórico</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Patrick+Hand&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para esta página */
+        .cycles-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .cycle-btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white;
+            min-width: 200px;
+            text-decoration: none;
+            display: flex;
+            justify-content: center; /* Centra el texto dentro del botón */
+            align-items: center; /* Centra el texto verticalmente */
+            text-align: center; /* Centra el texto */
+        }
+        
+        .cycle-btn.primary {
+            background-color: #C2185B;
+        }
+        
+        .cycle-btn.secondary {
+            background-color: #4361ee;
+        }
+        
+        .cycle-btn.tertiary {
+            background-color: #4CAF50;
+        }
+        
+        .cycle-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .back-btn {
+            background-color: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background-color: #A0154B;
+            transform: scale(1.05);
+        }
+        
+        /* Solo estos estilos se agregaron para centrar */
+        .title-section {
+            text-align: center; /* Centra el título y subtítulo */
+            width: 100%; /* Asegura que ocupe todo el ancho */
+        }
+        
+        .main-title, .section-subtitle {
+            text-align: center; /* Centra específicamente cada elemento */
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .cycles-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cycle-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado (sin cambios) -->
+        <header class="header">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="Sin título (4).png" class="logo" alt="EstadísticaMente - Inicio">
+                </a>
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="main-contentn1">
+            <!-- Botón de regreso -->
+            <button class="back-btn" onclick="window.location.href='nivelinicial.html'">
+                ← Volver a Nivel Primario
+            </button>
+            
+            <!-- Título principal (ahora centrado) -->
+            <div class="title-section">
+                <h1 class="main-title">Material Teórico</h1>
+                <p class="section-subtitle">Selecciona un ciclo para descargar su material</p>
+            </div>
+            
+            <!-- Botones de ciclos (contenido centrado) -->
+            <div class="cycles-buttons">
+                <a href="https://drive.google.com/uc?export=download&id=1d3nYAlVQwD5HM8uYvnlWePTK6rpmEup4" download class="cycle-btn primary">
+                    Primer Ciclo
+                </a>
+                <a href="URL_DEL_PDF_SEGUNDO_CICLO" download class="cycle-btn secondary">
+                    Segundo Ciclo
+                </a>
+                <a href="URL_DEL_PDF_TERCER_CICLO" download class="cycle-btn tertiary">
+                    Tercer Ciclo
+                </a>
+            </div>
+        </main>
+
+        <!-- Pie de página (sin cambios) -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p style="margin-bottom: 10px;">
+                    🧠 EstadísticaMente es una herramienta educativa desarrollada por Marcela Balzarelli y Pablo Barchiesi.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Chatbot de Profe Marce -->
+    <div id="profe-marce-avatar" class="chat-avatar" onclick="toggleChat()">
+        <img src="img/profemarce.png" alt="Profe Marce">
+    </div>
+
+    <div id="chat-window" class="chat-window hidden">
+        <div class="chat-header">
+            <img src="img/profemarce.png" alt="Avatar Profe Marce" class="chat-avatar-img">
+            <h3>Profe Marce</h3>
+            <button id="close-chat" class="close-chat-btn">✖</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" id="chat-input" placeholder="Escribí tu duda..." autocomplete="off">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+
+        
+        // Función para el chatbot
+        function toggleChat() {
+            const chatWindow = document.getElementById('chat-window');
+            chatWindow.classList.toggle('hidden');
+        }
+        
+        // Cerrar el chat
+        document.getElementById('close-chat').addEventListener('click', function() {
+            document.getElementById('chat-window').classList.add('hidden');
+        });
+        
+        // Enviar mensaje en el chat
+        document.getElementById('chat-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            
+            if (input.value.trim() !== '') {
+                // Agregar mensaje del usuario
+                const userMessage = document.createElement('div');
+                userMessage.innerHTML = '<strong>Tú:</strong> ' + input.value;
+                messages.appendChild(userMessage);
+                
+                // Limpiar input
+                input.value = '';
+                
+                // Simular respuesta del profesor
+                setTimeout(function() {
+                    const botMessage = document.createElement('div');
+                    botMessage.innerHTML = '<strong>Profe Marce:</strong> ¿Necesitas ayuda con el material teórico? Selecciona el ciclo correspondiente para descargar el PDF.';
+                    messages.appendChild(botMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                messages.scrollTop = messages.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>

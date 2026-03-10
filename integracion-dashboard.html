@@ -1,0 +1,4685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Ultimate</title>
+    
+    <!-- CDN para PDF -->
+     <!-- Agregar estos CDN en el head de dem.html -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+ 
+    <!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+
+<!-- Meta tags para PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EstadísticaMente">
+<link rel="apple-touch-icon" href="./Sin título (4).png">
+
+<meta name="msapplication-TileImage" content="./Sin título (4).png">
+<meta name="msapplication-TileColor" content="#C2185B">
+<meta name="theme-color" content="#C2185B">
+
+<!-- Preload de recursos críticos -->
+<link rel="preload" href="./styles.css" as="style">
+<link rel="preload" href="./script.js" as="script">
+    <!-- MathJax con configuración mejorada -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: {
+                    addMenu: [0, '', '']
+                }
+            },
+            startup: {
+                pageReady: function() {
+                    return MathJax.startup.defaultPageReady().then(function() {
+                        console.log('MathJax está listo');
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Tus archivos JS -->
+    <script src="js/analizador-inteligente.js"></script>
+    <script src="js/ia-generador-informes.js"></script>
+    <script src="js/generador-pdf.js"></script>
+    <script src="js/descargar-reporte-ia.js"></script>
+    
+    <!-- Otros CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    
+<style>
+    :root {
+        --primary: #C2185B;        /* Rosa principal de EstadísticaMente */
+        --secondary: #F8BBD0;      /* Rosa claro de EstadísticaMente */
+        --accent: #4361ee;         /* Azul acento */
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --dark-pink: #A0154B;      /* Rosa oscuro */
+    }
+    
+    body {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+    
+    .dashboard {
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+    
+.header {
+    background-color: #ffffff;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.logo {
+    width: 300px;
+    height: auto;
+    max-width: 100%;
+}
+    /* Nuevos estilos para filtros cruzados */
+    .filtros-cruzados-panel {
+        background: #fff8f8;
+        border: 2px solid var(--secondary);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: none;
+        animation: slideDown 0.3s ease;
+    }
+
+    .filtros-cruzados-panel.activo {
+        display: block;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .filtros-activos {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+    }
+
+    .filtro-activo {
+        background: var(--primary);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        animation: popIn 0.3s ease;
+        font-family: 'Comic Neue', cursive;
+    }
+
+    @keyframes popIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .filtro-activo button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .filtro-activo button:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .controles-filtros {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .instrucciones {
+        background: #f8f0f5;
+        border: 1px solid var(--secondary);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+    }
+    
+    .ingesta-datos {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+        border: 1px solid #f0f0f0;
+    }
+    
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--secondary);
+        padding-bottom: 15px;
+    }
+    
+    .tab {
+        padding: 12px 24px;
+        background: #f8f9fa;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-family: 'Comic Neue', cursive;
+    }
+    
+    .tab.active {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-family: 'Open Sans', sans-serif;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+    }
+    
+    .form-group textarea {
+        height: 100px;
+        resize: vertical;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s;
+        font-family: 'Comic Neue', cursive;
+    }
+    
+    .btn:hover {
+        background: var(--dark-pink);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
+    }
+    
+    .btn-success {
+        background: var(--success);
+    }
+    
+    .btn-warning {
+        background: var(--warning);
+        color: #333;
+    }
+    
+    .btn-danger {
+        background: var(--danger);
+    }
+    
+    .grid-graficos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .grafico-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+        overflow: hidden;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+        position: relative;
+    }
+
+    .grafico-container.filtrado {
+        border-color: var(--primary);
+        box-shadow: 0 4px 20px rgba(194, 24, 91, 0.3);
+    }
+    
+    .grafico-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(194, 24, 91, 0.15);
+    }
+    
+    .grafico-header {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--secondary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .titulo-grafico {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        border: 1px solid transparent;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.3s;
+        cursor: pointer;
+        min-width: 200px;
+        background: white;
+        font-family: 'Patrick Hand', cursive;
+    }
+    
+    .titulo-grafico:hover {
+        border-color: var(--secondary);
+        background: #f8f9fa;
+    }
+    
+    .titulo-grafico:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 2px rgba(194, 24, 91, 0.1);
+        cursor: text;
+    }
+    
+    .grafico-content {
+        height: 400px;
+        padding: 15px;
+    }
+    
+    .controles-grafico {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .controles-grafico select {
+        padding: 6px 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 12px;
+        background: white;
+        font-family: 'Open Sans', sans-serif;
+    }
+    
+    .estadisticas-panel {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+        border: 1px solid #f0f0f0;
+    }
+    
+    .estadisticas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .estadistica {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border-left: 4px solid var(--primary);
+        position: relative;
+        transition: all 0.3s;
+    }
+
+    .estadistica:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(194, 24, 91, 0.1);
+    }
+
+    .estadistica .valor {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--primary);
+        font-family: 'Comic Neue', cursive;
+    }
+    
+    .estadistica .label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        margin-top: 5px;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .estadistica-eliminar {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(220, 53, 69, 0.1);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--danger);
+        font-size: 14px;
+        opacity: 0;
+        transition: all 0.3s;
+    }
+
+    .estadistica:hover .estadistica-eliminar {
+        opacity: 1;
+    }
+
+    .estadistica-eliminar:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .estadistica-agregar {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border: 2px dashed var(--secondary);
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 120px;
+    }
+
+    .estadistica-agregar:hover {
+        border-color: var(--primary);
+        background: #f8f0f5;
+        transform: translateY(-2px);
+    }
+
+    .estadistica-agregar-icono {
+        font-size: 32px;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .estadistica-agregar-texto {
+        font-size: 14px;
+        color: #666;
+        font-weight: 500;
+        font-family: 'Comic Neue', cursive;
+    }
+    
+    .preview-datos {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid var(--secondary);
+    }
+    
+    .tabla-datos {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        font-family: 'Open Sans', sans-serif;
+    }
+    
+    .tabla-datos th, .tabla-datos td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    .tabla-datos th {
+        background: var(--secondary);
+        font-weight: 600;
+        color: #333;
+    }
+
+    .indicador-filtros {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    /* Modal para agregar estadísticas */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-contenido {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(194, 24, 91, 0.3);
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        border: 2px solid var(--primary);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--secondary);
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        color: var(--primary);
+        font-family: 'Patrick Hand', cursive;
+    }
+
+    .modal-cerrar {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--primary);
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+
+    .modal-cerrar:hover {
+        background: var(--secondary);
+        color: var(--dark-pink);
+    }
+
+    .modal-opciones {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .modal-opcion {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        font-family: 'Comic Neue', cursive;
+    }
+
+    .modal-opcion:hover {
+        border-color: var(--primary);
+        background: #f8f0f5;
+        transform: translateY(-2px);
+    }
+
+    .modal-opcion.activo {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+    }
+
+    .modal-opcion-icono {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .modal-opcion-titulo {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .modal-opcion-desc {
+        font-size: 12px;
+        color: #666;
+        opacity: 0.8;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .modal-opcion.activo .modal-opcion-desc {
+        color: white;
+        opacity: 0.9;
+    }
+
+    .modal-campos {
+        margin-bottom: 25px;
+    }
+
+    .modal-acciones {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    /* Botones con colores de EstadísticaMente */
+    .btn-primary {
+        background: var(--primary);
+    }
+
+    .btn-secondary {
+        background: var(--secondary);
+        color: #333;
+    }
+
+    .btn-accent {
+        background: var(--accent);
+    }
+
+    .btn-primary:hover {
+        background: var(--dark-pink);
+    }
+
+    .btn-secondary:hover {
+        background: #f48fb1;
+    }
+
+    .btn-accent:hover {
+        background: #3a56d4;
+    }
+            .back-btn {
+            background-color: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background-color: #A0154B;
+            transform: scale(1.05);
+        }
+
+        /* tabla de frecuencia */
+
+        /* Estilos para la sección de tabla de frecuencias */
+.tabla-frecuencias-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.controles-tabla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.resultados-tabla {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid var(--secondary);
+}
+
+.tabla-frecuencias {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tabla-frecuencias th {
+    background: var(--primary);
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.tabla-frecuencias td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.tabla-frecuencias tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.tabla-frecuencias tr:hover {
+    background: #f0f0f0;
+}
+
+.intervalo-header {
+    background: var(--secondary) !important;
+    color: #333;
+}
+
+.medidas-estadisticas {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+.medidas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.medida-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    border-left: 3px solid var(--primary);
+}
+
+.medida-valor {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary);
+    font-family: 'Comic Neue', cursive;
+}
+
+.medida-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Estilos para botones de eliminar gráficos */
+.boton-eliminar-grafico {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.grafico-container:hover .boton-eliminar-grafico {
+    opacity: 1;
+}
+
+.boton-eliminar-grafico:hover {
+    background: var(--danger);
+    transform: scale(1.1);
+}
+
+/* Asegurar que el contenedor del gráfico tenga posición relativa */
+.grafico-container {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+    overflow: hidden;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid rgba(220, 53, 69, 0.9);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+.level-btn {
+    padding: 15px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    font-family: 'Comic Neue', cursive;
+    margin-left: 10px;
+}
+
+.level-btn.primary {
+    background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.level-btn.primary:hover {
+    background: linear-gradient(135deg, #3a56d4 0%, #3046c4 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+}
+
+.level-btn.secondary {
+    background: linear-gradient(135deg, #F8BBD0 0%, #f48fb1 100%);
+    color: #333;
+    box-shadow: 0 4px 12px rgba(248, 187, 208, 0.3);
+}
+
+.level-btn.secondary:hover {
+    background: linear-gradient(135deg, #f48fb1 0%, #f06292 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(248, 187, 208, 0.4);
+    color: white;
+}
+
+
+/* chat */
+
+* Chatbot Styles */
+.chat-avatar {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #C2185B;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+}
+
+.chat-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+}
+
+.chat-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Chatbot Styles - VERSIÓN CORREGIDA */
+.chat-avatar {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #C2185B;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10000; /* Aumentado para asegurar visibilidad */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    animation: bounce 2s infinite;
+}
+
+.chat-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+}
+
+.chat-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10001; /* Mayor que el avatar */
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #F8BBD0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.chat-window.hidden {
+    display: none;
+}
+
+.chat-header {
+    background: #C2185B;
+    color: white;
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-family: 'Comic Neue', cursive;
+    flex: 1;
+}
+
+.chat-avatar-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.close-chat-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-chat-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chat-messages div {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.chat-messages div strong {
+    color: #C2185B;
+}
+
+.chat-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.chat-form button {
+    background: #C2185B;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s;
+}
+
+.chat-form button:hover {
+    background: #A0154B;
+}
+
+/* Efecto de typing */
+.typing-animation {
+    color: #666;
+    font-style: italic;
+}
+
+.dot-typing {
+    position: relative;
+}
+
+.dot-typing::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Responsive para el chatbot */
+@media (max-width: 768px) {
+    .chat-window {
+        width: 90%;
+        height: 60vh;
+        right: 5%;
+        bottom: 80px;
+    }
+    
+    .chat-avatar {
+        bottom: 80px;
+        right: 20px;
+    }
+}
+
+
+/* Estilos offline discretos para index.html */
+.offline-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 20px;
+    margin: 0;
+    font-family: 'Comic Neue', cursive;
+    font-size: 14px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.offline-header.offline {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.offline-header .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.offline-header .install-prompt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.install-header-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Comic Neue', cursive;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.install-header-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+.close-install-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.close-install-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+</style>
+</head>
+<body>
+ 
+    <div class="container">
+        <!-- Encabezado (sin cambios) -->
+        <header class="header">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="Sin título (4).png" class="logo" alt="EstadísticaMente - Inicio">
+                </a>
+            </div>
+        </header>
+        <!-- Header offline discreto -->
+<div id="offline-header" class="offline-header">
+    <div class="status">
+        <span id="status-icon">🌐</span>
+        <span id="status-text">Conectado</span>
+    </div>
+    <div class="install-prompt" id="install-prompt" style="display: none;">
+        <span>¿Instalar app?</span>
+        <button class="install-header-btn" onclick="installApp()">📱 Instalar</button>
+        <button class="close-install-btn" onclick="closeInstallPrompt()">×</button>
+    </div>
+</div>
+
+<!-- Indicador de datos offline -->
+<div id="offline-data-indicator" class="offline-data-indicator">
+    <span>📂</span>
+    <span>Usando datos guardados localmente - Modo offline</span>
+</div>
+
+        <!-- Contenido principal -->
+        <main class="main-contentn1">
+            <!-- Botón de regreso -->
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                ← Volver al Inicio
+            </button>
+        
+        <div class="instrucciones">
+            <strong>💡 Cómo usar los filtros cruzados:</strong> 
+            <ul>
+                <li>Haz <strong>clic en cualquier elemento</strong> de los gráficos (barras, puntos, segmentos) para aplicar filtros</li>
+                <li>Los filtros se <strong>acumulan automáticamente</strong> entre gráficos</li>
+                <li>Usa el panel de filtros activos para <strong>gestionar y eliminar</strong> filtros individuales</li>
+                <li>Los gráficos con filtros activos se <strong>resaltan con borde azul</strong></li>
+                <li><strong>Haz clic en los títulos</strong> de los gráficos para editarlos (Enter para guardar)</li>
+            </ul>
+        </div>
+        
+        <div class="ingesta-datos">
+<div class="tabs">
+    <button class="tab active" onclick="cambiarTab('manual')">📝 Datos Manuales</button>
+    <button class="tab" onclick="cambiarTab('frecuencia')">📊 Tabla de Frecuencia</button>
+    <button class="tab" onclick="cambiarTab('csv')">📁 CSV/Excel</button>
+    <button class="tab" onclick="cambiarTab('ejemplo')">📊 Datos de Ejemplo</button>
+</div>
+            
+            <div id="manual" class="tab-content active">
+                <h3>Ingresar Datos Manualmente</h3>
+                <div class="form-group">
+                    <label>Datos en formato CSV:</label>
+                    <textarea id="datosManual" placeholder="mes,categoria,region,ventas,clientes
+Enero,Electrónica,Norte,15000,45
+Enero,Ropa,Sur,8000,62
+Febrero,Electrónica,Norte,18000,52
+Febrero,Ropa,Sur,9000,68"></textarea>
+                </div>
+                <button class="btn" onclick="cargarDatosManuales()">📥 Cargar Datos Manuales</button>
+            </div>
+            
+<div id="csv" class="tab-content">
+    <h3>Cargar Archivo CSV/Excel</h3>
+    <div class="form-group">
+        <label>Seleccionar archivo (CSV, XLS, XLSX):</label>
+        <input type="file" id="archivoCSV" accept=".csv,.xlsx,.xls">
+        <small style="color: #666; font-size: 12px;">Formatos soportados: CSV, Excel (.xls, .xlsx)</small>
+    </div>
+    <div class="form-group">
+        <label>Delimitador:</label>
+        <select id="delimitador">
+            <option value=",">Coma (,)</option>
+            <option value=";">Punto y coma (;)</option>
+            <option value="\t">Tabulador</option>
+        </select>
+    </div>
+    <button class="btn" onclick="cargarArchivoCSV()">📁 Procesar Archivo</button>
+</div>
+            
+            
+            <div id="ejemplo" class="tab-content">
+                <h3>Datos de Ejemplo Predefinidos</h3>
+                <p>Selecciona un conjunto de datos de ejemplo para probar el dashboard:</p>
+                <div class="form-group">
+                    <select id="datasetEjemplo" onchange="cargarDatasetEjemplo()">
+                        <option value="">Seleccionar dataset...</option>
+                        <option value="ventas">📊 Ventas Comerciales</option>
+                        <option value="financiero">💹 Datos Financieros</option>
+                        <option value="clima">🌤️ Datos Climáticos</option>
+                        <option value="redes">📱 Analytics de Redes</option>
+                    </select>
+                </div>
+            </div>
+            
+<div id="frecuencia" class="tab-content">
+    <h3>📊 Crear Tabla de Frecuencias</h3>
+    
+    <div class="form-group">
+        <label>Tipo de Tabla:</label>
+        <select id="tipoTablaFrecuencia" onchange="cambiarTipoTablaFrecuencia()">
+            <option value="simple">Datos Simples</option>
+            <option value="agrupada">Datos Agrupados</option>
+        </select>
+    </div>
+
+    <!-- Formulario para Datos Simples -->
+    <div id="formularioSimple" class="form-group">
+        <label>Datos en formato CSV (variable,frecuencia):</label>
+        <textarea id="datosSimple" placeholder="variable,frecuencia
+A,15
+B,23
+C,42
+D,8"></textarea>
+        <button class="btn" onclick="cargarDatosSimples()">📥 Cargar Datos Simples</button>
+    </div>
+
+    <!-- Formulario para Datos Agrupados -->
+    <div id="formularioAgrupado" class="form-group" style="display: none;">
+        <div class="form-group">
+            <label>Longitud del Intervalo:</label>
+            <input type="number" id="longitudIntervalo" placeholder="Ej: 5">
+        </div>
+        <div class="form-group">
+            <label>Valor Mínimo:</label>
+            <input type="number" id="valorMinimo" placeholder="Ej: 0">
+        </div>
+        <div class="form-group">
+            <label>Valor Máximo:</label>
+            <input type="number" id="valorMaximo" placeholder="Ej: 100">
+        </div>
+        <button class="btn" onclick="generarIntervalos()">🔄 Generar Intervalos</button>
+        
+        <div id="tablaFrecuenciasAgrupadas" style="display: none; margin-top: 20px;">
+            <h4>Ingresar Frecuencias por Intervalo:</h4>
+            <div id="contenedorIntervalos"></div>
+            <button class="btn btn-success" onclick="cargarDatosAgrupados()">📥 Cargar Datos Agrupados</button>
+        </div>
+    </div>
+</div>
+
+
+            <div class="preview-datos">
+                <h4>Vista Previa de Datos:</h4>
+                <div id="vistaPrevia"></div>
+            </div>
+        </div>
+
+        <!-- PANEL DE FILTROS MOVIDO AQUÍ -->
+        <div class="filtros-cruzados-panel" id="filtrosCruzadosPanel">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">🎛️ Filtros Cruzados Activos</h3>
+                <div class="controles-filtros">
+                    <button class="btn btn-success" onclick="exportarDatosFiltrados()">📊 Exportar Datos Filtrados</button>
+                    <button class="btn btn-danger" onclick="limpiarTodosLosFiltros()">🧹 Limpiar Todos los Filtros</button>
+                </div>
+            </div>
+            <div class="filtros-activos" id="filtrosActivosContainer">
+                <!-- Los filtros activos se generan dinámicamente -->
+            </div>
+            <div style="font-size: 14px; color: #666;">
+                <strong>📈 Datos mostrados:</strong> 
+                <span id="contadorDatos">0</span> de <span id="totalDatos">0</span> registros 
+                (<span id="porcentajeDatos">0%</span>)
+            </div>
+        </div>
+        <!-- PANEL DE CONTROL DE GRÁFICOS - Agregar esto antes del grid-graficos -->
+<div class="panel-control-graficos">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0;">🎨 Gestión de Gráficos</h3>
+        <button class="btn btn-success" onclick="mostrarModalNuevoGrafico()" style="padding: 10px 20px;">
+            ➕ Agregar Nuevo Gráfico
+        </button>
+    </div>
+    
+    <div class="controles-rapidos">
+        <button class="btn btn-secondary" onclick="eliminarTodosLosGraficos()" style="padding: 8px 16px;">
+            🗑️ Eliminar Todos
+        </button>
+        <button class="btn btn-secondary" onclick="generarGraficosAutomaticos()" style="padding: 8px 16px;">
+            🔄 Generar Automáticos
+        </button>
+        <span style="margin-left: auto; color: #666; font-size: 14px;">
+            Gráficos activos: <span id="contadorGraficos">0</span>
+        </span>
+    </div>
+</div>
+
+<!-- Chatbot de Profe Marce -->
+<div id="profe-marce-avatar" class="chat-avatar" onclick="toggleChat()">
+    <img src="img/profemarce.png" alt="Profe Marce">
+</div>
+
+
+<div id="chat-window" class="chat-window hidden">
+    <div class="chat-header">
+        <img src="img/profemarce.png" alt="Avatar Profe Marce" class="chat-avatar-img">
+        <h3>Profe Marce</h3>
+        <button id="close-chat" class="close-chat-btn">✖</button>
+    </div>
+    <div id="chat-messages" class="chat-messages"></div>
+    <form id="chat-form" class="chat-form">
+        <input type="text" id="chat-input" placeholder="Escribí tu duda..." autocomplete="off">
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+
+<style>
+.panel-control-graficos {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.controles-rapidos {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+</style>
+        
+        <div class="grid-graficos" id="contenedorGraficos">
+            <!-- Los gráficos se generan dinámicamente -->
+        </div>
+        
+
+
+        <!-- PANEL DE TABLA DE FRECUENCIAS - POSICIÓN CORRECTA -->
+        <div class="tabla-frecuencias-panel">
+            <h3>📊 Tabla de Frecuencias</h3>
+    
+            <div class="controles-tabla">
+                <div class="form-group">
+                    <label for="variableSeleccionada">Seleccionar Variable:</label>
+                    <select id="variableSeleccionada" onchange="actualizarControlesTabla()">
+                        <option value="">Seleccionar variable...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipoVariable">Tipo de Variable:</label>
+                    <select id="tipoVariable" onchange="actualizarControlesTabla()">
+                        <option value="cuantitativa">Cuantitativa</option>
+                        <option value="cualitativa">Cualitativa</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="tipoTablaWrapper" style="display: none;">
+                    <label for="tipoTabla">Tipo de Tabla:</label>
+                    <select id="tipoTabla" onchange="actualizarControlesTabla()">
+                        <option value="simple">Simple</option>
+                        <option value="agrupada">Agrupada</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="intervalosWrapper" style="display: none;">
+                    <label for="cantidadIntervalos">Cantidad de Intervalos (opcional):</label>
+                    <input type="number" id="cantidadIntervalos" min="2" max="20" placeholder="Automático (Sturges)">
+                </div>
+                
+                <button class="btn" onclick="generarTablaFrecuencias()">📈 Generar Tabla de Frecuencias</button>
+            </div>
+            
+            <div id="resultadosTablaFrecuencias" class="resultados-tabla" style="display: none;">
+                <!-- Aquí se mostrarán los resultados -->
+            </div>
+        </div>
+<div class="estadisticas-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0;">📈 Resumen Estadístico</h3>
+        <button class="btn" onclick="mostrarModalAgregar()" style="padding: 8px 16px; font-size: 12px;">
+            ➕ Agregar Estadístico
+        </button>
+    </div>
+    <div class="estadisticas-grid" id="estadisticas">
+        <!-- Las estadísticas se generan dinámicamente -->
+    </div>
+</div>
+        <div style="text-align: center; margin: 20px 0;">
+    <button class="btn btn-success" onclick="generarReporteCompleto()" 
+            style="padding: 15px 30px; font-size: 16px;">
+        📊 Generar Reporte Automático
+    </button>
+    <button class="level-btn primary" onclick="abrirMaterialsTeorico()"
+            style="padding: 15px 30px; font-size: 16px; margin-left: 10px;">
+        📚 Material Teórico
+    </button>
+    <button class="level-btn secondary" onclick="abrirActividadesInteractivas()"
+            style="padding: 15px 30px; font-size: 16px; margin-left: 10px;">
+        🎮 Actividades Interactivas
+    </button>
+</div>
+
+        <!-- Panel de resultados del análisis -->
+        <div id="panelAnalisis" style="display: none; margin: 20px 0;">
+            <div class="estadisticas-panel">
+                <h3>🤖 Análisis Automático Generado</h3>
+                
+            
+                
+                <div id="resultadosAnalisis"></div>
+            </div>
+        </div>
+
+        
+        </main>
+    </div>
+
+<!-- Modal para agregar estadísticas -->
+<div class="modal" id="modalAgregarEstadistica">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3>➕ Agregar Nueva Estadístico</h3>
+            <button class="modal-cerrar" onclick="cerrarModalAgregar()">×</button>
+        </div>
+        
+        <div class="form-group">
+            <label>Tipo de Estadístico:</label>
+            <div class="modal-opciones">
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('promedio')" data-tipo="promedio">
+                    <div class="modal-opcion-icono">📊</div>
+                    <div class="modal-opcion-titulo">Promedio</div>
+                    <div class="modal-opcion-desc">Valor promedio</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('mediana')" data-tipo="mediana">
+                    <div class="modal-opcion-icono">📈</div>
+                    <div class="modal-opcion-titulo">Mediana</div>
+                    <div class="modal-opcion-desc">Valor central</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('moda')" data-tipo="moda">
+                    <div class="modal-opcion-icono">🔢</div>
+                    <div class="modal-opcion-titulo">Moda</div>
+                    <div class="modal-opcion-desc">Valor más frecuente</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('percentil')" data-tipo="percentil">
+                    <div class="modal-opcion-icono">P</div>
+                    <div class="modal-opcion-titulo">Percentil</div>
+                    <div class="modal-opcion-desc">Valor en posición %</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('quartil')" data-tipo="quartil">
+                    <div class="modal-opcion-icono">Q</div>
+                    <div class="modal-opcion-titulo">Quartil</div>
+                    <div class="modal-opcion-desc">Divisiones en 4 partes</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('deciles')" data-tipo="deciles">
+                    <div class="modal-opcion-icono">D</div>
+                    <div class="modal-opcion-titulo">Decil</div>
+                    <div class="modal-opcion-desc">Divisiones en 10 partes</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('maximo')" data-tipo="maximo">
+                    <div class="modal-opcion-icono">⬆️</div>
+                    <div class="modal-opcion-titulo">Máximo</div>
+                    <div class="modal-opcion-desc">Valor más alto</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('minimo')" data-tipo="minimo">
+                    <div class="modal-opcion-icono">⬇️</div>
+                    <div class="modal-opcion-titulo">Mínimo</div>
+                    <div class="modal-opcion-desc">Valor más bajo</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('varianza')" data-tipo="varianza">
+                    <div class="modal-opcion-icono">σ²</div>
+                    <div class="modal-opcion-titulo">Varianza</div>
+                    <div class="modal-opcion-desc">Medida de dispersión</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('desviacion')" data-tipo="desviacion">
+                    <div class="modal-opcion-icono">σ</div>
+                    <div class="modal-opcion-titulo">Desv. Estándar</div>
+                    <div class="modal-opcion-desc">Dispersión de datos</div>
+                </div>
+                <div class="modal-opcion" onclick="seleccionarTipoEstadistica('coeficiente')" data-tipo="coeficiente">
+                    <div class="modal-opcion-icono">%</div>
+                    <div class="modal-opcion-titulo">Coef. Variación</div>
+                    <div class="modal-opcion-desc">Variación relativa</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-campos" id="camposEstadistica" style="display: none;">
+            <div class="form-group">
+                <label for="campoSeleccionado">Seleccionar Variable:</label>
+                <select id="campoSeleccionado" class="form-group">
+                    <!-- Los campos se llenan dinámicamente -->
+                </select>
+            </div>
+            
+            <!-- NUEVO: Opciones específicas para percentiles, quartiles y deciles -->
+            <div id="opcionesEspecificas" style="display: none;">
+                <!-- Se llena dinámicamente cuando se selecciona percentil, quartil o decil -->
+            </div>
+            
+            <div class="form-group">
+                <label for="nombrePersonalizado">Nombre Personalizado:</label>
+                <input type="text" id="nombrePersonalizado" placeholder="Ej: Promedio de Ventas" class="form-group">
+            </div>
+        </div>
+
+        <div class="modal-acciones">
+            <button class="btn btn-secondary" onclick="cerrarModalAgregar()">Cancelar</button>
+            <button class="btn btn-success" onclick="agregarEstadistica()" id="btnAgregarEstadistica" disabled>Agregar Estadístico</button>
+        </div>
+    </div>
+</div>
+<!-- Modal para agregar nuevo gráfico (NUEVO - PEGA AQUÍ) -->
+<div class="modal" id="modalNuevoGrafico">
+    <div class="modal-contenido" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3>➕ Agregar Nuevo Gráfico</h3>
+            <button class="modal-cerrar" onclick="cerrarModalNuevoGrafico()">×</button>
+        </div>
+        
+        <div class="form-group">
+            <label>Tipo de Gráfico:</label>
+<select id="nuevoTipoGrafico" class="form-group" onchange="actualizarCamposNuevoGrafico()">
+    <option value="">Seleccionar tipo...</option>
+    <option value="bar">📊 Barras</option>
+    <option value="line">📈 Líneas</option>
+    <option value="scatter">🔵 Dispersión (Scatter)</option>
+    <option value="pie">🥧 Circular (Pie)</option>
+    <option value="doughnut">🍩 Dona (Doughnut)</option>
+    <option value="area">📐 Área</option>
+    <option value="bubble">🫧 Burbujas (Bubble)</option>
+    <option value="box">📦 Cajas (Box Plot)</option>
+    <option value="violin">🎻 Violín (Violin Plot)</option>
+    <option value="histogram">📋 Histograma</option>
+    <option value="heatmap">🔥 Mapa de Calor</option>
+
+</select>
+        </div>
+        
+        <div class="form-group">
+            <label for="nuevoCampoX">Campo Eje X / Categorías:</label>
+            <select id="nuevoCampoX" class="form-group">
+                <option value="">Seleccionar campo...</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="campoYContainer">
+            <label for="nuevoCampoY">Campo Eje Y / Valores:</label>
+            <select id="nuevoCampoY" class="form-group">
+                <option value="">Seleccionar campo...</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="campoZContainer" style="display: none;">
+            <label for="nuevoCampoZ">Campo Eje Z / Tamaño (para burbujas):</label>
+            <select id="nuevoCampoZ" class="form-group">
+                <option value="">Seleccionar campo...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="nuevoTituloGrafico">Título del Gráfico:</label>
+            <input type="text" id="nuevoTituloGrafico" class="form-group" placeholder="Ej: Ventas por Mes">
+        </div>
+        
+        <div class="modal-acciones">
+            <button class="btn btn-secondary" onclick="cerrarModalNuevoGrafico()">Cancelar</button>
+            <button class="btn btn-success" onclick="agregarNuevoGrafico()" id="btnAgregarGrafico" disabled>
+                Agregar Gráfico
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Estado de conexión -->
+<div id="connection-status" class="connection-status">
+    <span id="status-icon">🌐</span>
+    <span id="status-text">Conectado</span>
+</div>
+
+<!-- Botón de instalación -->
+<button id="installButton" class="install-button" style="display: none;">
+    📱 Instalar App
+</button>
+
+<script>
+// Registrar Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(registration) {
+        console.log('✅ Service Worker registrado con éxito:', registration.scope);
+        
+        // Verificar actualizaciones
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          console.log('🔄 Nueva versión del Service Worker encontrada');
+          
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('📦 Nueva versión disponible');
+              mostrarActualizacionDisponible();
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.log('❌ Error al registrar Service Worker:', error);
+      });
+  });
+}
+
+// Detectar estado de conexión
+function updateOnlineStatus() {
+  const statusElement = document.getElementById('connection-status');
+  const statusText = document.getElementById('status-text');
+  const statusIcon = document.getElementById('status-icon');
+  
+  if (navigator.onLine) {
+    statusText.textContent = 'Conectado';
+    statusIcon.textContent = '🌐';
+    statusElement.style.background = '#4CAF50';
+  } else {
+    statusText.textContent = 'Modo Offline';
+    statusIcon.textContent = '📴';
+    statusElement.style.background = '#FF9800';
+  }
+}
+
+// Instalación de PWA
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const installButton = document.getElementById('installButton');
+  if (installButton) {
+    installButton.style.display = 'block';
+    
+    installButton.addEventListener('click', () => {
+      installButton.style.display = 'none';
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('✅ Usuario aceptó instalar la PWA');
+        }
+        deferredPrompt = null;
+      });
+    });
+  }
+});
+
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+function mostrarActualizacionDisponible() {
+  if (confirm('¡Nueva versión disponible! ¿Quieres recargar para actualizar?')) {
+    window.location.reload();
+  }
+}
+
+        // Configuración global
+        let datosOriginales = [];
+        let usandoDatosOffline = false;
+        let datosFiltrados = [];
+        let configuracionGraficos = [];
+let tiposGraficosDisponibles = [
+    'bar', 'line', 'scatter', 'pie', 'doughnut', 'area', 
+    'bubble', 'box', 'violin', 'histogram', 'heatmap'
+];
+
+// Nombres en español para mostrar en la interfaz
+let nombresGraficosEspanol = {
+    'bar': 'Barras',
+    'line': 'Líneas',
+    'scatter': 'Dispersión',
+    'pie': 'Circular',
+    'doughnut': 'Dona',
+    'area': 'Área',
+    'bubble': 'Burbujas',
+    'box': 'Cajas (Box Plot)',
+    'violin': 'Violín',
+    'histogram': 'Histograma',
+    'heatmap': 'Mapa de Calor',
+    'contour': 'Contorno',
+    'surface': 'Superficie 3D',
+    'candlestick': 'Velas',
+    'ohlc': 'OHLC',
+    'waterfall': 'Cascada'
+};
+        let filtrosCruzadosActivos = new Map();
+        let graficosInstancias = new Map();
+        let titulosPersonalizados = new Map();
+        let mathJaxCargado = false;
+        let estadisticasPersonalizadas = [];
+        let tipoEstadisticaSeleccionado = null;
+
+        // Configurar MathJax cuando esté listo
+        if (window.MathJax) {
+            window.MathJax.startup.promise.then(() => {
+                mathJaxCargado = true;
+                console.log('✅ MathJax completamente cargado y listo');
+            }).catch(error => {
+                console.error('❌ Error cargando MathJax:', error);
+            });
+        }
+// Función helper para obtener nombre en español
+function obtenerNombreGraficoEspanol(tipo) {
+    return nombresGraficosEspanol[tipo] || tipo;
+}
+        // ===== FUNCIONALIDAD DE TABLA DE FRECUENCIAS =====
+
+ // Función para actualizar los controles de la tabla de frecuencias
+function actualizarControlesTabla() {
+    console.log('🔄 Actualizando controles de tabla...');
+    
+    const tipoVariable = document.getElementById('tipoVariable').value;
+    const tipoTablaWrapper = document.getElementById('tipoTablaWrapper');
+    const intervalosWrapper = document.getElementById('intervalosWrapper');
+    
+    console.log('Tipo de variable:', tipoVariable);
+    
+    // Mostrar/ocultar controles según el tipo de variable
+    if (tipoVariable === 'cuantitativa') {
+        tipoTablaWrapper.style.display = 'block';
+        
+        const tipoTabla = document.getElementById('tipoTabla').value;
+        if (tipoTabla === 'agrupada') {
+            intervalosWrapper.style.display = 'block';
+        } else {
+            intervalosWrapper.style.display = 'none';
+        }
+    } else {
+        tipoTablaWrapper.style.display = 'none';
+        intervalosWrapper.style.display = 'none';
+    }
+    
+    // Actualizar opciones de variables disponibles
+    actualizarOpcionesVariables();
+}
+
+// Función para actualizar las opciones de variables en el select
+function actualizarOpcionesVariables() {
+    const selectVariable = document.getElementById('variableSeleccionada');
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    console.log('📊 Datos para analizar:', datosParaAnalizar.length);
+    
+    if (datosParaAnalizar.length === 0) {
+        selectVariable.innerHTML = '<option value="">No hay datos disponibles</option>';
+        return;
+    }
+    
+    const campos = Object.keys(datosParaAnalizar[0]);
+    const tipoVariable = document.getElementById('tipoVariable').value;
+    
+    console.log('Campos disponibles:', campos);
+    console.log('Tipo de variable seleccionado:', tipoVariable);
+    
+    // Filtrar campos según el tipo de variable seleccionado
+    let camposFiltrados = campos;
+    if (tipoVariable === 'cuantitativa') {
+        camposFiltrados = campos.filter(campo => 
+            datosParaAnalizar.some(d => typeof d[campo] === 'number')
+        );
+    } else {
+        camposFiltrados = campos.filter(campo => 
+            datosParaAnalizar.some(d => typeof d[campo] === 'string')
+        );
+    }
+    
+    console.log('Campos filtrados:', camposFiltrados);
+    
+    // Guardar la selección actual
+    const seleccionActual = selectVariable.value;
+    
+    // Actualizar opciones
+    selectVariable.innerHTML = '<option value="">Seleccionar variable...</option>' +
+        camposFiltrados.map(campo => `<option value="${campo}">${campo}</option>`).join('');
+    
+    // Restaurar selección anterior si todavía existe
+    if (camposFiltrados.includes(seleccionActual)) {
+        selectVariable.value = seleccionActual;
+    }
+}
+
+// Función principal para generar la tabla de frecuencias
+function generarTablaFrecuencias() {
+    console.log('🎯 Generando tabla de frecuencias...');
+    
+    const variableSeleccionada = document.getElementById('variableSeleccionada').value;
+    const tipoVariable = document.getElementById('tipoVariable').value;
+    const tipoTabla = document.getElementById('tipoTabla').value;
+    const cantidadIntervalos = document.getElementById('cantidadIntervalos').value;
+    
+    console.log('Parámetros:', {
+        variableSeleccionada,
+        tipoVariable,
+        tipoTabla,
+        cantidadIntervalos
+    });
+    
+    if (!variableSeleccionada) {
+        mostrarMensaje('❌ Por favor selecciona una variable');
+        return;
+    }
+    
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    if (datosParaAnalizar.length === 0) {
+        mostrarMensaje('❌ No hay datos disponibles para analizar');
+        return;
+    }
+    
+    // Extraer los valores de la variable seleccionada
+    const valores = datosParaAnalizar.map(item => item[variableSeleccionada]);
+    
+    console.log('Valores extraídos:', valores);
+    
+    let resultados;
+    
+    if (tipoVariable === 'cuantitativa') {
+        // Convertir a números y filtrar valores válidos
+        const valoresNumericos = valores.map(v => parseFloat(v)).filter(v => !isNaN(v));
+        
+        console.log('Valores numéricos:', valoresNumericos);
+        
+        if (valoresNumericos.length === 0) {
+            mostrarMensaje('❌ La variable seleccionada no contiene valores numéricos válidos');
+            return;
+        }
+        
+        if (tipoTabla === 'agrupada') {
+            resultados = generarTablaAgrupada(valoresNumericos, cantidadIntervalos);
+        } else {
+            resultados = generarTablaSimple(valoresNumericos);
+        }
+    } else {
+        // Para variables cualitativas
+        resultados = generarTablaCualitativa(valores);
+    }
+    
+    mostrarResultadosTabla(resultados, variableSeleccionada, tipoVariable);
+    mostrarMensaje('✅ Tabla de frecuencias generada correctamente');
+}
+
+// Función para generar tabla de frecuencias simple (cuantitativa)
+function generarTablaSimple(valores) {
+    console.log('📈 Generando tabla simple...');
+    
+    // Ordenar valores
+    const valoresOrdenados = [...valores].sort((a, b) => a - b);
+    
+    // Calcular frecuencias
+    const frecuencias = {};
+    valoresOrdenados.forEach(valor => {
+        frecuencias[valor] = (frecuencias[valor] || 0) + 1;
+    });
+    
+    const valoresUnicos = Object.keys(frecuencias).map(Number).sort((a, b) => a - b);
+    const n = valoresOrdenados.length;
+    
+    console.log('Valores únicos:', valoresUnicos);
+    console.log('Total de datos:', n);
+    
+    // Calcular frecuencias acumuladas y relativas
+    let fa = 0;
+    let frAcumulada = 0;
+    
+    const tabla = valoresUnicos.map(valor => {
+        const f = frecuencias[valor];
+        fa += f;
+        const fr = f / n;
+        frAcumulada += fr;
+        
+        return {
+            valor: valor,
+            frecuencia: f,
+            frecuenciaAcumulada: fa,
+            frecuenciaRelativa: fr,
+            frecuenciaRelativaAcumulada: frAcumulada
+        };
+    });
+    
+    return {
+        tipo: 'simple',
+        tabla: tabla,
+        total: n,
+        valores: valoresOrdenados
+    };
+}
+
+// Función para generar tabla de frecuencias agrupada
+function generarTablaAgrupada(valores, cantidadIntervalosInput) {
+    console.log('📊 Generando tabla agrupada...');
+    
+    const valoresOrdenados = [...valores].sort((a, b) => a - b);
+    const n = valoresOrdenados.length;
+    
+    // Calcular número de intervalos (usar Sturges si no se especifica)
+    let k = cantidadIntervalosInput ? parseInt(cantidadIntervalosInput) : Math.ceil(1 + 3.322 * Math.log10(n));
+    k = Math.max(2, Math.min(20, k)); // Limitar entre 2 y 20
+    
+    console.log('Número de intervalos:', k);
+    
+    // Calcular rango
+    const min = Math.min(...valoresOrdenados);
+    const max = Math.max(...valoresOrdenados);
+    const rango = max - min;
+    
+    // Calcular amplitud del intervalo
+    const amplitud = Math.ceil((rango / k) * 100) / 100; // Redondear hacia arriba con 2 decimales
+    
+    console.log('Rango:', rango, 'Amplitud:', amplitud);
+    
+    // Crear intervalos
+    const intervalos = [];
+    let inicio = min;
+    
+    for (let i = 0; i < k; i++) {
+        const fin = i === k - 1 ? max : inicio + amplitud;
+        const marcaClase = (inicio + fin) / 2;
+        
+        intervalos.push({
+            inicio: inicio,
+            fin: fin,
+            marcaClase: marcaClase,
+            frecuencia: 0
+        });
+        
+        inicio = fin;
+    }
+    
+    console.log('Intervalos creados:', intervalos);
+    
+    // Contar frecuencias
+    valoresOrdenados.forEach(valor => {
+        for (let i = 0; i < intervalos.length; i++) {
+            const intervalo = intervalos[i];
+            if (valor >= intervalo.inicio && (i === intervalos.length - 1 ? valor <= intervalo.fin : valor < intervalo.fin)) {
+                intervalo.frecuencia++;
+                break;
+            }
+        }
+    });
+    
+    // Calcular frecuencias acumuladas y relativas
+    let fa = 0;
+    let frAcumulada = 0;
+    
+    const tabla = intervalos.map(intervalo => {
+        const f = intervalo.frecuencia;
+        fa += f;
+        const fr = f / n;
+        frAcumulada += fr;
+        
+        return {
+            intervalo: `[${intervalo.inicio.toFixed(2)} - ${intervalo.fin.toFixed(2)})`,
+            marcaClase: intervalo.marcaClase.toFixed(2),
+            frecuencia: f,
+            frecuenciaAcumulada: fa,
+            frecuenciaRelativa: fr,
+            frecuenciaRelativaAcumulada: frAcumulada
+        };
+    });
+    
+    return {
+        tipo: 'agrupada',
+        tabla: tabla,
+        total: n,
+        valores: valoresOrdenados,
+        configuracion: {
+            intervalos: k,
+            amplitud: amplitud,
+            rango: rango,
+            min: min,
+            max: max
+        }
+    };
+}
+
+// Función para generar tabla de frecuencias cualitativa
+function generarTablaCualitativa(valores) {
+    console.log('📝 Generando tabla cualitativa...');
+    
+    // Calcular frecuencias
+    const frecuencias = {};
+    valores.forEach(valor => {
+        if (valor !== null && valor !== undefined && valor !== '') {
+            frecuencias[valor] = (frecuencias[valor] || 0) + 1;
+        }
+    });
+    
+    const categorias = Object.keys(frecuencias).sort();
+    const n = valores.length;
+    
+    console.log('Categorías encontradas:', categorias);
+    console.log('Total de datos:', n);
+    
+    // Calcular frecuencias relativas
+    const tabla = categorias.map(categoria => {
+        const f = frecuencias[categoria];
+        const fr = f / n;
+        
+        return {
+            categoria: categoria,
+            frecuencia: f,
+            frecuenciaRelativa: fr
+        };
+    });
+    
+    return {
+        tipo: 'cualitativa',
+        tabla: tabla,
+        total: n,
+        valores: valores
+    };
+}
+
+// Función para mostrar los resultados de la tabla de frecuencias
+function mostrarResultadosTabla(resultados, variable, tipoVariable) {
+    console.log('🖥️ Mostrando resultados...');
+    
+    const contenedor = document.getElementById('resultadosTablaFrecuencias');
+    contenedor.style.display = 'block';
+    
+    let html = `<h4>Tabla de Frecuencias - Variable: ${variable}</h4>`;
+    
+    // Generar tabla según el tipo
+    if (resultados.tipo === 'cualitativa') {
+        html += generarHTMLTablaCualitativa(resultados);
+    } else if (resultados.tipo === 'simple') {
+        html += generarHTMLTablaSimple(resultados);
+    } else {
+        html += generarHTMLTablaAgrupada(resultados);
+    }
+    
+    // Agregar medidas estadísticas para variables cuantitativas
+       //if (tipoVariable === 'cuantitativa') {
+           //html += generarMedidasEstadisticas(resultados.valores);
+       //}
+    
+    contenedor.innerHTML = html;
+    
+    console.log('✅ Resultados mostrados correctamente');
+}
+
+        // Función para generar HTML de tabla cualitativa
+        function generarHTMLTablaCualitativa(resultados) {
+            let html = `
+                <table class="tabla-frecuencias">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Frecuencia (f)</th>
+                            <th>Frecuencia Relativa (fr)</th>
+                            <th>Porcentaje (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            resultados.tabla.forEach(fila => {
+                html += `
+                    <tr>
+                        <td>${fila.categoria}</td>
+                        <td>${fila.frecuencia}</td>
+                        <td>${fila.frecuenciaRelativa.toFixed(4)}</td>
+                        <td>${(fila.frecuenciaRelativa * 100).toFixed(2)}%</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    <tr style="background: #f0f0f0; font-weight: bold;">
+                        <td>Total</td>
+                        <td>${resultados.total}</td>
+                        <td>1.0000</td>
+                        <td>100.00%</td>
+                    </tr>
+                </tbody>
+            </table>
+            `;
+            
+            return html;
+        }
+
+        // Función para generar HTML de tabla simple
+        function generarHTMLTablaSimple(resultados) {
+            let html = `
+                <table class="tabla-frecuencias">
+                    <thead>
+                        <tr>
+                            <th>Valor (x)</th>
+                            <th>Frecuencia (f)</th>
+                            <th>Frecuencia Acumulada (F)</th>
+                            <th>Frecuencia Relativa (fr)</th>
+                            <th>Fr. Relativa Acumulada (Fr)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            resultados.tabla.forEach(fila => {
+                html += `
+                    <tr>
+                        <td>${fila.valor}</td>
+                        <td>${fila.frecuencia}</td>
+                        <td>${fila.frecuenciaAcumulada}</td>
+                        <td>${fila.frecuenciaRelativa.toFixed(4)}</td>
+                        <td>${fila.frecuenciaRelativaAcumulada.toFixed(4)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    <tr style="background: #f0f0f0; font-weight: bold;">
+                        <td>Total</td>
+                        <td>${resultados.total}</td>
+                        <td>-</td>
+                        <td>1.0000</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            `;
+            
+            return html;
+        }
+
+        // Función para generar HTML de tabla agrupada
+        function generarHTMLTablaAgrupada(resultados) {
+            let html = `
+                <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+                    <strong>Configuración:</strong> ${resultados.configuracion.intervalos} intervalos, 
+                    Amplitud: ${resultados.configuracion.amplitud.toFixed(2)}, 
+                    Rango: ${resultados.configuracion.rango.toFixed(2)}
+                </div>
+                <table class="tabla-frecuencias">
+                    <thead>
+                        <tr>
+                            <th>Intervalo</th>
+                            <th>Marca de Clase (x)</th>
+                            <th>Frecuencia (f)</th>
+                            <th>Frecuencia Acumulada (F)</th>
+                            <th>Frecuencia Relativa (fr)</th>
+                            <th>Fr. Relativa Acumulada (Fr)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            resultados.tabla.forEach(fila => {
+                html += `
+                    <tr>
+                        <td>${fila.intervalo}</td>
+                        <td>${fila.marcaClase}</td>
+                        <td>${fila.frecuencia}</td>
+                        <td>${fila.frecuenciaAcumulada}</td>
+                        <td>${fila.frecuenciaRelativa.toFixed(4)}</td>
+                        <td>${fila.frecuenciaRelativaAcumulada.toFixed(4)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    <tr style="background: #f0f0f0; font-weight: bold;">
+                        <td>Total</td>
+                        <td>-</td>
+                        <td>${resultados.total}</td>
+                        <td>-</td>
+                        <td>1.0000</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            `;
+            
+            return html;
+        }
+
+        // Función para generar medidas estadísticas
+        function generarMedidasEstadisticas(valores) {
+            const n = valores.length;
+            const suma = valores.reduce((a, b) => a + b, 0);
+            const media = suma / n;
+            
+            // Calcular mediana
+            const sorted = [...valores].sort((a, b) => a - b);
+            const mediana = n % 2 === 0 ? 
+                (sorted[n/2 - 1] + sorted[n/2]) / 2 : 
+                sorted[Math.floor(n/2)];
+            
+            // Calcular moda
+            const frecuencias = {};
+            sorted.forEach(valor => {
+                frecuencias[valor] = (frecuencias[valor] || 0) + 1;
+            });
+            const maxFrecuencia = Math.max(...Object.values(frecuencias));
+            const modas = Object.keys(frecuencias).filter(valor => frecuencias[valor] === maxFrecuencia);
+            const moda = modas.length === Object.keys(frecuencias).length ? 'No hay moda (distribución uniforme)' : modas.join(', ');
+            
+            // Calcular varianza y desviación estándar
+            const sumaCuadrados = valores.reduce((a, b) => a + Math.pow(b - media, 2), 0);
+            const varianza = sumaCuadrados / n;
+            const desviacionEstandar = Math.sqrt(varianza);
+            
+            // Calcular rango
+            const rango = Math.max(...valores) - Math.min(...valores);
+            
+            return `
+                <div class="medidas-estadisticas">
+                    <h4>📐 Medidas Estadísticas</h4>
+                    <div class="medidas-grid">
+                        <div class="medida-item">
+                            <div class="medida-valor">${media.toFixed(2)}</div>
+                            <div class="medida-label">Media (x̄)</div>
+                        </div>
+                        <div class="medida-item">
+                            <div class="medida-valor">${mediana.toFixed(2)}</div>
+                            <div class="medida-label">Mediana</div>
+                        </div>
+                        <div class="medida-item">
+                            <div class="medida-valor">${moda}</div>
+                            <div class="medida-label">Moda</div>
+                        </div>
+                        <div class="medida-item">
+                            <div class="medida-valor">${varianza.toFixed(2)}</div>
+                            <div class="medida-label">Varianza (σ²)</div>
+                        </div>
+                        <div class="medida-item">
+                            <div class="medida-valor">${desviacionEstandar.toFixed(2)}</div>
+                            <div class="medida-label">Desv. Estándar (σ)</div>
+                        </div>
+                        <div class="medida-item">
+                            <div class="medida-valor">${rango.toFixed(2)}</div>
+                            <div class="medida-label">Rango</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+function inicializarControlesTablaFrecuencias() {
+    console.log('🚀 Inicializando controles de tabla de frecuencias...');
+    actualizarOpcionesVariables();
+    actualizarControlesTabla();
+}
+
+// Función de debug
+function debugTablaFrecuencias() {
+    console.log('=== DEBUG TABLA FRECUENCIAS ===');
+    console.log('Datos originales:', datosOriginales);
+    console.log('Datos filtrados:', datosFiltrados);
+    console.log('Variable seleccionada:', document.getElementById('variableSeleccionada').value);
+    console.log('Opciones disponibles:', document.getElementById('variableSeleccionada').innerHTML);
+    console.log('=== FIN DEBUG ===');
+}
+        // ===== FUNCIONALIDAD DE ESTADÍSTICAS DINÁMICAS =====
+
+function mostrarModalAgregar() {
+    document.getElementById('modalAgregarEstadistica').style.display = 'flex';
+    // Limpiar selección previa
+    tipoEstadisticaSeleccionado = null;
+    document.querySelectorAll('.modal-opcion').forEach(opcion => {
+        opcion.classList.remove('activo');
+    });
+    document.getElementById('camposEstadistica').style.display = 'none';
+    document.getElementById('btnAgregarEstadistica').disabled = true;
+    
+    // Llenar select con campos numéricos disponibles
+    const camposNumericos = obtenerCamposNumericos();
+    const selectCampo = document.getElementById('campoSeleccionado');
+    selectCampo.innerHTML = camposNumericos.map(campo => 
+        `<option value="${campo}">${campo}</option>`
+    ).join('');
+}
+
+function cerrarModalAgregar() {
+    document.getElementById('modalAgregarEstadistica').style.display = 'none';
+}
+
+function seleccionarTipoEstadistica(tipo) {
+    tipoEstadisticaSeleccionado = tipo;
+    
+    // Actualizar UI
+    document.querySelectorAll('.modal-opcion').forEach(opcion => {
+        opcion.classList.remove('activo');
+    });
+    document.querySelector(`[data-tipo="${tipo}"]`).classList.add('activo');
+    
+    // Mostrar campos adicionales
+    document.getElementById('camposEstadistica').style.display = 'block';
+    
+    // Mostrar opciones específicas para percentiles, quartiles y deciles
+    const opcionesEspecificas = document.getElementById('opcionesEspecificas');
+    if (tipo === 'percentil' || tipo === 'quartil' || tipo === 'deciles') {
+        opcionesEspecificas.style.display = 'block';
+        
+        if (tipo === 'percentil') {
+            opcionesEspecificas.innerHTML = `
+                <div class="form-group">
+                    <label for="valorPercentil">Seleccionar Percentil:</label>
+                    <select id="valorPercentil" class="form-group">
+                        <option value="1">P1 - Percentil 1</option>
+                        <option value="5">P5 - Percentil 5</option>
+                        <option value="10">P10 - Percentil 10 (D1)</option>
+                        <option value="15">P15 - Percentil 15</option>
+                        <option value="20">P20 - Percentil 20 (D2)</option>
+                        <option value="25">P25 - Percentil 25 (Q1)</option>
+                        <option value="30">P30 - Percentil 30 (D3)</option>
+                        <option value="35">P35 - Percentil 35</option>
+                        <option value="40">P40 - Percentil 40 (D4)</option>
+                        <option value="45">P45 - Percentil 45</option>
+                        <option value="50" selected>P50 - Percentil 50 (Mediana - Q2 - D5)</option>
+                        <option value="55">P55 - Percentil 55</option>
+                        <option value="60">P60 - Percentil 60 (D6)</option>
+                        <option value="65">P65 - Percentil 65</option>
+                        <option value="70">P70 - Percentil 70 (D7)</option>
+                        <option value="75">P75 - Percentil 75 (Q3)</option>
+                        <option value="80">P80 - Percentil 80 (D8)</option>
+                        <option value="85">P85 - Percentil 85</option>
+                        <option value="90">P90 - Percentil 90 (D9)</option>
+                        <option value="95">P95 - Percentil 95</option>
+                        <option value="99">P99 - Percentil 99</option>
+                    </select>
+                </div>
+            `;
+        } else if (tipo === 'quartil') {
+            opcionesEspecificas.innerHTML = `
+                <div class="form-group">
+                    <label for="valorQuartil">Seleccionar Quartil:</label>
+                    <select id="valorQuartil" class="form-group">
+                        <option value="1">Q1 - Primer Quartil (25%)</option>
+                        <option value="2">Q2 - Segundo Quartil (50% - Mediana)</option>
+                        <option value="3">Q3 - Tercer Quartil (75%)</option>
+                        <option value="ric">Rango Intercuartílico (IQR = Q3 - Q1)</option>
+                    </select>
+                </div>
+            `;
+        } else if (tipo === 'deciles') {
+            opcionesEspecificas.innerHTML = `
+                <div class="form-group">
+                    <label for="valorDecil">Seleccionar Decil:</label>
+                    <select id="valorDecil" class="form-group">
+                        <option value="todos">Todos los Deciles (D1-D9)</option>
+                        <option value="1">D1 - Primer Decil (10%)</option>
+                        <option value="2">D2 - Segundo Decil (20%)</option>
+                        <option value="3">D3 - Tercer Decil (30%)</option>
+                        <option value="4">D4 - Cuarto Decil (40%)</option>
+                        <option value="5">D5 - Quinto Decil (50% - Mediana)</option>
+                        <option value="6">D6 - Sexto Decil (60%)</option>
+                        <option value="7">D7 - Séptimo Decil (70%)</option>
+                        <option value="8">D8 - Octavo Decil (80%)</option>
+                        <option value="9">D9 - Noveno Decil (90%)</option>
+                    </select>
+                </div>
+            `;
+        }
+    } else {
+        opcionesEspecificas.style.display = 'none';
+    }
+    
+    document.getElementById('btnAgregarEstadistica').disabled = false;
+}
+
+function obtenerCamposNumericos() {
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    if (datosParaAnalizar.length === 0) return [];
+    
+    return Object.keys(datosParaAnalizar[0]).filter(campo => 
+        datosParaAnalizar.some(d => typeof d[campo] === 'number')
+    );
+}
+
+function agregarEstadistica() {
+    if (!tipoEstadisticaSeleccionado) {
+        mostrarMensaje('❌ Por favor selecciona un tipo de estadística');
+        return;
+    }
+    
+    const campo = document.getElementById('campoSeleccionado').value;
+    if (!campo) {
+        mostrarMensaje('❌ Por favor selecciona una variable');
+        return;
+    }
+    
+    // Verificar que el campo tenga datos numéricos
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    const valoresNumericos = datosParaAnalizar
+        .map(d => d[campo])
+        .filter(v => v != null && !isNaN(v) && typeof v === 'number');
+    
+    if (valoresNumericos.length === 0) {
+        mostrarMensaje(`❌ El campo "${campo}" no contiene valores numéricos válidos`);
+        return;
+    }
+    
+    const nombrePersonalizado = document.getElementById('nombrePersonalizado').value;
+    
+    let estadisticaConfig = {
+        id: Date.now(),
+        tipo: tipoEstadisticaSeleccionado,
+        campo: campo,
+        nombre: nombrePersonalizado
+    };
+    
+    // Configuraciones específicas
+    if (tipoEstadisticaSeleccionado === 'percentil') {
+        const valorPercentil = document.getElementById('valorPercentil').value;
+        estadisticaConfig.valorPercentil = parseInt(valorPercentil);
+        if (!nombrePersonalizado) {
+            estadisticaConfig.nombre = `P${valorPercentil} ${campo}`;
+        }
+    } else if (tipoEstadisticaSeleccionado === 'quartil') {
+        const valorQuartil = document.getElementById('valorQuartil').value;
+        estadisticaConfig.valorQuartil = valorQuartil;
+        if (!nombrePersonalizado) {
+            estadisticaConfig.nombre = valorQuartil === 'ric' ? 
+                `Rango Intercuartílico ${campo}` : `Q${valorQuartil} ${campo}`;
+        }
+    } else if (tipoEstadisticaSeleccionado === 'deciles') {
+        const valorDecil = document.getElementById('valorDecil').value;
+        estadisticaConfig.valorDecil = valorDecil;
+        if (!nombrePersonalizado) {
+            estadisticaConfig.nombre = valorDecil === 'todos' ? 
+                `Deciles ${campo}` : `D${valorDecil} ${campo}`;
+        }
+    } else {
+        if (!nombrePersonalizado) {
+            estadisticaConfig.nombre = this.generarNombreEstadistica(tipoEstadisticaSeleccionado, campo);
+        }
+    }
+    
+    // Probar el cálculo antes de agregar
+    const resultadoPrueba = calcularEstadisticaPersonalizada(estadisticaConfig);
+    if (resultadoPrueba === 'N/A' || resultadoPrueba === 'Error') {
+        mostrarMensaje(`❌ No se pueden calcular ${estadisticaConfig.nombre} - verifica los datos`);
+        return;
+    }
+    
+    estadisticasPersonalizadas.push(estadisticaConfig);
+    actualizarEstadisticas();
+    cerrarModalAgregar();
+    mostrarMensaje('✅ Estadístico agregado correctamente');
+}
+
+
+function eliminarEstadistica(id) {
+    estadisticasPersonalizadas = estadisticasPersonalizadas.filter(est => est.id !== id);
+    actualizarEstadisticas();
+    mostrarMensaje('🗑️ Estadístico eliminado');
+}
+
+// Función corregida para calcular percentiles
+function calcularPercentil(valores, percentil) {
+    if (!valores || valores.length === 0) return NaN;
+    
+    // Filtrar solo valores numéricos válidos
+    const valoresNumericos = valores.filter(v => 
+        v != null && !isNaN(v) && typeof v === 'number'
+    );
+    
+    if (valoresNumericos.length === 0) return NaN;
+    
+    const sorted = [...valoresNumericos].sort((a, b) => a - b);
+    
+    // Método más robusto para calcular percentiles
+    if (percentil <= 0) return sorted[0];
+    if (percentil >= 100) return sorted[sorted.length - 1];
+    
+    const index = (percentil / 100) * (sorted.length - 1);
+    const lowerIndex = Math.floor(index);
+    const upperIndex = Math.ceil(index);
+    
+    if (lowerIndex === upperIndex) {
+        return sorted[lowerIndex];
+    }
+    
+    // Interpolación lineal entre los dos valores más cercanos
+    const weight = index - lowerIndex;
+    return sorted[lowerIndex] + (sorted[upperIndex] - sorted[lowerIndex]) * weight;
+}
+
+// Función corregida para calcular deciles
+function calcularDeciles(valores) {
+    const deciles = {};
+    for (let i = 1; i <= 9; i++) {
+        const decilValue = calcularPercentil(valores, i * 10);
+        deciles[`D${i}`] = isNaN(decilValue) ? 'N/A' : decilValue;
+    }
+    return deciles;
+}
+
+// Función corregida para calcular quartiles
+function calcularQuartiles(valores) {
+    return {
+        Q1: calcularPercentil(valores, 25),
+        Q2: calcularPercentil(valores, 50),
+        Q3: calcularPercentil(valores, 75)
+    };
+}
+
+// Función para calcular moda
+function calcularModa(valores) {
+    const frecuencias = {};
+    valores.forEach(valor => {
+        frecuencias[valor] = (frecuencias[valor] || 0) + 1;
+    });
+    
+    const maxFrecuencia = Math.max(...Object.values(frecuencias));
+    const modas = Object.keys(frecuencias)
+        .filter(valor => frecuencias[valor] === maxFrecuencia)
+        .map(Number);
+    
+    return modas.length === Object.keys(frecuencias).length ? 
+        'Sin moda (uniforme)' : 
+        modas.join(', ');
+}
+
+
+function calcularEstadisticaPersonalizada(estadistica) {
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    if (datosParaAnalizar.length === 0) return 'N/A';
+    
+    // Extraer y validar valores numéricos
+    const valores = datosParaAnalizar
+        .map(d => {
+            const valor = d[estadistica.campo];
+            // Convertir a número si es string
+            if (typeof valor === 'string') {
+                const num = parseFloat(valor);
+                return isNaN(num) ? null : num;
+            }
+            return typeof valor === 'number' ? valor : null;
+        })
+        .filter(v => v != null && !isNaN(v));
+    
+    if (valores.length === 0) {
+        console.warn(`No hay valores numéricos válidos para el campo: ${estadistica.campo}`);
+        return 'N/A';
+    }
+    
+    const sorted = [...valores].sort((a, b) => a - b);
+    const n = valores.length;
+    const suma = valores.reduce((a, b) => a + b, 0);
+    const media = suma / n;
+    
+    console.log(`Calculando ${estadistica.tipo} para ${estadistica.campo}:`, {
+        valores: valores.length,
+        media: media,
+        min: Math.min(...valores),
+        max: Math.max(...valores)
+    });
+    
+    try {
+        switch(estadistica.tipo) {
+            case 'promedio':
+                return media.toFixed(2);
+                
+            case 'mediana':
+                return calcularPercentil(valores, 50).toFixed(2);
+                
+            case 'maximo':
+                return Math.max(...valores).toLocaleString();
+                
+            case 'minimo':
+                return Math.min(...valores).toLocaleString();
+                
+            case 'suma':
+                return suma.toLocaleString();
+                
+            case 'conteo':
+                return valores.length.toLocaleString();
+                
+            case 'moda':
+                return calcularModa(valores);
+                
+            case 'varianza':
+                const sumaCuadrados = valores.reduce((a, b) => a + Math.pow(b - media, 2), 0);
+                return (sumaCuadrados / n).toFixed(2);
+                
+            case 'desviacion':
+                const varianza = valores.reduce((a, b) => a + Math.pow(b - media, 2), 0) / n;
+                return Math.sqrt(varianza).toFixed(2);
+                
+            case 'coeficiente':
+                const desviacion = Math.sqrt(valores.reduce((a, b) => a + Math.pow(b - media, 2), 0) / n);
+                return media !== 0 ? ((desviacion / media) * 100).toFixed(2) + '%' : 'N/A';
+                
+            case 'percentil':
+                const percentilVal = calcularPercentil(valores, estadistica.valorPercentil);
+                return isNaN(percentilVal) ? 'N/A' : percentilVal.toFixed(2);
+                
+            case 'quartil':
+                if (estadistica.valorQuartil === 'ric') {
+                    const q1 = calcularPercentil(valores, 25);
+                    const q3 = calcularPercentil(valores, 75);
+                    return (isNaN(q1) || isNaN(q3)) ? 'N/A' : (q3 - q1).toFixed(2);
+                } else {
+                    const percentil = parseInt(estadistica.valorQuartil) * 25;
+                    const quartilVal = calcularPercentil(valores, percentil);
+                    return isNaN(quartilVal) ? 'N/A' : quartilVal.toFixed(2);
+                }
+                
+            case 'deciles':
+                if (estadistica.valorDecil === 'todos') {
+                    const deciles = calcularDeciles(valores);
+                    return Object.keys(deciles)
+                        .map(d => `${d}: ${deciles[d]}`)
+                        .join('; ');
+                } else {
+                    const percentil = parseInt(estadistica.valorDecil) * 10;
+                    const decilVal = calcularPercentil(valores, percentil);
+                    return isNaN(decilVal) ? 'N/A' : decilVal.toFixed(2);
+                }
+                
+            default:
+                return 'N/A';
+        }
+    } catch (error) {
+        console.error(`Error calculando ${estadistica.tipo}:`, error);
+        return 'Error';
+    }
+}
+
+        // ===== FUNCIONES EXISTENTES (modificadas para incluir estadísticas personalizadas) =====
+
+function actualizarEstadisticas() {
+    const contenedor = document.getElementById('estadisticas');
+    const datosParaEstadisticas = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    if (datosParaEstadisticas.length === 0) {
+        contenedor.innerHTML = `
+            <div class="estadistica">
+                <div class="valor">0</div>
+                <div class="label">No hay datos</div>
+            </div>
+            <div class="estadistica-agregar" onclick="mostrarModalAgregar()">
+                <div class="estadistica-agregar-icono">+</div>
+                <div class="estadistica-agregar-texto">Agregar Estadística</div>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    // SOLO ESTAS 2 ESTADÍSTICAS BÁSICAS
+    html += `
+        <div class="estadistica">
+            <div class="valor">${datosParaEstadisticas.length}</div>
+            <div class="label">N (Tamaño Muestra)</div>
+        </div>
+        <div class="estadistica">
+            <div class="valor">${Object.keys(datosParaEstadisticas[0]).length}</div>
+            <div class="label">Variables</div>
+        </div>
+    `;
+    
+    // ESTADÍSTICAS PERSONALIZADAS (las que el usuario agregó manualmente)
+    estadisticasPersonalizadas.forEach(estadistica => {
+        const valor = calcularEstadisticaPersonalizada(estadistica);
+        html += `
+            <div class="estadistica">
+                <button class="estadistica-eliminar" onclick="eliminarEstadistica(${estadistica.id})" title="Eliminar estadística">×</button>
+                <div class="valor">${valor}</div>
+                <div class="label">${estadistica.nombre}</div>
+            </div>
+        `;
+    });
+    
+    // BOTÓN PARA AGREGAR MÁS
+    html += `
+        <div class="estadistica-agregar" onclick="mostrarModalAgregar()">
+            <div class="estadistica-agregar-icono">+</div>
+            <div class="estadistica-agregar-texto">Agregar Estadística</div>
+        </div>
+    `;
+    
+    contenedor.innerHTML = html;
+}
+
+function generarNombreEstadistica(tipo, campo) {
+    const nombres = {
+        'promedio': `Promedio de ${campo}`,
+        'mediana': `Mediana de ${campo}`,
+        'moda': `Moda de ${campo}`,
+        'maximo': `Máximo de ${campo}`,
+        'minimo': `Mínimo de ${campo}`,
+        'suma': `Suma de ${campo}`,
+        'conteo': `Conteo de ${campo}`,
+        'varianza': `Varianza de ${campo}`,
+        'desviacion': `Desviación Estándar de ${campo}`,
+        'coeficiente': `Coeficiente de Variación de ${campo}`
+    };
+    return nombres[tipo] || `${tipo} de ${campo}`;
+}
+// Función auxiliar para debug
+function debugEstadisticas() {
+    console.log('=== DEBUG ESTADÍSTICAS ===');
+    console.log('Datos originales:', datosOriginales.length);
+    console.log('Datos filtrados:', datosFiltrados.length);
+    console.log('Estadísticas personalizadas:', estadisticasPersonalizadas);
+    
+    if (datosOriginales.length > 0) {
+        const campos = Object.keys(datosOriginales[0]);
+        console.log('Campos disponibles:', campos);
+        
+        campos.forEach(campo => {
+            const valores = datosOriginales.map(d => d[campo]);
+            const numericos = valores.filter(v => typeof v === 'number' && !isNaN(v));
+            console.log(`Campo ${campo}: ${numericos.length} valores numéricos de ${valores.length}`);
+        });
+    }
+    console.log('=== FIN DEBUG ===');
+}
+        // ===== FUNCIONES EXISTENTES =====
+
+        // Función mejorada para renderizar Markdown y procesar LaTeX
+        function renderizarMarkdownConLaTeX(textoMarkdown) {
+            return new Promise((resolve) => {
+                const tempDiv = document.createElement('div');
+                tempDiv.className = 'mathjax-loading';
+                
+                const htmlSanitizado = DOMPurify.sanitize(
+                    marked.parse(textoMarkdown, {
+                        breaks: true,
+                        gfm: true,
+                        tables: true
+                    })
+                );
+                
+                tempDiv.innerHTML = htmlSanitizado;
+                
+                setTimeout(() => {
+                    if (window.MathJax && mathJaxCargado) {
+                        MathJax.typesetPromise([tempDiv]).then(() => {
+                            console.log('✅ LaTeX renderizado correctamente');
+                            tempDiv.classList.remove('mathjax-loading');
+                            resolve(tempDiv.innerHTML);
+                        }).catch(error => {
+                            console.warn('⚠️ Advertencia al renderizar LaTeX:', error);
+                            tempDiv.classList.remove('mathjax-loading');
+                            resolve(tempDiv.innerHTML);
+                        });
+                    } else {
+                        console.warn('⚠️ MathJax no disponible, mostrando texto plano');
+                        tempDiv.classList.remove('mathjax-loading');
+                        resolve(tempDiv.innerHTML);
+                    }
+                }, 100);
+            });
+        }
+
+        // Función para renderizar contenido con reintentos
+        async function renderizarConReintentos(elemento, contenido, reintentos = 3) {
+            for (let i = 0; i < reintentos; i++) {
+                try {
+                    const contenidoRenderizado = await renderizarMarkdownConLaTeX(contenido);
+                    elemento.innerHTML = contenidoRenderizado;
+                    
+                    const elementosMath = elemento.querySelectorAll('.MathJax, [mathjax]');
+                    if (elementosMath.length === 0) {
+                        console.log('✅ Contenido renderizado correctamente en intento', i + 1);
+                        return;
+                    }
+                    
+                    if (i < reintentos - 1) {
+                        console.log(`🔄 Reintentando renderizado (${i + 1}/${reintentos})`);
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                } catch (error) {
+                    console.error(`❌ Error en intento ${i + 1}:`, error);
+                    if (i === reintentos - 1) {
+                        elemento.innerHTML = `<div style="color: #666; font-style: italic;">
+                            <p>📊 Contenido de análisis (formato alternativo):</p>
+                            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+                                ${contenido.replace(/\$\$.*?\$\$|\$.*?\$/g, match => 
+                                    `<code>${match}</code>`
+                                )}
+                            </div>
+                        </div>`;
+                    }
+                }
+            }
+        }
+
+        // Función auxiliar para renderizar contenido de IA
+        async function renderizarContenidoIA(contenidoMarkdown) {
+            const elementoIA = document.getElementById('contenido-ia');
+            
+            if (!elementoIA) return;
+            
+            try {
+                const htmlSanitizado = DOMPurify.sanitize(
+                    marked.parse(contenidoMarkdown, {
+                        breaks: true,
+                        gfm: true,
+                        tables: true
+                    })
+                );
+                
+                elementoIA.innerHTML = htmlSanitizado;
+                
+                if (window.MathJax && mathJaxCargado) {
+                    console.log('🔄 Ejecutando MathJax...');
+                    await MathJax.typesetPromise([elementoIA]);
+                    console.log('✅ MathJax ejecutado correctamente');
+                } else {
+                    console.warn('⚠️ MathJax no disponible');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error renderizando contenido IA:', error);
+                elementoIA.innerHTML = `
+                    <div style="color: #666; font-style: italic;">
+                        <p>📊 Contenido de análisis (formato alternativo):</p>
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; white-space: pre-wrap;">
+                            ${contenidoMarkdown}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+ 
+// Función mejorada para mostrar resultados de análisis
+async function mostrarResultadosAnalisis(analisis, informeIA = '', mostrarBotonDescarga = false) {
+    const panel = document.getElementById('panelAnalisis');
+    const contenedor = document.getElementById('resultadosAnalisis');
+    
+    panel.style.display = 'block';
+    
+    let htmlEstructura = '';
+    
+    if (informeIA) {
+        htmlEstructura = `
+            <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; border-left: 4px solid #667eea; margin-bottom: 20px;">
+                <h4 style="color: #4361ee; margin-bottom: 15px;">🤖 Análisis de Inteligencia Artificial</h4>
+                <div id="contenido-ia" style="font-family: Arial, sans-serif; line-height: 1.6; background: white; padding: 20px; border-radius: 5px; min-height: 100px;">
+                    <div style="text-align: center; color: #666;">
+                        <div class="spinner"></div>
+                        <p style="margin-top: 10px;">Procesando contenido...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    htmlEstructura += `<div style="margin-bottom: 20px;">
+        <h4>📈 Insights Principales</h4>
+        <div class="estadisticas-grid">`;
+
+    analisis.insights?.forEach(insight => {
+        htmlEstructura += `
+            <div class="estadistica" style="background: ${insight.importancia === 'alta' ? '#fff3cd' : '#f8f9fa'};">
+                <div class="valor">${insight.tipo === 'tendencia' ? '📊' : insight.tipo === 'correlacion' ? '🔗' : '⚠️'}</div>
+                <div class="label">${insight.titulo}</div>
+                <div style="font-size: 12px; margin-top: 5px; color: #666;">${insight.descripcion}</div>
+            </div>
+        `;
+    });
+
+    htmlEstructura += `</div></div>`;
+    
+    // AGREGAR BOTÓN DE DESCARGA SI SE SOLICITA
+    if (mostrarBotonDescarga) {
+        htmlEstructura += `
+            <div id="botonDescargaCompleta" style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #f8f0f5 0%, #fff8f8 100%); border-radius: 12px; border: 3px solid #C2185B; box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);">
+                <h4 style="color: #C2185B; margin-bottom: 10px; font-family: 'Comic Neue', cursive;">🎯 Reporte Completo Listo</h4>
+                <p style="color: #666; margin-bottom: 20px; font-size: 14px; line-height: 1.4;">
+                    <strong>Todo incluido:</strong> Gráficos + Tablas + Estadísticas + Análisis IA + Datos + Conclusiones
+                </p>
+                <button class="btn" onclick="descargarReporteCompleto()" 
+                        id="btnDescargarTodo"
+                        style="padding: 15px 40px; font-size: 18px; background: linear-gradient(135deg, #C2185B 0%, #A0154B 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);">
+                    📥 Descargar Reporte Completo PDF
+                </button>
+                <div style="margin-top: 15px; font-size: 12px; color: #888;">
+                    ⏱️ Genera un PDF profesional con todo el análisis
+                </div>
+            </div>
+        `;
+    }
+    
+    contenedor.innerHTML = htmlEstructura;
+    
+    if (informeIA) {
+        await renderizarContenidoIA(informeIA);
+    }
+}
+
+        // Datos de ejemplo
+        const datasetsEjemplo = {
+            ventas: [
+                { mes: 'Enero', categoria: 'Electrónica', region: 'Norte', producto: 'Smartphone', vendedor: 'Ana', ventas: 15000, costos: 12000, clientes: 45, satisfaccion: 4.2 },
+                { mes: 'Enero', categoria: 'Ropa', region: 'Sur', producto: 'Camisetas', vendedor: 'Carlos', ventas: 8000, costos: 6000, clientes: 62, satisfaccion: 4.5 },
+                { mes: 'Febrero', categoria: 'Electrónica', region: 'Norte', producto: 'Smartphone', vendedor: 'Ana', ventas: 18000, costos: 14000, clientes: 52, satisfaccion: 4.3 },
+                { mes: 'Febrero', categoria: 'Ropa', region: 'Sur', producto: 'Camisetas', vendedor: 'Carlos', ventas: 9000, costos: 6500, clientes: 68, satisfaccion: 4.6 },
+                { mes: 'Marzo', categoria: 'Electrónica', region: 'Norte', producto: 'Tablet', vendedor: 'Beatriz', ventas: 12000, costos: 9000, clientes: 38, satisfaccion: 4.1 },
+                { mes: 'Marzo', categoria: 'Ropa', region: 'Este', producto: 'Pantalones', vendedor: 'David', ventas: 7500, costos: 5500, clientes: 55, satisfaccion: 4.4 }
+            ],
+            financiero: [
+                { fecha: '2024-01', ingreso: 50000, gasto: 35000, beneficio: 15000, inversion: 10000, roi: 1.5 },
+                { fecha: '2024-02', ingreso: 55000, gasto: 38000, beneficio: 17000, inversion: 12000, roi: 1.42 },
+                { fecha: '2024-03', ingreso: 48000, gasto: 32000, beneficio: 16000, inversion: 8000, roi: 2.0 },
+                { fecha: '2024-04', ingreso: 62000, gasto: 40000, beneficio: 22000, inversion: 15000, roi: 1.47 }
+            ],
+            clima: [
+                { mes: 'Enero', temperatura: 15, humedad: 65, precipitacion: 120, presion: 1013, viento: 12 },
+                { mes: 'Febrero', temperatura: 17, humedad: 62, precipitacion: 80, presion: 1015, viento: 10 },
+                { mes: 'Marzo', temperatura: 20, humedad: 58, precipitacion: 60, presion: 1012, viento: 15 },
+                { mes: 'Abril', temperatura: 23, humedad: 55, precipitacion: 40, presion: 1010, viento: 18 }
+            ],
+            redes: [
+                { plataforma: 'Facebook', seguidores: 15000, engagement: 4.5, alcance: 50000, clicks: 1200, conversiones: 45 },
+                { plataforma: 'Instagram', seguidores: 25000, engagement: 6.2, alcance: 75000, clicks: 1800, conversiones: 68 },
+                { plataforma: 'Twitter', seguidores: 8000, engagement: 3.8, alcance: 25000, clicks: 600, conversiones: 22 },
+                { plataforma: 'LinkedIn', seguidores: 5000, engagement: 2.5, alcance: 15000, clicks: 300, conversiones: 15 }
+            ]
+        };
+
+function inicializarDashboard() {
+    // Intentar cargar datos guardados primero
+    if (cargarDatosGuardados()) {
+        mostrarMensaje('📂 Datos cargados desde almacenamiento local');
+    } else {
+        // Si no hay datos guardados, cargar ejemplo
+        cargarDatasetEjemplo('ventas');
+    }
+    
+    generarInterfazGraficos();
+    inicializarControlesTablaFrecuencias();
+}
+
+        // Sistema de tabs
+        function cambiarTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Cargar datos manuales
+function cargarDatosManuales() {
+    const csvData = document.getElementById('datosManual').value;
+    try {
+        const resultados = Papa.parse(csvData, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true
+        });
+        
+        if (resultados.errors.length > 0) {
+            alert('Errores en el CSV: ' + resultados.errors.map(e => e.message).join(', '));
+            return;
+        }
+        
+        datosOriginales = resultados.data;
+        guardarDatosEnLocalStorage(); // ← GUARDAR PARA OFFLINE
+        usandoDatosOffline = false;
+        
+        generarInterfazGraficos();
+        aplicarFiltrosYActualizar();
+        inicializarControlesTablaFrecuencias();
+        mostrarMensaje('✅ Datos cargados correctamente' + (usandoDatosOffline ? ' (modo offline)' : ''));
+    } catch (error) {
+        alert('Error al procesar CSV: ' + error.message);
+    }
+}
+
+        // Cargar archivo CSV
+function cargarArchivoCSV() {
+    const archivo = document.getElementById('archivoCSV').files[0];
+    const delimitador = document.getElementById('delimitador').value;
+    
+    if (!archivo) {
+        alert('Por favor selecciona un archivo');
+        return;
+    }
+    
+    const extension = archivo.name.split('.').pop().toLowerCase();
+    
+    // Si es archivo Excel (.xls, .xlsx)
+    if (extension === 'xls' || extension === 'xlsx') {
+        cargarArchivoExcel(archivo);
+    } 
+    // Si es archivo CSV
+    else if (extension === 'csv') {
+        cargarArchivoCSVOriginal(archivo, delimitador);
+    } 
+    else {
+        alert('Formato de archivo no soportado. Use .csv, .xls o .xlsx');
+    }
+}
+// Función específica para archivos Excel
+function cargarArchivoExcel(archivo) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            // Obtener la primera hoja
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convertir a JSON
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                header: 1, // Para obtener arrays en lugar de objetos
+                defval: "" // Valores por defecto vacíos
+            });
+            
+            if (jsonData.length === 0) {
+                alert('El archivo Excel está vacío');
+                return;
+            }
+            
+            // Convertir a formato de datos estándar (array de objetos)
+            const headers = jsonData[0];
+            const datos = [];
+            
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                const obj = {};
+                
+                for (let j = 0; j < headers.length; j++) {
+                    // Intentar convertir a número si es posible
+                    const valor = row[j];
+                    if (valor !== undefined && valor !== null && valor !== '') {
+                        const num = Number(valor);
+                        obj[headers[j]] = isNaN(num) ? valor : num;
+                    } else {
+                        obj[headers[j]] = null;
+                    }
+                }
+                
+                // Solo agregar filas que tengan al menos un valor no vacío
+                if (Object.values(obj).some(val => val !== null && val !== '')) {
+                    datos.push(obj);
+                }
+            }
+            
+            datosOriginales = datos;
+            // Limpiar títulos personalizados cuando se cargan nuevos datos
+            titulosPersonalizados.clear();
+            generarInterfazGraficos();
+            aplicarFiltrosYActualizar();
+            inicializarControlesTablaFrecuencias();
+            mostrarMensaje('✅ Archivo Excel cargado correctamente');
+            
+        } catch (error) {
+            console.error('Error al procesar Excel:', error);
+            alert('Error al procesar el archivo Excel: ' + error.message);
+        }
+    };
+    
+    reader.onerror = function(error) {
+        alert('Error al leer el archivo: ' + error.message);
+    };
+    
+    reader.readAsArrayBuffer(archivo);
+}
+
+// Función original para CSV (renombrada)
+function cargarArchivoCSVOriginal(archivo, delimitador) {
+    Papa.parse(archivo, {
+        header: true,
+        delimiter: delimitador,
+        dynamicTyping: true,
+        complete: function(resultados) {
+            if (resultados.errors.length > 0) {
+                alert('Errores en el archivo: ' + resultados.errors.map(e => e.message).join(', '));
+                return;
+            }
+            
+            datosOriginales = resultados.data;
+            // Limpiar títulos personalizados cuando se cargan nuevos datos
+            titulosPersonalizados.clear();
+            generarInterfazGraficos();
+            aplicarFiltrosYActualizar();
+            inicializarControlesTablaFrecuencias();
+            mostrarMensaje('✅ Archivo CSV cargado correctamente');
+        },
+        error: function(error) {
+            alert('Error al leer el archivo: ' + error.message);
+        }
+    });
+}
+
+
+        // Cargar dataset de ejemplo
+        function cargarDatasetEjemplo(tipo = null) {
+            const datasetSelect = document.getElementById('datasetEjemplo');
+            const datasetTipo = tipo || datasetSelect.value;
+            
+            if (datasetTipo && datasetsEjemplo[datasetTipo]) {
+                datosOriginales = datasetsEjemplo[datasetTipo];
+                // Limpiar títulos personalizados cuando se cargan nuevos datos
+                titulosPersonalizados.clear();
+                generarInterfazGraficos();
+                aplicarFiltrosYActualizar();
+                inicializarControlesTablaFrecuencias();
+                mostrarMensaje(`✅ Dataset "${datasetTipo}" cargado correctamente`);
+            }
+        }
+
+        // Aplicar filtros y actualizar vista
+        function aplicarFiltrosYActualizar() {
+            // Aplicar filtros cruzados
+            datosFiltrados = datosOriginales.filter(item => {
+                for (let [campo, valor] of filtrosCruzadosActivos) {
+                    if (item[campo] !== valor) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            inicializarControlesTablaFrecuencias();
+            actualizarVistaPrevia();
+            actualizarGraficosSinRegenerar();
+            actualizarUI();
+        }
+
+        // Actualizar gráficos sin regenerar la interfaz completa
+        function actualizarGraficosSinRegenerar() {
+            configuracionGraficos.forEach((_, indice) => {
+                actualizarGrafico(indice);
+            });
+            actualizarEstadisticas();
+        }
+
+        // Actualizar vista previa
+        function actualizarVistaPrevia() {
+            const contenedor = document.getElementById('vistaPrevia');
+            const datosParaMostrar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+            
+            if (datosParaMostrar.length === 0) {
+                contenedor.innerHTML = '<p>No hay datos cargados</p>';
+                return;
+            }
+            
+            const campos = Object.keys(datosParaMostrar[0]);
+            let html = `
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            ${campos.map(campo => `<th>${campo}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${datosParaMostrar.slice(0, 10).map(fila => `
+                            <tr>
+                                ${campos.map(campo => `<td>${fila[campo]}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <p><em>Mostrando ${Math.min(10, datosParaMostrar.length)} de ${datosParaMostrar.length} registros</em></p>
+            `;
+            
+            contenedor.innerHTML = html;
+        }
+
+
+
+        // Actualizar selects de campos cuando cambian los datos
+        function actualizarSelectsCampos() {
+            const campos = datosOriginales.length > 0 ? Object.keys(datosOriginales[0]) : [];
+            
+            configuracionGraficos.forEach((config, index) => {
+                const selectCampo = document.getElementById(`select-campo-${index}`);
+                const selectCampoValor = document.getElementById(`select-campo-valor-${index}`);
+                
+                if (selectCampo) {
+                    // Guardar selección actual
+                    const valorActual = selectCampo.value;
+                    
+                    // Actualizar opciones
+                    selectCampo.innerHTML = campos.map(campo => 
+                        `<option value="${campo}" ${campo === valorActual ? 'selected' : ''}>${campo}</option>`
+                    ).join('');
+                    
+                    // Si el valor actual ya no existe, usar el primero
+                    if (!campos.includes(valorActual) && campos.length > 0) {
+                        selectCampo.value = campos[0];
+                        configuracionGraficos[index].campo = campos[0];
+                    }
+                }
+                
+                if (selectCampoValor) {
+                    const valorActual = selectCampoValor.value;
+                    
+                    selectCampoValor.innerHTML = campos.map(campo => 
+                        `<option value="${campo}" ${campo === valorActual ? 'selected' : ''}>${campo}</option>`
+                    ).join('');
+                    
+                    if (!campos.includes(valorActual) && campos.length > 0) {
+                        selectCampoValor.value = campos[0];
+                        configuracionGraficos[index].campoValor = campos[0];
+                    }
+                }
+            });
+        }
+
+        // Cambiar campo de valor del gráfico
+        function cambiarCampoValorGrafico(indice, campoValor) {
+            configuracionGraficos[indice].campoValor = campoValor;
+            actualizarGrafico(indice);
+        }
+
+        // Manejar la tecla Enter en el título
+        function manejarEnterTitulo(event, indice, inputElement) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                cambiarTituloGrafico(indice, inputElement.value);
+                inputElement.blur(); // Quitar el foco del input
+            }
+        }
+
+        // Cambiar título del gráfico
+        function cambiarTituloGrafico(indice, nuevoTitulo) {
+            if (nuevoTitulo.trim() !== '') {
+                // Guardar el título personalizado
+                titulosPersonalizados.set(indice, nuevoTitulo);
+                
+                // Actualizar la configuración del gráfico
+                configuracionGraficos[indice].titulo = nuevoTitulo;
+                
+                // Actualizar solo este gráfico
+                actualizarGrafico(indice);
+                
+                // Actualizar el input para reflejar el cambio
+                const inputTitulo = document.querySelector(`#grafico-container-${indice} .titulo-grafico`);
+                if (inputTitulo) {
+                    inputTitulo.value = nuevoTitulo;
+                }
+                
+                mostrarMensaje('✅ Título actualizado correctamente');
+            }
+        }
+
+        // Generar configuración automática de gráficos
+        function generarConfiguracionAutomatica(campos) {
+            if (campos.length === 0) return [];
+            
+            const configs = [];
+            const camposNumericos = campos.filter(campo => 
+                datosOriginales.some(d => typeof d[campo] === 'number')
+            );
+            const camposCategoricos = campos.filter(campo => 
+                datosOriginales.some(d => typeof d[campo] === 'string')
+            );
+            
+            // Gráfico 1: Barras para campo categórico principal
+            if (camposCategoricos.length > 0) {
+                configs.push({
+                    tipo: 'bar',
+                    campo: camposCategoricos[0],
+                    titulo: `Gráfico 1 - ${camposCategoricos[0]}`,
+                    campoValor: camposNumericos[0] || campos[0]
+                });
+            }
+            
+            // Gráfico 2: Líneas para tendencias temporales
+            if (campos.some(c => c.toLowerCase().includes('fecha') || c.toLowerCase().includes('mes'))) {
+                const campoTiempo = campos.find(c => c.toLowerCase().includes('fecha') || c.toLowerCase().includes('mes'));
+                configs.push({
+                    tipo: 'line',
+                    campo: campoTiempo,
+                    titulo: `Gráfico 2 `,
+                    campoValor: camposNumericos[0]
+                });
+            }
+            
+            // Gráfico 3: Pie chart para categorías
+            if (camposCategoricos.length > 1) {
+                configs.push({
+                    tipo: 'pie',
+                    campo: camposCategoricos[1] || camposCategoricos[0],
+                    titulo: `Gráfico 3 `,
+                    campoValor: camposNumericos[0]
+                });
+            }
+            
+            // Gráfico 4: Scatter plot para correlaciones
+            if (camposNumericos.length >= 2) {
+                configs.push({
+                    tipo: 'scatter',
+                    campo: camposNumericos[0],
+                    titulo: `Gráfico 4`,
+                    campoValor: camposNumericos[1]
+                });
+            }
+            
+            // Gráfico 5: Histograma
+            if (camposNumericos.length > 0) {
+                configs.push({
+                    tipo: 'histogram',
+                    campo: camposNumericos[0],
+                    titulo: `Gráfico 5`,
+                    campoValor: camposNumericos[0]
+                });
+            }
+            
+            // Gráfico 6: Box plot
+            if (camposNumericos.length > 0 && camposCategoricos.length > 0) {
+                configs.push({
+                    tipo: 'box',
+                    campo: camposCategoricos[0],
+                    titulo: `Gráfico 6`,
+                    campoValor: camposNumericos[0]
+                });
+            }
+            
+            return configs;
+        }
+
+        // Cambiar tipo de gráfico
+        function cambiarTipoGrafico(indice, tipo) {
+            configuracionGraficos[indice].tipo = tipo;
+            actualizarGrafico(indice);
+        }
+
+        // Cambiar campo de gráfico
+        function cambiarCampoGrafico(indice, campo) {
+            configuracionGraficos[indice].campo = campo;
+            actualizarGrafico(indice);
+        }
+
+
+        // Función para mostrar modal de nuevo gráfico
+function mostrarModalNuevoGrafico() {
+    if (datosOriginales.length === 0) {
+        mostrarMensaje('❌ Primero carga algunos datos');
+        return;
+    }
+    
+    document.getElementById('modalNuevoGrafico').style.display = 'flex';
+    llenarSelectsCampos();
+    actualizarCamposNuevoGrafico();
+}
+
+function cerrarModalNuevoGrafico() {
+    document.getElementById('modalNuevoGrafico').style.display = 'none';
+}
+
+// Llenar selects con campos disponibles
+function llenarSelectsCampos() {
+    const campos = Object.keys(datosOriginales[0]);
+    const camposNumericos = campos.filter(campo => 
+        datosOriginales.some(d => typeof d[campo] === 'number')
+    );
+    const camposCategoricos = campos.filter(campo => 
+        datosOriginales.some(d => typeof d[campo] === 'string')
+    );
+    
+    const selectX = document.getElementById('nuevoCampoX');
+    const selectY = document.getElementById('nuevoCampoY');
+    const selectZ = document.getElementById('nuevoCampoZ');
+    
+    // Llenar campo X (generalmente categórico)
+    selectX.innerHTML = '<option value="">Seleccionar campo...</option>' +
+        camposCategoricos.map(campo => `<option value="${campo}">${campo}</option>`).join('') +
+        camposNumericos.map(campo => `<option value="${campo}">${campo} (numérico)</option>`).join('');
+    
+    // Llenar campo Y (generalmente numérico)
+    selectY.innerHTML = '<option value="">Seleccionar campo...</option>' +
+        camposNumericos.map(campo => `<option value="${campo}">${campo}</option>`).join('') +
+        camposCategoricos.map(campo => `<option value="${campo}">${campo} (categórico)</option>`).join('');
+    
+    // Llenar campo Z (para burbujas)
+    selectZ.innerHTML = '<option value="">Seleccionar campo...</option>' +
+        camposNumericos.map(campo => `<option value="${campo}">${campo}</option>`).join('');
+}
+
+// Actualizar campos según tipo de gráfico seleccionado
+function actualizarCamposNuevoGrafico() {
+    const tipoGrafico = document.getElementById('nuevoTipoGrafico').value;
+    const campoYContainer = document.getElementById('campoYContainer');
+    const campoZContainer = document.getElementById('campoZContainer');
+    
+    // Mostrar/ocultar campos según el tipo de gráfico
+    switch(tipoGrafico) {
+        case 'bubble':
+            campoYContainer.style.display = 'block';
+            campoZContainer.style.display = 'block';
+            break;
+        case 'pie':
+        case 'doughnut':
+        case 'bar':
+        case 'line':
+        case 'area':
+            campoYContainer.style.display = 'block';
+            campoZContainer.style.display = 'none';
+            break;
+        case 'histogram':
+        case 'box':
+        case 'violin':
+            // Estos gráficos pueden funcionar con una sola variable
+            campoYContainer.style.display = 'none';
+            campoZContainer.style.display = 'none';
+            break;
+        case 'scatter':
+            campoYContainer.style.display = 'block';
+            campoZContainer.style.display = 'none';
+            break;
+        default:
+            campoYContainer.style.display = 'block';
+            campoZContainer.style.display = 'none';
+    }
+    
+    // Habilitar botón si hay selección válida
+    const btnAgregar = document.getElementById('btnAgregarGrafico');
+    btnAgregar.disabled = !tipoGrafico;
+}
+
+function agregarNuevoGrafico() {
+    const tipo = document.getElementById('nuevoTipoGrafico').value;
+    const campoX = document.getElementById('nuevoCampoX').value;
+    const campoY = document.getElementById('nuevoCampoY').value;
+    const campoZ = document.getElementById('nuevoCampoZ').value;
+    const titulo = document.getElementById('nuevoTituloGrafico').value || `Gráfico ${configuracionGraficos.length + 1}`;
+    
+    if (!tipo) {
+        mostrarMensaje('❌ Selecciona el tipo de gráfico');
+        return;
+    }
+    
+    // Validaciones específicas por tipo de gráfico
+    let configValida = true;
+    let mensajeError = '';
+    
+    switch(tipo) {
+        case 'scatter':
+        case 'bubble':
+            if (!campoX || !campoY) {
+                configValida = false;
+                mensajeError = 'Los gráficos de dispersión y burbujas necesitan al menos 2 variables (X e Y)';
+            }
+            break;
+        case 'pie':
+        case 'doughnut':
+            if (!campoX || !campoY) {
+                configValida = false;
+                mensajeError = 'Los gráficos circulares necesitan 2 variables (categorías y valores)';
+            }
+            break;
+        case 'histogram':
+        case 'box':
+        case 'violin':
+            // Estos pueden funcionar con solo campo X
+            if (!campoX) {
+                configValida = false;
+                mensajeError = 'Este tipo de gráfico necesita al menos una variable';
+            }
+            break;
+        default:
+            // Barras, líneas, áreas pueden usar 1 o 2 variables
+            if (!campoX) {
+                configValida = false;
+                mensajeError = 'Este gráfico necesita al menos una variable';
+            }
+    }
+    
+    if (!configValida) {
+        mostrarMensaje('❌ ' + mensajeError);
+        return;
+    }
+    
+    // Crear nueva configuración
+    const nuevaConfig = {
+        tipo: tipo,
+        campo: campoX,
+        campoValor: campoY || null, // Puede ser null para gráficos de una variable
+        campoZ: campoZ || null,
+        titulo: titulo,
+        id: Date.now()
+    };
+    
+    // Agregar a la configuración
+    configuracionGraficos.push(nuevaConfig);
+    
+    // Generar interfaz actualizada
+    generarInterfazGraficos();
+    
+    // Cerrar modal y limpiar
+    cerrarModalNuevoGrafico();
+    document.getElementById('nuevoTipoGrafico').value = '';
+    document.getElementById('nuevoCampoX').value = '';
+    document.getElementById('nuevoCampoY').value = '';
+    document.getElementById('nuevoCampoZ').value = '';
+    document.getElementById('nuevoTituloGrafico').value = '';
+    
+    mostrarMensaje('✅ Gráfico agregado correctamente');
+}
+// Función para eliminar un gráfico específico
+function eliminarGrafico(indice) {
+    if (confirm('¿Estás seguro de que quieres eliminar este gráfico?')) {
+        configuracionGraficos.splice(indice, 1);
+        generarInterfazGraficos();
+        mostrarMensaje('🗑️ Gráfico eliminado');
+    }
+}
+
+// Función para eliminar todos los gráficos
+function eliminarTodosLosGraficos() {
+    if (configuracionGraficos.length === 0) {
+        mostrarMensaje('ℹ️ No hay gráficos para eliminar');
+        return;
+    }
+    
+    if (confirm('¿Estás seguro de que quieres eliminar TODOS los gráficos?')) {
+        configuracionGraficos = [];
+        generarInterfazGraficos();
+        mostrarMensaje('🗑️ Todos los gráficos han sido eliminados');
+    }
+}
+
+// Función para generar gráficos automáticos (como antes)
+function generarGraficosAutomaticos() {
+    if (datosOriginales.length === 0) {
+        mostrarMensaje('❌ Primero carga algunos datos');
+        return;
+    }
+    
+    const campos = Object.keys(datosOriginales[0]);
+    configuracionGraficos = generarConfiguracionAutomatica(campos);
+    generarInterfazGraficos();
+    mostrarMensaje('✅ Gráficos automáticos generados');
+}
+
+// Actualizar la función generarInterfazGraficos para incluir botones de eliminar
+function generarInterfazGraficos() {
+    const contenedor = document.getElementById('contenedorGraficos');
+    const campos = datosOriginales.length > 0 ? Object.keys(datosOriginales[0]) : [];
+    
+    let html = '';
+    
+    configuracionGraficos.forEach((config, index) => {
+        const tituloFinal = titulosPersonalizados.get(index) || config.titulo;
+        
+        // Determinar qué controles mostrar según el tipo de gráfico
+        let controlesHTML = '';
+        
+        switch(config.tipo) {
+            case 'histogram':
+            case 'box':
+            case 'violin':
+                // Solo necesita campo principal
+                controlesHTML = `
+                    <select id="select-campo-${index}" onchange="cambiarCampoGrafico(${index}, this.value)">
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === config.campo ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                `;
+                break;
+            case 'bubble':
+                // Necesita 3 campos
+                controlesHTML = `
+                    <select id="select-campo-${index}" onchange="cambiarCampoGrafico(${index}, this.value)">
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === config.campo ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                    <select id="select-campo-valor-${index}" onchange="cambiarCampoValorGrafico(${index}, this.value)">
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === (config.campoValor || config.campo) ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                    <select id="select-campo-z-${index}" onchange="cambiarCampoZGrafico(${index}, this.value)">
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === config.campoZ ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                `;
+                break;
+            default:
+                // La mayoría usa 1 o 2 campos
+                controlesHTML = `
+                    <select id="select-campo-${index}" onchange="cambiarCampoGrafico(${index}, this.value)">
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === config.campo ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                    <select id="select-campo-valor-${index}" onchange="cambiarCampoValorGrafico(${index}, this.value)">
+                        <option value="">(Conteo automático)</option>
+                        ${campos.map(campo => 
+                            `<option value="${campo}" ${campo === config.campoValor ? 'selected' : ''}>${campo}</option>`
+                        ).join('')}
+                    </select>
+                `;
+        }
+        
+        html += `
+            <div class="grafico-container" id="grafico-container-${index}">
+                <button class="boton-eliminar-grafico" onclick="eliminarGrafico(${index})" title="Eliminar gráfico">
+                    ×
+                </button>
+                <div class="grafico-header">
+                    <input type="text" 
+                           class="titulo-grafico" 
+                           value="${tituloFinal}" 
+                           onblur="cambiarTituloGrafico(${index}, this.value)"
+                           onkeypress="manejarEnterTitulo(event, ${index}, this)"
+                           placeholder="Escribe el título del gráfico..."
+                           title="Haz clic para editar el título (Enter para guardar)">
+                    <div class="controles-grafico">
+                        <select onchange="cambiarTipoGrafico(${index}, this.value)">
+                            ${tiposGraficosDisponibles.map(tipo => 
+                                `<option value="${tipo}" ${tipo === config.tipo ? 'selected' : ''}>
+                                    ${nombresGraficosEspanol[tipo] || tipo}
+                                </option>`
+                            ).join('')}
+                        </select>
+                        ${controlesHTML}
+                    </div>
+                </div>
+                <div class="grafico-content" id="grafico-${index}"></div>
+            </div>
+        `;
+    });
+    
+    // Si no hay gráficos, mostrar mensaje
+    if (configuracionGraficos.length === 0) {
+        html = `
+            <div class="grafico-container" style="text-align: center; padding: 50px;">
+                <h3 style="color: #666; margin-bottom: 20px;">🎨 No hay gráficos</h3>
+                <p style="color: #888; margin-bottom: 30px;">Agrega tu primer gráfico usando el botón superior</p>
+                <button class="btn" onclick="mostrarModalNuevoGrafico()" style="padding: 12px 24px;">
+                    ➕ Crear Mi Primer Gráfico
+                </button>
+            </div>
+        `;
+    }
+    
+    contenedor.innerHTML = html;
+    actualizarContadorGraficos();
+    actualizarTodosLosGraficos();
+}
+
+// Nueva función para manejar cambios en el campo Z
+function cambiarCampoZGrafico(indice, campoZ) {
+    configuracionGraficos[indice].campoZ = campoZ || null;
+    actualizarGrafico(indice);
+}
+
+// Actualizar contador de gráficos
+function actualizarContadorGraficos() {
+    document.getElementById('contadorGraficos').textContent = configuracionGraficos.length;
+}
+        // Actualizar gráfico específico
+function actualizarGrafico(indice) {
+    const config = configuracionGraficos[indice];
+    const datosParaGrafico = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    if (datosParaGrafico.length === 0) {
+        const graficoElement = document.getElementById(`grafico-${indice}`);
+        graficoElement.innerHTML = '<div style="text-align: center; padding: 50px; color: #666;">No hay datos para mostrar</div>';
+        return;
+    }
+    
+    // Verificar que los campos existan
+    const camposDisponibles = Object.keys(datosParaGrafico[0]);
+    if (!camposDisponibles.includes(config.campo)) {
+        config.campo = camposDisponibles[0] || 'campo';
+    }
+    if (config.campoValor && !camposDisponibles.includes(config.campoValor)) {
+        config.campoValor = null;
+    }
+    if (config.campoZ && !camposDisponibles.includes(config.campoZ)) {
+        config.campoZ = null;
+    }
+    
+    let trace;
+    const colores = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+    
+    try {
+        switch(config.tipo) {
+            case 'bar':
+                // Barras puede funcionar con una o dos variables
+                if (config.campoValor) {
+                    // Dos variables: agrupar por categoría y sumar valores
+                    const datosBarras = agruparDatos(datosParaGrafico, config.campo, config.campoValor);
+                    trace = {
+                        x: Object.keys(datosBarras),
+                        y: Object.values(datosBarras),
+                        type: 'bar',
+                        marker: { color: colores },
+                        name: `${config.campoValor} por ${config.campo}`
+                    };
+                } else {
+                    // Una variable: contar frecuencias
+                    const frecuencias = {};
+                    datosParaGrafico.forEach(item => {
+                        const valor = item[config.campo];
+                        if (valor !== undefined && valor !== null && valor !== '') {
+                            frecuencias[valor] = (frecuencias[valor] || 0) + 1;
+                        }
+                    });
+                    trace = {
+                        x: Object.keys(frecuencias),
+                        y: Object.values(frecuencias),
+                        type: 'bar',
+                        marker: { color: colores },
+                        name: `Conteo de ${config.campo}`
+                    };
+                }
+                break;
+                
+            case 'line':
+                // Líneas puede funcionar con una o dos variables
+                if (config.campoValor) {
+                    const datosLinea = agruparDatos(datosParaGrafico, config.campo, config.campoValor);
+                    trace = {
+                        x: Object.keys(datosLinea),
+                        y: Object.values(datosLinea),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        line: { color: colores[0], width: 3 },
+                        name: `${config.campoValor} por ${config.campo}`
+                    };
+                } else {
+                    // Para una variable, mostrar tendencia del conteo
+                    const valoresOrdenados = [...new Set(datosParaGrafico.map(d => d[config.campo]))].sort();
+                    const conteos = valoresOrdenados.map(valor => 
+                        datosParaGrafico.filter(d => d[config.campo] === valor).length
+                    );
+                    trace = {
+                        x: valoresOrdenados,
+                        y: conteos,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        line: { color: colores[0], width: 3 },
+                        name: `Conteo de ${config.campo}`
+                    };
+                }
+                break;
+                
+            case 'scatter':
+                const xValues = datosParaGrafico.map(d => d[config.campo]);
+                const yValues = datosParaGrafico.map(d => d[config.campoValor]);
+                trace = {
+                    x: xValues,
+                    y: yValues,
+                    mode: 'markers',
+                    type: 'scatter',
+                    marker: { 
+                        size: 10,
+                        color: colores[0]
+                    },
+                    name: `${config.campoValor} vs ${config.campo}`
+                };
+                break;
+                
+            case 'pie':
+                const datosPie = agruparDatos(datosParaGrafico, config.campo, config.campoValor);
+                trace = {
+                    labels: Object.keys(datosPie),
+                    values: Object.values(datosPie),
+                    type: 'pie',
+                    hole: 0.4,
+                    marker: { colors: colores },
+                    name: `${config.campoValor} por ${config.campo}`
+                };
+                break;
+                
+            case 'doughnut':
+                const datosDona = agruparDatos(datosParaGrafico, config.campo, config.campoValor);
+                trace = {
+                    labels: Object.keys(datosDona),
+                    values: Object.values(datosDona),
+                    type: 'pie',
+                    hole: 0.6,
+                    marker: { colors: colores },
+                    name: `${config.campoValor} por ${config.campo}`
+                };
+                break;
+                
+            case 'area':
+                const datosArea = agruparDatos(datosParaGrafico, config.campo, config.campoValor);
+                trace = {
+                    x: Object.keys(datosArea),
+                    y: Object.values(datosArea),
+                    type: 'scatter',
+                    mode: 'lines',
+                    fill: 'tozeroy',
+                    line: { color: colores[0] },
+                    name: `${config.campoValor} por ${config.campo}`
+                };
+                break;
+                
+            case 'bubble':
+                // CORRECCIÓN: Mejor manejo de datos para gráfico de burbujas
+                const xBubble = datosParaGrafico.map(d => d[config.campo]);
+                const yBubble = datosParaGrafico.map(d => d[config.campoValor]);
+                
+                // Usar campo Z si está disponible, de lo contrario usar valores constantes
+                let zBubble;
+                if (config.campoZ && camposDisponibles.includes(config.campoZ)) {
+                    zBubble = datosParaGrafico.map(d => d[config.campoZ] || 10);
+                } else {
+                    // Si no hay campo Z, usar valores basados en la frecuencia
+                    zBubble = Array(xBubble.length).fill(20);
+                }
+                
+                // CORRECCIÓN: Mejor normalización de tamaños
+                const maxZ = Math.max(...zBubble.filter(z => !isNaN(z)));
+                const minZ = Math.min(...zBubble.filter(z => !isNaN(z)));
+                const rangeZ = maxZ - minZ;
+                
+                // Si todos los valores son iguales, usar tamaño uniforme
+                const sizes = rangeZ === 0 ? 
+                    Array(zBubble.length).fill(20) :
+                    zBubble.map(z => {
+                        if (isNaN(z)) return 10;
+                        return ((z - minZ) / rangeZ) * 30 + 10; // Tamaños entre 10 y 40
+                    });
+                
+                trace = {
+                    x: xBubble,
+                    y: yBubble,
+                    mode: 'markers',
+                    type: 'scatter',
+                    marker: {
+                        size: sizes,
+                        color: colores[0],
+                        sizemode: 'area',
+                        sizeref: 2 * maxZ / (40 ** 2),
+                        sizemin: 4
+                    },
+                    name: `${config.campoValor} vs ${config.campo}`
+                };
+                break;
+                
+            case 'box':
+                // Para box plot, puede funcionar con una o dos variables
+                if (config.campoValor) {
+                    // Agrupar por categoría
+                    const grupos = {};
+                    datosParaGrafico.forEach(d => {
+                        const categoria = d[config.campo];
+                        const valor = d[config.campoValor];
+                        if (valor !== null && !isNaN(valor)) {
+                            if (!grupos[categoria]) grupos[categoria] = [];
+                            grupos[categoria].push(valor);
+                        }
+                    });
+                    
+                    trace = Object.keys(grupos).map((categoria, idx) => ({
+                        y: grupos[categoria],
+                        name: categoria,
+                        type: 'box',
+                        marker: { color: colores[idx % colores.length] }
+                    }));
+                } else {
+                    // Una variable: usar todos los valores numéricos del campo
+                    const valoresBox = datosParaGrafico
+                        .map(d => d[config.campo])
+                        .filter(valor => valor !== null && !isNaN(valor));
+                    
+                    trace = [{
+                        y: valoresBox,
+                        type: 'box',
+                        marker: { color: colores[0] },
+                        name: config.campo
+                    }];
+                }
+                break;
+                
+            case 'violin':
+                // Violin plot puede funcionar con una o dos variables
+                if (config.campoValor) {
+                    const gruposViolin = {};
+                    datosParaGrafico.forEach(d => {
+                        const categoria = d[config.campo];
+                        const valor = d[config.campoValor];
+                        if (valor !== null && !isNaN(valor)) {
+                            if (!gruposViolin[categoria]) gruposViolin[categoria] = [];
+                            gruposViolin[categoria].push(valor);
+                        }
+                    });
+                    
+                    trace = Object.keys(gruposViolin).map((categoria, idx) => ({
+                        y: gruposViolin[categoria],
+                        name: categoria,
+                        type: 'violin',
+                        marker: { color: colores[idx % colores.length] }
+                    }));
+                } else {
+                    // Una variable: usar todos los valores numéricos del campo
+                    const valoresViolin = datosParaGrafico
+                        .map(d => d[config.campo])
+                        .filter(valor => valor !== null && !isNaN(valor));
+                    
+                    trace = [{
+                        y: valoresViolin,
+                        type: 'violin',
+                        marker: { color: colores[0] },
+                        name: config.campo
+                    }];
+                }
+                break;
+                
+            case 'histogram':
+                // Histograma siempre usa una variable
+                const valoresHistograma = datosParaGrafico
+                    .map(d => d[config.campo])
+                    .filter(valor => valor !== null && !isNaN(valor));
+                
+                if (valoresHistograma.length === 0) {
+                    throw new Error('No hay valores numéricos válidos para el histograma');
+                }
+                
+                trace = {
+                    x: valoresHistograma,
+                    type: 'histogram',
+                    marker: { 
+                        color: colores[0],
+                        line: {
+                            color: '#333',
+                            width: 1
+                        }
+                    },
+                    opacity: 0.7,
+                    nbinsx: Math.min(20, Math.ceil(Math.sqrt(valoresHistograma.length))),
+                    name: `Distribución de ${config.campo}`
+                };
+                break;
+                
+            case 'heatmap':
+                // Heatmap necesita dos variables
+                const categoriasX = [...new Set(datosParaGrafico.map(d => d[config.campo]))].slice(0, 20);
+                const categoriasY = [...new Set(datosParaGrafico.map(d => d[config.campoValor]))].slice(0, 20);
+                
+                const z = categoriasY.map(y => 
+                    categoriasX.map(x => {
+                        const items = datosParaGrafico.filter(d => d[config.campo] === x && d[config.campoValor] === y);
+                        if (items.length === 0) return 0;
+                        
+                        // Calcular promedio o suma según el campo disponible
+                        const campoCalculo = config.campoZ || config.campoValor;
+                        const valores = items.map(item => item[campoCalculo]).filter(v => v !== null && !isNaN(v));
+                        if (valores.length === 0) return 0;
+                        
+                        return valores.reduce((sum, val) => sum + val, 0) / valores.length; // Promedio
+                    })
+                );
+                
+                trace = {
+                    x: categoriasX,
+                    y: categoriasY,
+                    z: z,
+                    type: 'heatmap',
+                    colorscale: 'Viridis',
+                    hoverongaps: false,
+                    name: `Mapa de calor ${config.campo} vs ${config.campoValor}`
+                };
+                break;
+                
+            default:
+                // Por defecto, intentar con una variable (conteo)
+                const frecuenciasDefault = {};
+                datosParaGrafico.forEach(item => {
+                    const valor = item[config.campo];
+                    if (valor !== undefined && valor !== null && valor !== '') {
+                        frecuenciasDefault[valor] = (frecuenciasDefault[valor] || 0) + 1;
+                    }
+                });
+                trace = {
+                    x: Object.keys(frecuenciasDefault),
+                    y: Object.values(frecuenciasDefault),
+                    type: 'bar',
+                    marker: { color: colores },
+                    name: `Conteo de ${config.campo}`
+                };
+        }
+        
+        const layout = {
+            margin: { t: 40, r: 30, b: 50, l: 50 },
+            showlegend: ['pie', 'doughnut', 'box', 'violin'].includes(config.tipo) || 
+                       (Array.isArray(trace) && trace.length > 1),
+            height: 350,
+            title: config.titulo,
+            hovermode: 'closest',
+            // Layout específico para histograma
+            ...(config.tipo === 'histogram' && {
+                xaxis: { title: config.campo },
+                yaxis: { title: 'Frecuencia' },
+                bargap: 0.05
+            }),
+            // Layout específico para burbujas
+            ...(config.tipo === 'bubble' && {
+                xaxis: { title: config.campo },
+                yaxis: { title: config.campoValor }
+            }),
+            // Layout específico para scatter
+            ...(config.tipo === 'scatter' && {
+                xaxis: { title: config.campo },
+                yaxis: { title: config.campoValor }
+            }),
+            // Layout específico para box plot de una variable
+            ...(config.tipo === 'box' && !config.campoValor && {
+                xaxis: { showticklabels: false },
+                yaxis: { title: config.campo }
+            }),
+            // Layout específico para violin plot de una variable
+            ...(config.tipo === 'violin' && !config.campoValor && {
+                xaxis: { showticklabels: false },
+                yaxis: { title: config.campo }
+            })
+        };
+        
+        const configPlotly = {
+            responsive: true,
+            displayModeBar: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d']
+        };
+        
+        const graficoElement = document.getElementById(`grafico-${indice}`);
+        const data = Array.isArray(trace) ? trace : [trace];
+        
+        Plotly.react(graficoElement, data, layout, configPlotly)
+            .then(function(gd) {
+                graficosInstancias.set(indice, gd);
+                
+                // Configurar evento de clic para filtros cruzados
+                gd.on('plotly_click', function(data) {
+                    if (data.points && data.points.length > 0) {
+                        const punto = data.points[0];
+                        let valorFiltro;
+                        let campoFiltro = config.campo;
+                        
+                        if (['pie', 'doughnut'].includes(config.tipo)) {
+                            valorFiltro = punto.label;
+                        } else if (config.tipo === 'scatter' || config.tipo === 'bubble') {
+                            // Para scatter, usar el valor del punto en el eje X
+                            valorFiltro = punto.x;
+                        } else if (config.tipo === 'histogram') {
+                            // Para histograma, usar el rango del bin
+                            valorFiltro = `Bin ${punto.binNumber}`;
+                        } else if (['box', 'violin'].includes(config.tipo) && config.campoValor) {
+                            // Para box/violin con categorías, usar la categoría
+                            valorFiltro = punto.data.name;
+                        } else {
+                            valorFiltro = punto.x;
+                        }
+                        
+                        aplicarFiltroCruzado(campoFiltro, valorFiltro);
+                    }
+                });
+            });
+            
+    } catch (error) {
+        console.error(`Error creando gráfico ${config.tipo}:`, error);
+        const graficoElement = document.getElementById(`grafico-${indice}`);
+        graficoElement.innerHTML = `
+            <div style="text-align: center; padding: 50px; color: #dc3545;">
+                <h4>❌ Error en el gráfico</h4>
+                <p>No se pudo crear el gráfico de tipo "${config.tipo}"</p>
+                <small>Error: ${error.message}</small>
+                <br>
+                <button class="btn" onclick="eliminarGrafico(${indice})" style="margin-top: 10px;">
+                    Eliminar este gráfico
+                </button>
+            </div>
+        `;
+    }
+}
+        // Aplicar filtro cruzado
+        function aplicarFiltroCruzado(campo, valor) {
+            filtrosCruzadosActivos.set(campo, valor);
+            aplicarFiltrosYActualizar();
+            inicializarControlesTablaFrecuencias();
+
+        }
+
+        // Remover filtro cruzado específico
+        function removerFiltroCruzado(campo) {
+            filtrosCruzadosActivos.delete(campo);
+            aplicarFiltrosYActualizar();
+            inicializarControlesTablaFrecuencias();
+
+        }
+
+        // Limpiar todos los filtros
+        function limpiarTodosLosFiltros() {
+            filtrosCruzadosActivos.clear();
+            aplicarFiltrosYActualizar();
+            inicializarControlesTablaFrecuencias();
+
+        }
+
+        // Exportar datos filtrados
+        function exportarDatosFiltrados() {
+            const datosParaExportar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+            
+            if (datosParaExportar.length === 0) {
+                alert('No hay datos para exportar');
+                return;
+            }
+            
+            const csv = Papa.unparse(datosParaExportar);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'datos_filtrados.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Actualizar todos los gráficos
+        function actualizarTodosLosGraficos() {
+            configuracionGraficos.forEach((_, indice) => {
+                actualizarGrafico(indice);
+            });
+            actualizarEstadisticas();
+        }
+
+        // Agrupar datos
+function agruparDatos(datos, campo, campoSuma) {
+    return datos.reduce((acc, item) => {
+        const key = item[campo];
+        if (key !== undefined && key !== null && key !== '') {
+            const valor = item[campoSuma];
+            // Solo sumar si el valor es numérico
+            if (typeof valor === 'number' && !isNaN(valor)) {
+                acc[key] = (acc[key] || 0) + valor;
+            } else if (!acc[key]) {
+                // Si no es numérico, contar ocurrencias
+                acc[key] = 1;
+            } else {
+                acc[key] += 1;
+            }
+        }
+        return acc;
+    }, {});
+}
+
+        // Actualizar UI (filtros activos, contadores, etc.)
+        function actualizarUI() {
+            const panelFiltros = document.getElementById('filtrosCruzadosPanel');
+            const contenedorFiltros = document.getElementById('filtrosActivosContainer');
+            const contadorDatos = document.getElementById('contadorDatos');
+            const totalDatos = document.getElementById('totalDatos');
+            const porcentajeDatos = document.getElementById('porcentajeDatos');
+            
+            // Mostrar/ocultar panel de filtros
+            if (filtrosCruzadosActivos.size > 0) {
+                panelFiltros.classList.add('activo');
+            } else {
+                panelFiltros.classList.remove('activo');
+            }
+            
+            // Actualizar filtros activos
+            contenedorFiltros.innerHTML = '';
+            filtrosCruzadosActivos.forEach((valor, campo) => {
+                const filtroElement = document.createElement('div');
+                filtroElement.className = 'filtro-activo';
+                filtroElement.innerHTML = `
+                    📊 ${campo}: <strong>${valor}</strong>
+                    <button onclick="removerFiltroCruzado('${campo}')" title="Eliminar filtro">×</button>
+                `;
+                contenedorFiltros.appendChild(filtroElement);
+            });
+            
+            // Actualizar contadores
+            const total = datosOriginales.length;
+            const filtrados = datosFiltrados.length;
+            const porcentaje = total > 0 ? Math.round((filtrados / total) * 100) : 0;
+            
+            contadorDatos.textContent = filtrados;
+            totalDatos.textContent = total;
+            porcentajeDatos.textContent = `${porcentaje}%`;
+            
+            // Actualizar estilos de gráficos
+            configuracionGraficos.forEach((_, indice) => {
+                const container = document.getElementById(`grafico-container-${indice}`);
+                if (filtrosCruzadosActivos.size > 0) {
+                    container.classList.add('filtrado');
+                } else {
+                    container.classList.remove('filtrado');
+                }
+            });
+        }
+
+        // Función para capturar gráficos como imágenes
+        async function capturarGraficosComoImagenes() {
+            console.log('📸 Iniciando captura de gráficos...');
+            const imagenes = [];
+            
+            for (let i = 0; i < configuracionGraficos.length; i++) {
+                try {
+                    const gd = graficosInstancias.get(i);
+                    if (gd) {
+                        const imagen = await Plotly.toImage(gd, {
+                            format: 'png',
+                            width: 800,
+                            height: 600
+                        });
+                        imagenes.push({
+                            titulo: configuracionGraficos[i].titulo,
+                            imagen: imagen
+                        });
+                        console.log(`✅ Gráfico ${i + 1} capturado`);
+                    }
+                } catch (error) {
+                    console.warn(`⚠️ Error capturando gráfico ${i + 1}:`, error);
+                }
+            }
+            
+            return imagenes;
+        }
+
+async function generarReporteCompleto() {
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    
+    if (datosParaAnalizar.length === 0) {
+        alert('No hay datos para analizar');
+        return;
+    }
+
+    mostrarCargaAnalisis();
+
+    try {
+        // 1. Análisis tradicional automático
+        const analizador = new AnalizadorDashboard(datosParaAnalizar);
+        const analisis = analizador.analizarCompleto();
+
+        // 2. Obtener tabla de frecuencias actual
+        const tablaFrecuencias = obtenerTablaFrecuenciasActual();
+        
+        // 3. Capturar gráficos y datos reales
+        console.log('📊 Preparando análisis completo...');
+        const graficosComoImagenes = await capturarGraficosComoImagenes();
+        const datosGraficosReales = await obtenerDatosRealesDeGraficos();
+        
+        // 4. Análisis con DeepSeek - enfoque profesional
+        const iaGenerador = new DeepSeekGeneradorInformes();
+        const informeIA = await iaGenerador.generarInformeAnalitico(
+            analisis, 
+            configuracionGraficos, 
+            datosGraficosReales,
+            tablaFrecuencias,
+            estadisticasPersonalizadas
+        );
+        
+        // 5. GUARDAR DATOS GLOBALMENTE PARA LA DESCARGA - AQUÍ VAN LAS LÍNEAS
+        window.analisisActual = analisis;
+        window.configuracionGraficos = configuracionGraficos;
+        window.tablaFrecuenciasActual = tablaFrecuencias;
+        window.estadisticasPersonalizadas = estadisticasPersonalizadas;
+        
+        // 6. MOSTRAR BOTÓN DE DESCARGA DESPUÉS DEL ANÁLISIS
+        mostrarResultadosAnalisis(analisis, informeIA, true);
+        
+        mostrarMensaje('✅ Análisis con IA generado correctamente. Usa el botón "Descargar Reporte Completo PDF" para exportar.');
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al generar reporte: ' + error.message);
+    }
+}
+// NUEVA FUNCIÓN: Obtener datos reales de cada gráfico
+async function obtenerDatosRealesDeGraficos() {
+    const datosGraficos = [];
+    
+    for (let i = 0; i < configuracionGraficos.length; i++) {
+        const config = configuracionGraficos[i];
+        const datosParaGrafico = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+        
+        if (datosParaGrafico.length === 0) {
+            datosGraficos.push(null);
+            continue;
+        }
+        
+        // Obtener datos agrupados según la configuración del gráfico
+        const datosAgrupados = agruparDatos(datosParaGrafico, config.campo, config.campoValor || config.campo);
+        datosGraficos.push(datosAgrupados);
+    }
+    
+    return datosGraficos;
+}
+// Función auxiliar para obtener la tabla de frecuencias actual
+function obtenerTablaFrecuenciasActual() {
+    const variableSeleccionada = document.getElementById('variableSeleccionada').value;
+    const tipoVariable = document.getElementById('tipoVariable').value;
+    const tipoTabla = document.getElementById('tipoTabla').value;
+    
+    if (!variableSeleccionada) return null;
+    
+    const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    const valores = datosParaAnalizar.map(item => item[variableSeleccionada]);
+    
+    if (tipoVariable === 'cuantitativa') {
+        const valoresNumericos = valores.map(v => parseFloat(v)).filter(v => !isNaN(v));
+        if (tipoTabla === 'agrupada') {
+            const cantidadIntervalos = document.getElementById('cantidadIntervalos').value;
+            return generarTablaAgrupada(valoresNumericos, cantidadIntervalos);
+        } else {
+            return generarTablaSimple(valoresNumericos);
+        }
+    } else {
+        return generarTablaCualitativa(valores);
+    }
+}
+        function verAnalisisCompleto() {
+            const datosParaAnalizar = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+            const analizador = new AnalizadorDashboard(datosParaAnalizar);
+            const analisis = analizador.analizarCompleto();
+            
+            // Aquí podrías abrir un modal o nueva ventana con el análisis completo
+            console.log('Análisis completo:', analisis);
+            alert('Análisis completo mostrado en consola. Revisa la pestaña de Developer Tools.');
+        }
+
+        // Mostrar mensaje
+        function mostrarMensaje(mensaje) {
+            // Implementación simple de notificación
+            console.log(mensaje);
+            
+            // Opción mejorada: mostrar notificación en pantalla
+            const notificacion = document.createElement('div');
+            notificacion.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-family: 'Comic Neue', cursive;
+                box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
+            `;
+            notificacion.textContent = mensaje;
+            document.body.appendChild(notificacion);
+            
+            setTimeout(() => {
+                if (document.body.contains(notificacion)) {
+                    document.body.removeChild(notificacion);
+                }
+            }, 3000);
+        }
+// Agregar esta función en la sección de funciones del archivo dem.html
+function mostrarCargaAnalisis() {
+    const panel = document.getElementById('panelAnalisis');
+    const contenedor = document.getElementById('resultadosAnalisis');
+    
+    panel.style.display = 'block';
+    contenedor.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+            <div class="spinner"></div>
+            <h4 style="color: #C2185B; margin-top: 20px;">🤖 Generando Análisis con IA</h4>
+            <p style="color: #666;">Estamos procesando tus datos y generando un informe completo...</p>
+            <p style="color: #888; font-size: 12px;">Esto puede tomar unos segundos</p>
+        </div>
+    `;
+}
+  function abrirMaterialsTeorico() {
+        window.open('materials.html');
+    }
+
+
+
+// Función para cambiar entre tipos de tabla de frecuencia
+function cambiarTipoTablaFrecuencia() {
+    const tipo = document.getElementById('tipoTablaFrecuencia').value;
+    const formularioSimple = document.getElementById('formularioSimple');
+    const formularioAgrupado = document.getElementById('formularioAgrupado');
+    
+    if (tipo === 'simple') {
+        formularioSimple.style.display = 'block';
+        formularioAgrupado.style.display = 'none';
+    } else {
+        formularioSimple.style.display = 'none';
+        formularioAgrupado.style.display = 'block';
+    }
+}
+
+// Función para generar intervalos automáticamente
+// Función para generar intervalos automáticamente
+function generarIntervalos() {
+    const longitud = parseFloat(document.getElementById('longitudIntervalo').value);
+    const minimo = parseFloat(document.getElementById('valorMinimo').value);
+    const maximo = parseFloat(document.getElementById('valorMaximo').value);
+    
+    // Verificar que los valores sean números válidos (incluyendo 0)
+    if (isNaN(longitud) || isNaN(minimo) || isNaN(maximo)) {
+        mostrarMensaje('❌ Completa todos los campos con valores numéricos');
+        return;
+    }
+    
+    if (minimo >= maximo) {
+        mostrarMensaje('❌ El valor mínimo debe ser menor al máximo');
+        return;
+    }
+    
+    if (longitud <= 0) {
+        mostrarMensaje('❌ La longitud del intervalo debe ser mayor a 0');
+        return;
+    }
+    
+    const contenedor = document.getElementById('contenedorIntervalos');
+    let html = '<table class="tabla-datos" style="width: 100%;">';
+    html += '<thead><tr><th>Intervalo</th><th>Frecuencia</th></tr></thead><tbody>';
+    
+    let inicio = minimo;
+    let contador = 0;
+    
+    while (inicio < maximo) {
+        const fin = Math.min(inicio + longitud, maximo);
+        const intervalo = `[${inicio.toFixed(2)} - ${fin.toFixed(2)})`;
+        
+        html += `
+            <tr>
+                <td>${intervalo}</td>
+                <td>
+                    <input type="number" id="frecuencia_${contador}" 
+                           min="0" value="0" style="width: 80px; padding: 5px;">
+                    <input type="hidden" id="intervalo_${contador}" value="${intervalo}">
+                </td>
+            </tr>
+        `;
+        
+        inicio = fin;
+        contador++;
+    }
+    
+    html += '</tbody></table>';
+    contenedor.innerHTML = html;
+    
+    document.getElementById('tablaFrecuenciasAgrupadas').style.display = 'block';
+    mostrarMensaje('✅ Intervalos generados correctamente');
+}
+
+// Función para cargar datos simples
+function cargarDatosSimples() {
+    const csvData = document.getElementById('datosSimple').value;
+    
+    try {
+        const resultados = Papa.parse(csvData, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true
+        });
+        
+        if (resultados.errors.length > 0) {
+            alert('Errores en el CSV: ' + resultados.errors.map(e => e.message).join(', '));
+            return;
+        }
+        
+        // Convertir datos simples a formato estándar
+        const datosConvertidos = [];
+        resultados.data.forEach(fila => {
+            for (let i = 0; i < fila.frecuencia; i++) {
+                datosConvertidos.push({
+                    variable: fila.variable,
+                    valor: fila.variable,
+                    frecuencia: fila.frecuencia
+                });
+            }
+        });
+        
+        datosOriginales = datosConvertidos;
+        generarInterfazGraficos();
+        aplicarFiltrosYActualizar();
+        inicializarControlesTablaFrecuencias();
+        mostrarMensaje('✅ Datos simples cargados correctamente');
+        
+    } catch (error) {
+        alert('Error al procesar datos simples: ' + error.message);
+    }
+}
+
+// Función para cargar datos agrupados
+function cargarDatosAgrupados() {
+    const datosAgrupados = [];
+    let contador = 0;
+    
+    // Recopilar todas las frecuencias
+    while (document.getElementById(`frecuencia_${contador}`)) {
+        const frecuencia = parseInt(document.getElementById(`frecuencia_${contador}`).value);
+        const intervalo = document.getElementById(`intervalo_${contador}`).value;
+        
+        if (frecuencia > 0) {
+            datosAgrupados.push({
+                intervalo: intervalo,
+                frecuencia: frecuencia,
+                marca_clase: calcularMarcaClase(intervalo)
+            });
+        }
+        contador++;
+    }
+    
+    if (datosAgrupados.length === 0) {
+        mostrarMensaje('❌ Ingresa al menos una frecuencia');
+        return;
+    }
+    
+    // Convertir a formato estándar para el dashboard
+    const datosConvertidos = [];
+    datosAgrupados.forEach(grupo => {
+        for (let i = 0; i < grupo.frecuencia; i++) {
+            datosConvertidos.push({
+                intervalo: grupo.intervalo,
+                marca_clase: grupo.marca_clase,
+                frecuencia: grupo.frecuencia,
+                valor: grupo.marca_clase // Para análisis numérico
+            });
+        }
+    });
+    
+    datosOriginales = datosConvertidos;
+    generarInterfazGraficos();
+    aplicarFiltrosYActualizar();
+    inicializarControlesTablaFrecuencias();
+    mostrarMensaje('✅ Datos agrupados cargados correctamente');
+}
+
+// Función auxiliar para calcular marca de clase
+function calcularMarcaClase(intervalo) {
+    const numeros = intervalo.match(/[\d\.]+/g);
+    if (numeros && numeros.length >= 2) {
+        const inicio = parseFloat(numeros[0]);
+        const fin = parseFloat(numeros[1]);
+        return (inicio + fin) / 2;
+    }
+    return 0;
+}
+
+
+
+
+// Función para guardar datos en localStorage
+function guardarDatosEnLocalStorage() {
+    try {
+        if (datosOriginales.length > 0) {
+            localStorage.setItem('estadisticamente_datos', JSON.stringify(datosOriginales));
+            localStorage.setItem('estadisticamente_ultima_actualizacion', new Date().toISOString());
+            console.log('💾 Datos guardados para uso offline');
+        }
+    } catch (e) {
+        console.warn('⚠️ No se pudieron guardar los datos en localStorage:', e);
+    }
+}
+
+// Función para cargar datos guardados
+function cargarDatosGuardados() {
+    try {
+        const datosGuardados = localStorage.getItem('estadisticamente_datos');
+        if (datosGuardados) {
+            datosOriginales = JSON.parse(datosGuardados);
+            const ultimaActualizacion = localStorage.getItem('estadisticamente_ultima_actualizacion');
+            console.log('📂 Datos cargados desde almacenamiento local');
+            console.log('🕐 Última actualización:', ultimaActualizacion);
+            usandoDatosOffline = true;
+            return true;
+        }
+    } catch (e) {
+        console.warn('❌ Error al cargar datos guardados:', e);
+    }
+    return false;
+}
+
+
+
+        // Inicializar al cargar la página
+        window.onload = inicializarDashboard;
+    </script>
+
+    <script src="chatbot.js"></script>
+</body>
+</html>
