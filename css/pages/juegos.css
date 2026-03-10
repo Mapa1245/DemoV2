@@ -1,0 +1,73 @@
+/**
+ * EstadísticaMente - Juegos Page Styles
+ * =====================================
+ * Estilos específicos para la página de actividades interactivas.
+ * Extraído de juegos.html para mejor mantenibilidad.
+ */
+
+/* ===========================
+   SELECTOR DE CICLOS
+   =========================== */
+
+.cycles-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--em-space-6);
+    margin: var(--em-space-8) 0;
+    flex-wrap: wrap;
+}
+
+.cycle-title {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-3xl);
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-4);
+    text-align: center;
+    border-bottom: var(--em-border-width-3) solid var(--em-primary-light);
+    padding-bottom: var(--em-space-3);
+}
+
+/* ===========================
+   CONTENEDOR DE JUEGOS
+   =========================== */
+
+.games-container {
+    display: none;
+    margin: var(--em-space-8) 0;
+    width: 100%;
+}
+
+.games-container.active {
+    display: block;
+    animation: em-fadeInUp var(--em-transition-slow);
+}
+
+/* ===========================
+   GRID DE JUEGOS
+   =========================== */
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--em-space-6);
+    margin-top: var(--em-space-6);
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cycles-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cycle-title {
+        font-size: var(--em-text-2xl);
+    }
+}

@@ -1,0 +1,178 @@
+/**
+ * EstadísticaMente - Home Page Styles
+ * ====================================
+ * Estilos específicos para la página principal (index.html).
+ * Extraído de index.html para mejor mantenibilidad.
+ */
+
+/* ===========================
+   BANNER DE INSTALACION PWA
+   =========================== */
+
+.install-app-banner {
+    background: linear-gradient(135deg, var(--em-primary) 0%, var(--em-primary-dark) 100%);
+    color: var(--em-white);
+    padding: var(--em-space-3) var(--em-space-5);
+    margin: 0;
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-sm);
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--em-shadow-primary);
+    border-bottom: var(--em-border-width-2) solid var(--em-primary-light);
+}
+
+.install-app-content {
+    display: flex;
+    align-items: center;
+    gap: var(--em-space-3);
+}
+
+.install-app-text {
+    font-weight: var(--em-font-bold);
+}
+
+.install-app-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--em-primary);
+    border: none;
+    padding: var(--em-space-2) var(--em-space-4);
+    border-radius: var(--em-radius-full);
+    cursor: pointer;
+    font-family: var(--em-font-heading);
+    font-weight: var(--em-font-bold);
+    font-size: var(--em-text-xs);
+    transition: var(--em-transition-all);
+    box-shadow: var(--em-shadow-sm);
+}
+
+.install-app-btn:hover {
+    background: var(--em-white);
+    transform: translateY(-2px);
+    box-shadow: var(--em-shadow-md);
+}
+
+.close-install-btn {
+    background: none;
+    border: none;
+    color: var(--em-white);
+    cursor: pointer;
+    font-size: var(--em-text-lg);
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--em-radius-circle);
+    transition: var(--em-transition-colors);
+}
+
+.close-install-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Ocultar cuando la app está instalada */
+.app-installed .install-app-banner {
+    display: none !important;
+}
+
+/* ===========================
+   HERO SECTION
+   =========================== */
+
+.hero-home {
+    text-align: center;
+    padding: var(--em-space-12) var(--em-space-4);
+    background: linear-gradient(135deg, var(--em-primary-lighter) 0%, var(--em-white) 100%);
+}
+
+.hero-home h1 {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-4xl);
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-4);
+}
+
+.hero-home p {
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-lg);
+    color: var(--em-text-secondary);
+    max-width: 600px;
+    margin: 0 auto var(--em-space-8);
+}
+
+/* ===========================
+   SECCIONES DE CONTENIDO
+   =========================== */
+
+.section-title {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-2xl);
+    color: var(--em-primary);
+    text-align: center;
+    margin-bottom: var(--em-space-6);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--em-space-6);
+    margin: var(--em-space-8) 0;
+}
+
+.feature-card {
+    background: var(--em-white);
+    padding: var(--em-space-6);
+    border-radius: var(--em-radius-lg);
+    text-align: center;
+    box-shadow: var(--em-shadow-sm);
+    transition: var(--em-transition-all);
+    border: var(--em-border-width-2) solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--em-shadow-md);
+    border-color: var(--em-primary-light);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: var(--em-space-4);
+}
+
+.feature-title {
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    color: var(--em-text-primary);
+    margin-bottom: var(--em-space-2);
+}
+
+.feature-description {
+    font-family: var(--em-font-body);
+    color: var(--em-text-secondary);
+    font-size: var(--em-text-sm);
+    line-height: var(--em-leading-relaxed);
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .install-app-banner {
+        flex-direction: column;
+        gap: var(--em-space-3);
+        text-align: center;
+    }
+    
+    .hero-home h1 {
+        font-size: var(--em-text-3xl);
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -25,6 +25,12 @@
 @import url('./components/tables.css');
 @import url('./components/modals.css');
 
+/* Pages - Estilos específicos por página */
+@import url('./pages/home.css');
+@import url('./pages/login.css');
+@import url('./pages/juegos.css');
+@import url('./pages/dashboard.css');
+
 /* 
  * NOTA: Los siguientes imports se activarán conforme se vayan creando los archivos.
  */

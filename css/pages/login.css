@@ -1,0 +1,125 @@
+/**
+ * EstadísticaMente - Login Page Styles
+ * =====================================
+ * Estilos específicos para la página de login.
+ * Extraído de login.html para mejor mantenibilidad.
+ */
+
+/* ===========================
+   CONTENEDOR PRINCIPAL
+   =========================== */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--em-primary) 0%, var(--em-accent) 100%);
+    padding: var(--em-space-8);
+}
+
+/* ===========================
+   CARD DE LOGIN
+   =========================== */
+
+.login-card {
+    background: var(--em-white);
+    border-radius: var(--em-radius-2xl);
+    padding: var(--em-space-12);
+    box-shadow: var(--em-shadow-2xl);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.login-logo {
+    width: 250px;
+    margin-bottom: var(--em-space-6);
+}
+
+.login-title {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-3xl);
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-2);
+}
+
+.login-subtitle {
+    color: var(--em-text-secondary);
+    margin-bottom: var(--em-space-8);
+    font-family: var(--em-font-body);
+}
+
+/* ===========================
+   FORMULARIO
+   =========================== */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--em-space-6);
+}
+
+/* Botón de login */
+.login-btn {
+    background: var(--em-primary);
+    color: var(--em-white);
+    border: none;
+    border-radius: var(--em-radius-md);
+    padding: var(--em-space-4);
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    font-weight: var(--em-font-bold);
+    cursor: pointer;
+    transition: var(--em-transition-all);
+    margin-top: var(--em-space-4);
+}
+
+.login-btn:hover {
+    background: var(--em-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--em-shadow-primary);
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+
+.login-footer {
+    margin-top: var(--em-space-8);
+    color: var(--em-text-secondary);
+    font-size: var(--em-text-sm);
+}
+
+.login-footer a {
+    color: var(--em-accent);
+    text-decoration: none;
+    font-weight: var(--em-font-semibold);
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: var(--em-space-4);
+    }
+    
+    .login-card {
+        padding: var(--em-space-8);
+    }
+    
+    .login-title {
+        font-size: var(--em-text-2xl);
+    }
+    
+    .login-logo {
+        width: 200px;
+    }
+}
