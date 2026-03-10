@@ -198,3 +198,44 @@ También hay clases utilitarias listas para usar:
 - `/app/material.html` - Agregado link a variables.css
 - `/app/materials.html` - Agregado link a variables.css
 - `/app/integracion-dashboard.html` - Mapeado variables locales al sistema global
+
+---
+
+## Archivos Modificados en Fase 2
+
+- `/app/css/base.css` - **NUEVO** - Reset, tipografía, utilidades
+- Todos los HTML → agregado link a `base.css`
+
+### Contenido de base.css:
+- **Reset CSS** mejorado (box-sizing, margin/padding reset)
+- **Tipografía unificada** (h1-h6 con fuentes correctas)
+- **Estilos de links** consistentes
+- **Utilidades de layout** (.em-flex, .em-container, etc.)
+- **Utilidades de espaciado** (.em-m-*, .em-p-*, etc.)
+- **Utilidades de texto** (.em-text-center, .em-font-bold, etc.)
+- **Animaciones base** (em-fadeIn, em-bounce, etc.)
+- **Estados interactivos** (focus, disabled)
+- **Responsive helpers** (.em-hide-mobile, .em-hide-desktop)
+- **Print styles**
+
+### Clases utilitarias disponibles:
+
+```html
+<!-- Layout -->
+<div class="em-container">...</div>
+<div class="em-flex em-items-center em-justify-between em-gap-4">...</div>
+
+<!-- Espaciado -->
+<div class="em-mt-4 em-mb-6 em-px-4">...</div>
+
+<!-- Texto -->
+<p class="em-text-center em-text-lg em-font-bold">...</p>
+
+<!-- Display -->
+<div class="em-hidden">Oculto</div>
+<div class="em-block">Visible</div>
+
+<!-- Animaciones -->
+<div class="em-animate-fadeIn">...</div>
+<div class="em-animate-bounce">...</div>
+```

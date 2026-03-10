@@ -14,14 +14,13 @@
 /* Variables y Tokens */
 @import url('./variables.css');
 
+/* Base - Reset, tipografía, utilidades */
+@import url('./base.css');
+
 /* 
  * NOTA: Los siguientes imports se activarán conforme se vayan creando los archivos.
  * Por ahora, los estilos existentes en styles.css siguen funcionando.
  */
-
-/* Base - Descomentar cuando esté listo
-@import url('./base.css');
-*/
 
 /* Layouts - Descomentar cuando estén listos
 @import url('./layouts/header.css');

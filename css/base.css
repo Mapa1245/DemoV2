@@ -1,0 +1,598 @@
+/**
+ * EstadísticaMente - Base Styles
+ * ==============================
+ * Reset, tipografía base y estilos fundamentales.
+ * 
+ * IMPORTANTE: Este archivo complementa styles.css, no lo reemplaza.
+ * Los estilos aquí usan las variables de variables.css
+ */
+
+/* ===========================
+   RESET MEJORADO
+   =========================== */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Prevenir ajustes de tamaño de fuente en iOS */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+/* ===========================
+   BODY BASE
+   =========================== */
+
+body {
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-base);
+    font-weight: var(--em-font-normal);
+    line-height: var(--em-leading-normal);
+    color: var(--em-text-primary);
+    background-color: var(--em-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   TIPOGRAFIA
+   =========================== */
+
+/* Títulos con fuente display (Patrick Hand) */
+h1, .em-h1 {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-4xl);
+    font-weight: var(--em-font-bold);
+    line-height: var(--em-leading-tight);
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-4);
+}
+
+h2, .em-h2 {
+    font-family: var(--em-font-display);
+    font-size: var(--em-text-3xl);
+    font-weight: var(--em-font-bold);
+    line-height: var(--em-leading-tight);
+    color: var(--em-primary);
+    margin-bottom: var(--em-space-3);
+}
+
+/* Subtítulos con fuente heading (Comic Neue) */
+h3, .em-h3 {
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-2xl);
+    font-weight: var(--em-font-bold);
+    line-height: var(--em-leading-tight);
+    color: var(--em-text-primary);
+    margin-bottom: var(--em-space-3);
+}
+
+h4, .em-h4 {
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-xl);
+    font-weight: var(--em-font-semibold);
+    line-height: var(--em-leading-tight);
+    color: var(--em-text-primary);
+    margin-bottom: var(--em-space-2);
+}
+
+h5, .em-h5 {
+    font-family: var(--em-font-heading);
+    font-size: var(--em-text-lg);
+    font-weight: var(--em-font-semibold);
+    line-height: var(--em-leading-normal);
+    color: var(--em-text-primary);
+    margin-bottom: var(--em-space-2);
+}
+
+h6, .em-h6 {
+    font-family: var(--em-font-body);
+    font-size: var(--em-text-base);
+    font-weight: var(--em-font-semibold);
+    line-height: var(--em-leading-normal);
+    color: var(--em-text-secondary);
+    margin-bottom: var(--em-space-2);
+}
+
+/* Párrafos */
+p {
+    margin-bottom: var(--em-space-4);
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* Texto pequeño */
+small, .em-small {
+    font-size: var(--em-text-sm);
+    color: var(--em-text-secondary);
+}
+
+/* Texto destacado */
+strong, b {
+    font-weight: var(--em-font-semibold);
+}
+
+em, i {
+    font-style: italic;
+}
+
+/* ===========================
+   LINKS
+   =========================== */
+
+a {
+    color: var(--em-accent);
+    text-decoration: none;
+    transition: var(--em-transition-colors);
+}
+
+a:hover {
+    color: var(--em-accent-dark);
+    text-decoration: underline;
+}
+
+a:focus {
+    outline: 2px solid var(--em-accent);
+    outline-offset: 2px;
+}
+
+/* Links en contexto primario (footer, etc) */
+.em-link-light {
+    color: var(--em-white);
+}
+
+.em-link-light:hover {
+    color: var(--em-primary-light);
+}
+
+/* ===========================
+   LISTAS
+   =========================== */
+
+ul, ol {
+    margin-bottom: var(--em-space-4);
+    padding-left: var(--em-space-6);
+}
+
+li {
+    margin-bottom: var(--em-space-2);
+}
+
+li:last-child {
+    margin-bottom: 0;
+}
+
+/* Listas sin estilo */
+.em-list-none {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* ===========================
+   IMAGENES Y MEDIA
+   =========================== */
+
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Imágenes inline */
+img.em-inline {
+    display: inline;
+}
+
+/* ===========================
+   FORMULARIOS BASE
+   =========================== */
+
+input,
+button,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* Remover estilos de autocompletado en WebKit */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px var(--em-white) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ===========================
+   TABLAS BASE
+   =========================== */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* ===========================
+   UTILIDADES DE LAYOUT
+   =========================== */
+
+/* Container principal */
+.em-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--em-space-4);
+    padding-right: var(--em-space-4);
+}
+
+.em-container-sm {
+    max-width: 800px;
+}
+
+.em-container-lg {
+    max-width: 1400px;
+}
+
+.em-container-fluid {
+    max-width: 100%;
+}
+
+/* Flexbox helpers */
+.em-flex {
+    display: flex;
+}
+
+.em-flex-col {
+    flex-direction: column;
+}
+
+.em-flex-wrap {
+    flex-wrap: wrap;
+}
+
+.em-items-center {
+    align-items: center;
+}
+
+.em-items-start {
+    align-items: flex-start;
+}
+
+.em-items-end {
+    align-items: flex-end;
+}
+
+.em-justify-center {
+    justify-content: center;
+}
+
+.em-justify-between {
+    justify-content: space-between;
+}
+
+.em-justify-around {
+    justify-content: space-around;
+}
+
+.em-gap-1 { gap: var(--em-space-1); }
+.em-gap-2 { gap: var(--em-space-2); }
+.em-gap-3 { gap: var(--em-space-3); }
+.em-gap-4 { gap: var(--em-space-4); }
+.em-gap-6 { gap: var(--em-space-6); }
+.em-gap-8 { gap: var(--em-space-8); }
+
+/* ===========================
+   UTILIDADES DE ESPACIADO
+   =========================== */
+
+/* Margin */
+.em-m-0 { margin: 0 !important; }
+.em-m-1 { margin: var(--em-space-1) !important; }
+.em-m-2 { margin: var(--em-space-2) !important; }
+.em-m-3 { margin: var(--em-space-3) !important; }
+.em-m-4 { margin: var(--em-space-4) !important; }
+.em-m-6 { margin: var(--em-space-6) !important; }
+.em-m-8 { margin: var(--em-space-8) !important; }
+.em-m-auto { margin: auto !important; }
+
+.em-mt-0 { margin-top: 0 !important; }
+.em-mt-1 { margin-top: var(--em-space-1) !important; }
+.em-mt-2 { margin-top: var(--em-space-2) !important; }
+.em-mt-3 { margin-top: var(--em-space-3) !important; }
+.em-mt-4 { margin-top: var(--em-space-4) !important; }
+.em-mt-6 { margin-top: var(--em-space-6) !important; }
+.em-mt-8 { margin-top: var(--em-space-8) !important; }
+
+.em-mb-0 { margin-bottom: 0 !important; }
+.em-mb-1 { margin-bottom: var(--em-space-1) !important; }
+.em-mb-2 { margin-bottom: var(--em-space-2) !important; }
+.em-mb-3 { margin-bottom: var(--em-space-3) !important; }
+.em-mb-4 { margin-bottom: var(--em-space-4) !important; }
+.em-mb-6 { margin-bottom: var(--em-space-6) !important; }
+.em-mb-8 { margin-bottom: var(--em-space-8) !important; }
+
+.em-mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+/* Padding */
+.em-p-0 { padding: 0 !important; }
+.em-p-1 { padding: var(--em-space-1) !important; }
+.em-p-2 { padding: var(--em-space-2) !important; }
+.em-p-3 { padding: var(--em-space-3) !important; }
+.em-p-4 { padding: var(--em-space-4) !important; }
+.em-p-6 { padding: var(--em-space-6) !important; }
+.em-p-8 { padding: var(--em-space-8) !important; }
+
+.em-py-1 { padding-top: var(--em-space-1) !important; padding-bottom: var(--em-space-1) !important; }
+.em-py-2 { padding-top: var(--em-space-2) !important; padding-bottom: var(--em-space-2) !important; }
+.em-py-3 { padding-top: var(--em-space-3) !important; padding-bottom: var(--em-space-3) !important; }
+.em-py-4 { padding-top: var(--em-space-4) !important; padding-bottom: var(--em-space-4) !important; }
+.em-py-6 { padding-top: var(--em-space-6) !important; padding-bottom: var(--em-space-6) !important; }
+
+.em-px-1 { padding-left: var(--em-space-1) !important; padding-right: var(--em-space-1) !important; }
+.em-px-2 { padding-left: var(--em-space-2) !important; padding-right: var(--em-space-2) !important; }
+.em-px-3 { padding-left: var(--em-space-3) !important; padding-right: var(--em-space-3) !important; }
+.em-px-4 { padding-left: var(--em-space-4) !important; padding-right: var(--em-space-4) !important; }
+.em-px-6 { padding-left: var(--em-space-6) !important; padding-right: var(--em-space-6) !important; }
+
+/* ===========================
+   UTILIDADES DE TEXTO
+   =========================== */
+
+.em-text-center { text-align: center !important; }
+.em-text-left { text-align: left !important; }
+.em-text-right { text-align: right !important; }
+
+.em-text-xs { font-size: var(--em-text-xs) !important; }
+.em-text-sm { font-size: var(--em-text-sm) !important; }
+.em-text-base { font-size: var(--em-text-base) !important; }
+.em-text-lg { font-size: var(--em-text-lg) !important; }
+.em-text-xl { font-size: var(--em-text-xl) !important; }
+.em-text-2xl { font-size: var(--em-text-2xl) !important; }
+.em-text-3xl { font-size: var(--em-text-3xl) !important; }
+
+.em-font-normal { font-weight: var(--em-font-normal) !important; }
+.em-font-medium { font-weight: var(--em-font-medium) !important; }
+.em-font-semibold { font-weight: var(--em-font-semibold) !important; }
+.em-font-bold { font-weight: var(--em-font-bold) !important; }
+
+.em-uppercase { text-transform: uppercase !important; }
+.em-lowercase { text-transform: lowercase !important; }
+.em-capitalize { text-transform: capitalize !important; }
+
+.em-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ===========================
+   UTILIDADES DE DISPLAY
+   =========================== */
+
+.em-hidden { display: none !important; }
+.em-block { display: block !important; }
+.em-inline { display: inline !important; }
+.em-inline-block { display: inline-block !important; }
+.em-flex { display: flex !important; }
+.em-grid { display: grid !important; }
+
+/* Visualmente oculto pero accesible para screen readers */
+.em-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ===========================
+   UTILIDADES DE POSICION
+   =========================== */
+
+.em-relative { position: relative !important; }
+.em-absolute { position: absolute !important; }
+.em-fixed { position: fixed !important; }
+.em-sticky { position: sticky !important; }
+
+/* ===========================
+   UTILIDADES DE OVERFLOW
+   =========================== */
+
+.em-overflow-auto { overflow: auto !important; }
+.em-overflow-hidden { overflow: hidden !important; }
+.em-overflow-visible { overflow: visible !important; }
+.em-overflow-x-auto { overflow-x: auto !important; }
+.em-overflow-y-auto { overflow-y: auto !important; }
+
+/* ===========================
+   UTILIDADES DE CURSOR
+   =========================== */
+
+.em-cursor-pointer { cursor: pointer !important; }
+.em-cursor-default { cursor: default !important; }
+.em-cursor-not-allowed { cursor: not-allowed !important; }
+
+/* ===========================
+   UTILIDADES DE INTERACCION
+   =========================== */
+
+.em-select-none { user-select: none !important; }
+.em-select-all { user-select: all !important; }
+.em-pointer-events-none { pointer-events: none !important; }
+.em-pointer-events-auto { pointer-events: auto !important; }
+
+/* ===========================
+   ANIMACIONES BASE
+   =========================== */
+
+@keyframes em-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes em-fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes em-fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes em-scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes em-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes em-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes em-bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Clases de animación */
+.em-animate-fadeIn { animation: em-fadeIn var(--em-transition-normal); }
+.em-animate-fadeInUp { animation: em-fadeInUp var(--em-transition-normal); }
+.em-animate-fadeInDown { animation: em-fadeInDown var(--em-transition-normal); }
+.em-animate-scaleIn { animation: em-scaleIn var(--em-transition-normal); }
+.em-animate-spin { animation: em-spin 1s linear infinite; }
+.em-animate-pulse { animation: em-pulse 2s ease-in-out infinite; }
+.em-animate-bounce { animation: em-bounce 2s infinite; }
+
+/* ===========================
+   ESTADOS INTERACTIVOS
+   =========================== */
+
+/* Focus visible para accesibilidad */
+:focus-visible {
+    outline: 2px solid var(--em-accent);
+    outline-offset: 2px;
+}
+
+/* Deshabilitar outline en focus por mouse */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Estado deshabilitado genérico */
+.em-disabled,
+[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ===========================
+   RESPONSIVE BREAKPOINTS
+   =========================== */
+
+/* Ocultar en móvil, mostrar en desktop */
+@media (max-width: 767px) {
+    .em-hide-mobile { display: none !important; }
+}
+
+@media (min-width: 768px) {
+    .em-hide-desktop { display: none !important; }
+}
+
+/* Ajustes de tipografía responsive */
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+    
+    h1, .em-h1 {
+        font-size: var(--em-text-3xl);
+    }
+    
+    h2, .em-h2 {
+        font-size: var(--em-text-2xl);
+    }
+    
+    h3, .em-h3 {
+        font-size: var(--em-text-xl);
+    }
+}
+
+/* ===========================
+   PRINT STYLES
+   =========================== */
+
+@media print {
+    *,
+    *::before,
+    *::after {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+    
+    img {
+        page-break-inside: avoid;
+    }
+    
+    p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+    }
+    
+    h2, h3 {
+        page-break-after: avoid;
+    }
+}
