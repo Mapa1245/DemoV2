@@ -1,0 +1,1827 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: white;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Encabezado */
+.header {
+    background-color: #ffffff;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.logo {
+    width: 300px;
+    height: auto;
+    max-width: 100%;
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-title {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 2.2rem;
+    color: #C2185B;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Ilustración */
+.illustration {
+    margin: 1.5rem 0;
+}
+
+.illustration-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+/* Botones */
+.buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.level-btn {
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+    padding: 1.5rem 1rem;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.level-btn.primary {
+    background-color: #C2185B;
+    color: white;
+}
+
+.level-btn.secondary {
+    background-color: #F8BBD0;
+}
+
+.level-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.level-btn:active {
+    transform: translateY(-2px);
+}
+
+/* Pie de página */
+.footer {
+    background-color: #C2185B;
+    padding: 1.5rem 0;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.footer-text {
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    flex: 1;
+}
+
+.footer-text a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-text a:hover {
+    text-decoration: underline;
+}
+
+.accessibility-icon,
+.character-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.accessibility-icon {
+    margin-right: auto;
+}
+
+.character-icon {
+    margin-left: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .level-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .accessibility-icon,
+    .character-icon {
+        position: static;
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .level-btn {
+        font-size: 1.1rem;
+        padding: 1.2rem 1rem;
+    }
+    
+    .logo {
+        width: 250px;
+    }
+    
+    .illustration-img {
+        width: 150px;
+    }
+}
+
+/* Chatbot Styles */
+/* Chatbot Styles - VERSIÓN CORREGIDA */
+.chat-avatar {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #C2185B;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10000; /* Aumentado para asegurar visibilidad */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    animation: bounce 2s infinite;
+}
+
+.chat-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+}
+
+.chat-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10001; /* Mayor que el avatar */
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #F8BBD0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.chat-window.hidden {
+    display: none;
+}
+
+.chat-header {
+    background: #C2185B;
+    color: white;
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-family: 'Comic Neue', cursive;
+    flex: 1;
+}
+
+.chat-avatar-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.close-chat-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-chat-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chat-messages div {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.chat-messages div strong {
+    color: #C2185B;
+}
+
+.chat-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.chat-form button {
+    background: #C2185B;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s;
+}
+
+.chat-form button:hover {
+    background: #A0154B;
+}
+
+/* Efecto de typing */
+.typing-animation {
+    color: #666;
+    font-style: italic;
+}
+
+.dot-typing {
+    position: relative;
+}
+
+.dot-typing::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Responsive para el chatbot */
+@media (max-width: 768px) {
+    .chat-window {
+        width: 90%;
+        height: 60vh;
+        right: 5%;
+        bottom: 80px;
+    }
+    
+    .chat-avatar {
+        bottom: 80px;
+        right: 20px;
+    }
+}
+/* Estilos específicos para nivel primario */
+.main-contentn1 {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: left;   
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-start; 
+}
+
+/* Título principal */
+.title-section {
+    text-align: center;
+    margin: 0;
+}
+
+.main-title {
+    font-family: 'Comic Neue', cursive;
+    font-size: 2.5rem;
+    color: #C2185B;
+    margin: 0;
+}
+
+/* Botón de ayuda */
+.help-btn {
+    background: #C2185B;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+     font-family: 'Comic Neue', cursive;
+    font-weight: 600;
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+}
+
+.help-btn:hover {
+    background: #A0154B;
+}
+
+/* Subtítulos de sección */
+.section-subtitle {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.8rem;
+    color: #C2185B;
+    text-align: left;
+    margin: 0rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+}
+
+/* Botones de carga */
+.load-buttons {
+.simple-state-4 {
+	width: 400px;
+	height: 67px;
+	padding: 8px;
+	background: #CC3181;
+	border-radius: 14px;
+	color: #FFFFFF;
+	font-family: "Economica";
+	font-weight: bold;
+	font-size: 36px;
+	line-height: 1.3;
+	text-align: center;
+	vertical-align: top;
+}
+}
+
+.load-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.load-btn.primary {
+    background: #C2185B;
+    color: white;
+}
+
+.load-btn.secondary {
+    background: #F8BBD0;
+    color: #333;
+}
+
+.load-btn.blue {
+    background: #4361ee;
+    color: white;
+}
+
+.load-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Contenedor de entrada */
+.input-container {
+    max-width: 600px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.input-container textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 15px;
+    border: 2px solid #F8BBD0;
+    border-radius: 12px;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.input-info {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+/* Opciones en fila */
+.options-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.option-group {
+    text-align: left;
+    flex: 1;
+    min-width: 250px;
+}
+
+.option-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.option-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 8px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 120px; /* Ancho fijo */
+    height: 100px; /* Alto fijo */
+    justify-content: center; 
+}
+
+.option-btn.active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.btn-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}
+
+/* Botones de función */
+.function-buttons {
+    display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+
+/* Resultados */
+.table-container {
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+
+.note-container {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border-left: 4px solid #4361ee;
+}
+
+.explanatory-note {
+    margin: 0;
+    font-style: italic;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.statistics-container {
+    margin: 2rem 0;
+}
+
+.statistic-result {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.statistic-result h3 {
+    color: #C2185B;
+    margin: 0 0 1rem 0;
+    font-family: 'Comic Neue', cursive;
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4361ee;
+    margin: 0;
+}
+
+.final-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.final-btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 12px;
+    background: #4361ee;
+    color: white;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 250px;
+}
+
+.final-btn:hover {
+    background: #3a56d4;
+    transform: translateY(-2px);
+}
+
+/* Botones de recursos */
+.resources-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.resource-btn {
+    padding: 12px 20px;
+    border: 2px solid #4361ee;
+    border-radius: 8px;
+    background: white;
+    color: #4361ee;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.resource-btn:hover {
+    background: #4361ee;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .help-btn {
+        position: static;
+        margin: 1rem auto;
+        display: block;
+    }
+    
+    .options-row {
+        flex-direction: column;
+    }
+    
+    .function-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .final-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .final-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    @media (max-width: 768px) {
+    .main-content {
+        align-items: center;
+        text-align: center;
+    }
+
+    .load-buttons,
+    .option-buttons,
+    .function-buttons,
+    .final-buttons,
+    .resources-buttons {
+        justify-content: center;
+    }
+}
+
+
+}
+
+
+.contenido-resultado {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.resultado-valor {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4361ee;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.explicacion {
+    font-style: italic;
+    color: #666;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.detalle-calculo {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border-left: 3px solid #4361ee;
+}
+
+.preview-tabla {
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.preview-tabla table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-tabla th,
+.preview-tabla td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.preview-tabla th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.grafico-resultado,
+.tabla-resultado,
+.media-resultado,
+.mediana-resultado,
+.moda-resultado,
+.pasos-resultado,
+.descarga-resultado {
+    line-height: 1.6;
+}
+
+.grafico-resultado p,
+.tabla-resultado p,
+.media-resultado p,
+.mediana-resultado p,
+.moda-resultado p,
+.pasos-resultado p,
+.descarga-resultado p {
+    margin: 5px 0;
+}
+
+.pasos-resultado ul,
+.descarga-resultado ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.pasos-resultado li,
+.descarga-resultado li {
+    margin: 5px 0;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Estilos para la tabla de frecuencia manual */
+.tabla-frecuencia-container {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tabla-frecuencia-container h3 {
+    color: #4361ee;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.tabla-instructions {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.fila-tabla {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.input-valor {
+    flex: 2;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.input-frecuencia {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btn-eliminar {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-eliminar:hover {
+    background: #c82333;
+}
+
+.controles-tabla {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-agregar {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-agregar:hover {
+    background: #218838;
+}
+
+.btn-generar {
+    background: #4361ee;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-generar:hover {
+    background: #3a56d4;
+}
+
+.btn-cancelar {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-cancelar:hover {
+    background: #5a6268;
+}
+
+
+/* Estilos específicos para Plotly */
+ .plotly .modebar {
+    background: transparent !important;
+}
+
+.plotly .modebar-btn {
+    color: #4361ee !important;
+}
+
+/* ESTILOS PARA GRÁFICOS - MANTENER SOLO ESTOS */
+
+.chart-container {
+    width: 100%;
+    margin: 20px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: 550px;
+}
+
+#chart-canvas {
+    width: 100%;
+    height: 500px;
+    background: white;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+   
+}
+/* Permitir que Plotly sea completamente responsive */
+.plotly .main-svg {
+    border-radius: 8px;
+}
+
+/* Asegurar que el contenedor principal ocupe espacio suficiente */
+.results-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: 200px;
+    min-height: 650px;
+}
+
+#pictograma-container {
+    width: 100%;
+    min-height: 400px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none; /* OCULTO POR DEFECTO */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Plotly responsive */
+.js-plotly-plot, 
+.js-plotly-plot .plot-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+/* CONTENEDORES DE OPCIONES MÁS ANCHOS */
+.input-section, .options-section, .functions-section, .final-section {
+    width: 100%;
+    max-width: 100%; /* Permitir que ocupen todo el ancho disponible */
+}
+/* CLASES ESPECÍFICAS PARA CONTENEDORES GRANDES */
+.large-container {
+    max-width: 1200px !important;
+}
+
+.full-width-section {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.large-chart {
+    min-height: 550px !important;
+    height: auto !important;
+}
+
+/* AJUSTES RESPONSIVE PARA PANTALLAS GRANDES */
+@media (min-width: 1200px) {
+    .main-contentn1 {
+        max-width: 1200px;
+        padding: 2rem;
+    }
+    
+
+    
+    #chart-canvas {
+        height: 550px !important;
+    }
+}
+
+/* GARANTIZAR QUE LOS GRÁFICOS USEN TODO EL ESPACIO */
+.plotly .plot-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.js-plotly-plot {
+    width: 100% !important;
+    height: 100% !important;
+}
+/* Asegurar que los contenedores de opciones tengan buen espaciado */
+.options-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.option-group {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+}
+
+
+
+#chart-canvas {
+    width: 100% !important;
+    height: 500px !important;
+    min-width: 100%;
+}
+
+/* Asegurar que Plotly sea responsive */
+.js-plotly-plot .plot-container .svg-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.plotly .main-svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+/* Estilos para la nueva disposición vertical */
+.function-buttons-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.function-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.function-btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #F8BBD0;
+    color: rgb(0, 0, 0);
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.function-btn:hover {
+    background: #F8BBD0;
+    transform: translateY(-2px);
+     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+
+.resultado-contenedor.mostrar {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos específicos para cada tipo de resultado */
+.grafico-info, .tabla-info, .media-info, .mediana-info, .moda-info {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+}
+
+.resultado-valor {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4361ee;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.explicacion {
+    font-style: italic;
+    color: #666;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.detalle-calculo {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border-left: 3px solid #4361ee;
+}
+    /* Estilos para la sección de resultados */
+    .results-section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 2px solid #e9ecef;
+    }
+
+
+
+    .pictograma-container {
+        width: 100%;
+        min-height: 400px;
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Estilos para contenedores de resultados */
+    .resultado-contenedor {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        display: none;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .resultado-contenedor h4 {
+        color: #4361ee;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #4361ee;
+        padding-bottom: 5px;
+    }
+
+    .contenido-resultado {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #4361ee;
+    }
+    /* Estilos para tabla de frecuencias completa */
+.tabla-completa-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 15px 0;
+}
+
+.tabla-completa-container h4 {
+    color: #4361ee;
+    text-align: center;
+    margin-bottom: 15px;
+    font-family: 'Comic Neue', cursive;
+    border-bottom: 2px solid #F8BBD0;
+    padding-bottom: 10px;
+}
+
+.tabla-info {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    border-left: 4px solid #4361ee;
+}
+
+.tabla-info p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.tabla-frecuencias-completa {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    min-width: 600px;
+}
+
+.tabla-frecuencias-completa th {
+    background: #4361ee;
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ddd;
+}
+
+.tabla-frecuencias-completa td {
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.tabla-frecuencias-completa tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.tabla-frecuencias-completa tbody tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s;
+}
+
+.total-row {
+    background: #e7f3ff !important;
+    font-weight: bold;
+}
+
+.total-row td {
+    border-top: 2px solid #4361ee !important;
+}
+
+/* Responsive para tablas */
+@media (max-width: 768px) {
+    .tabla-frecuencias-completa {
+        font-size: 12px;
+        min-width: 500px;
+    }
+    
+    .tabla-frecuencias-completa th,
+    .tabla-frecuencias-completa td {
+        padding: 8px 4px;
+    }
+    
+    .table-responsive {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+}
+
+.boton-estadistica.fucsia {
+    background: #C2185B !important;
+    color: white !important;
+    padding: 15px 20px !important;
+    border-radius: 12px !important;
+    font-family: 'Comic Neue', cursive !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: 10px !important;
+    border: none !important;
+}
+.boton-estadistica.fucsia:hover {
+    background: #A0154B !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(194, 24, 91, 0.3) !important;
+}
+
+.icono-boton {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Estilos para tabla con scroll limitado */
+.tabla-con-scroll {
+    max-height: 400px; /* Altura máxima para 6 filas aprox */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.tabla-con-scroll table {
+    margin-bottom: 0; /* Eliminar margen inferior */
+}
+
+.tabla-con-scroll .tabla-frecuencias-completa {
+    min-width: 600px; /* Mantener ancho mínimo */
+}
+
+/* Estilo para la barra de scroll */
+.tabla-con-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tabla-con-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.tabla-con-scroll::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.tabla-con-scroll::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+
+/* Estilos para botón de voz en Nivel Primario */
+.load-btn.blue.listening {
+  background: #f44336 !important;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Estilos para botones de opción activos */
+.option-btn.active {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border: 2px solid #4361ee;
+}
+
+.option-btn.primary.active {
+  background: linear-gradient(135deg, #3a56d4, #2f48b8);
+}
+
+.option-btn.secondary.active {
+  background: linear-gradient(135deg, #A0154B, #8A1240);
+}
+
+/* Estilos para el dashboard educativo */
+.educational-dashboard {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dashboard-header h3 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.btn-toggle {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stat-label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.chart-container {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.chart-container h4 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+}
+
+.chart-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.bar-label {
+    width: 120px;
+    font-size: 0.9rem;
+    color: #5a6c7d;
+}
+
+.bar {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    height: 25px;
+    border-radius: 4px;
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+.bar-value {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* ==================== ESTILOS CUBE.JS DASHBOARD ==================== */
+.educational-dashboard {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    color: white;
+}
+
+.dashboard-section h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.dashboard-header h3 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.btn-toggle {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stat-label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.chart-container {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.chart-container h4 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.chart-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 5px;
+}
+
+.bar-label {
+    width: 120px;
+    font-size: 0.9rem;
+    color: #5a6c7d;
+    font-weight: bold;
+}
+
+.bar {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    height: 25px;
+    border-radius: 4px;
+    position: relative;
+    transition: width 0.3s ease;
+    min-width: 30px;
+}
+
+.bar-value {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-charts {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+.user-info {
+        position: absolute;
+        right: 2rem;
+        top: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .logout-btn {
+        background: #C2185B;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Comic Neue', cursive;
+        font-size: 0.9rem;
+    }
+    
+    .logout-btn:hover {
+        background: #C2185B;
+    }
+
+    .tabla-frecuencia-container {
+    background: white;
+    border: 3px solid #F8BBD0;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.1);
+}
+
+.tabla-instructions {
+    background: #f8f0f5;
+    border: 1px solid #F8BBD0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Comic Neue', cursive;
+}
+
+.controles-tabla {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-agregar {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Comic Neue', cursive;
+    font-weight: bold;
+}
+
+.btn-generar {
+    background: #C2185B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Comic Neue', cursive;
+    font-weight: bold;
+}
+
+.btn-cancelar {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Comic Neue', cursive;
+    font-weight: bold;
+}
+
+.btn-agregar:hover { 
+    background: #218838; 
+    transform: translateY(-2px);
+}
+.btn-generar:hover { 
+    background: #A0154B; 
+    transform: translateY(-2px);
+}
+.btn-cancelar:hover { 
+    background: #5a6268; 
+    transform: translateY(-2px);
+}
+
+.input-valor:focus, .input-frecuencia:focus {
+    border-color: #C2185B !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1);
+}
+
+
+/* OffLine */
+
+/* Estilos para modo offline */
+.connection-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-family: 'Comic Neue', cursive;
+    z-index: 10000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.install-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #C2185B;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Comic Neue', cursive;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+    z-index: 10000;
+    transition: all 0.3s ease;
+}
+
+.install-button:hover {
+    background: #A0154B;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+}
+
+/* Indicador de carga para recursos offline */
+.offline-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #C2185B;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

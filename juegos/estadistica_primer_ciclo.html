@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pictogramas de Mascotas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #FFC107;
+            --accent: #2196F3;
+            --background: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --error: #F44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+        }
+        
+        .student-info {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .student-input {
+            padding: 10px 15px;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Lato', sans-serif;
+            flex: 1;
+        }
+        
+        header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .progress-bar {
+            width: 150px;
+            height: 15px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .score-container {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .star {
+            font-size: 24px;
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .star.filled {
+            color: var(--secondary);
+        }
+        
+        .card-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-number {
+            font-size: 18px;
+            color: var(--accent);
+            font-weight: bold;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pictogram-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .pictogram-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        
+        .pictogram-label {
+            width: 120px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: right;
+            padding-right: 15px;
+        }
+        
+        .pictogram-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            flex: 1;
+        }
+        
+        .pictogram-icon {
+            font-size: 24px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .question-container {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .drag-drop-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .option {
+            background-color: var(--accent);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: grab;
+            -webkit-user-select: none; /* Compatibilidad con Safari */
+            -moz-user-select: none; /* Compatibilidad con Firefox */
+            -ms-user-select: none; /* Compatibilidad con Internet Explorer */
+            user-select: none; /* Estándar */
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        
+        .option.dragging {
+            opacity: 0.5;
+        }
+        
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed var(--accent);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-color: rgba(33, 150, 243, 0.05);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .drop-zone.highlight {
+            background-color: rgba(33, 150, 243, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .drop-zone.correct {
+            background-color: rgba(139, 195, 74, 0.2);
+            border-color: var(--success);
+        }
+        
+        .drop-zone.incorrect {
+            background-color: rgba(244, 67, 54, 0.2);
+            border-color: var(--error);
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            min-height: 27px;
+            font-weight: 600;
+        }
+        
+        .feedback.correct {
+            color: var(--success);
+        }
+        
+        .feedback.incorrect {
+            color: var(--error);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-check {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-check:hover:not(:disabled) {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+        }
+        
+        .btn-prev {
+            background-color: #9E9E9E;
+            color: white;
+        }
+        
+        .btn-prev:hover:not(:disabled) {
+            background-color: #757575;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background-color: #FF5722;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background-color: #E64A19;
+            transform: translateY(-2px);
+        }
+        
+        .btn-export {
+            background-color: #9C27B0;
+            color: white;
+            display: none;
+        }
+        
+        .btn-export:hover {
+            background-color: #7B1FA2;
+            transform: translateY(-2px);
+        }
+        
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255,255,255,0.9);
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .celebration.active {
+            opacity: 1;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            animation: fall 3s linear forwards;
+        }
+        
+        .export-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .export-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+        
+        .export-header {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .export-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .export-result-item {
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .export-stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .export-star {
+            font-size: 24px;
+            color: #FFC107;
+        }
+        
+        .export-close {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        /* Nueva clase para el mensaje de felicitaciones */
+        .congratulations-message {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                padding: 20px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .pictogram-label {
+                width: 100px;
+                font-size: 16px;
+            }
+            
+            .pictogram-icon {
+                font-size: 20px;
+                width: 25px;
+                height: 25px;
+            }
+            
+            .question-container {
+                font-size: 18px;
+            }
+            
+            .option {
+                padding: 10px 15px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .student-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card-container {
+                padding: 15px;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .pictogram-row {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            
+            .pictogram-label {
+                width: 100%;
+                text-align: left;
+                margin-bottom: 5px;
+                padding-right: 0;
+            }
+            
+            .question-container {
+                font-size: 16px;
+            }
+            
+            .options-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .option {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="student-info">
+        <input type="text" id="student-name" class="student-input" placeholder="Nombre del estudiante">
+        <button class="btn-reset" id="reset-btn">Reiniciar</button>
+    </div>
+    
+    <header>
+        <h1>Pictogramas de Mascotas</h1>
+        <div class="progress-container">
+            <span id="progress-text">Tarjeta 1 de 10</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        <div class="score-container" id="score-container">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+        </div>
+    </header>
+    
+    <main class="card-container">
+        <div class="card-header">
+            <div class="card-number" id="card-number">Tarjeta 1</div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="pictogram-container" id="pictogram-container"></div>
+        </div>
+        
+        <div class="question-container" id="question"></div>
+        
+        <div class="drag-drop-container">
+            <div class="options-container" id="options-container"></div>
+            <div class="drop-zone" id="drop-zone">
+                <span>Arrastra tu respuesta aquí</span>
+            </div>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <div class="controls">
+            <button class="btn-prev" id="prev-btn">Anterior</button>
+            <button class="btn-check" id="check-btn">Verificar</button>
+            <button class="btn-next" id="next-btn">Siguiente</button>
+            <button class="btn-export" id="export-btn">Exportar Resultados</button>
+        </div>
+        
+        <div class="celebration" id="celebration"></div>
+    </main>
+    
+    <div class="export-container" id="export-container">
+        <div class="export-content" id="export-content">
+            <div class="export-header">
+                <h2>Resultados de Pictogramas de Mascotas</h2>
+                <h3 id="export-student-name">Estudiante: </h3>
+            </div>
+            <div class="export-results">
+                <div class="export-result-item">
+                    <h4>Puntuación</h4>
+                    <div class="export-stars" id="export-stars"></div>
+                    <p id="export-score">0/100 puntos</p>
+                </div>
+                <div class="export-result-item">
+                    <h4>Respuestas Correctas</h4>
+                    <p id="export-correct">0/10</p>
+                </div>
+                <div class="export-result-item">
+                    <h4>Porcentaje</h4>
+                    <p id="export-percentage">0%</p>
+                </div>
+            </div>
+            <!-- Corregido: usando clase CSS en lugar de estilo en línea -->
+            <div class="congratulations-message">
+                <h4>¡Felicidades por completar la actividad!</h4>
+                <p>Has demostrado gran habilidad interpretando pictogramas</p>
+            </div>
+            <button class="export-close" id="export-close">Cerrar</button>
+        </div>
+    </div>
+    
+    <button class="fullscreen-btn" id="fullscreen-btn" title="Pantalla completa">⛶</button>
+    
+    <script>
+        // Datos de las tarjetas
+        const tarjetas = [
+            {
+                id: 1,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Peces', 'Pájaros'],
+                    values: [8, 6, 4, 3],
+                    images: ['🐶', '🐱', '🐠', '🐦']
+                },
+                pregunta: "¿Cuántos estudiantes tienen peces como mascota?",
+                respuestaCorrecta: "4",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 2,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Hamsters', 'Tortugas'],
+                    values: [5, 7, 2, 3],
+                    images: ['🐶', '🐱', '🐹', '🐢']
+                },
+                pregunta: "¿Qué mascota es la más popular?",
+                respuestaCorrecta: "Gatos",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 3,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Conejos', 'Pájaros'],
+                    values: [6, 4, 3, 5],
+                    images: ['🐶', '🐱', '🐰', '🐦']
+                },
+                pregunta: "¿Cuántos estudiantes tienen conejos como mascota?",
+                respuestaCorrecta: "3",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 4,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Peces', 'Hamsters'],
+                    values: [9, 5, 4, 2],
+                    images: ['🐶', '🐱', '🐠', '🐹']
+                },
+                pregunta: "¿Cuántos estudiantes en total tienen perros o gatos?",
+                respuestaCorrecta: "14",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 5,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Tortugas', 'Pájaros'],
+                    values: [7, 6, 1, 4],
+                    images: ['🐶', '🐱', '🐢', '🐦']
+                },
+                pregunta: "¿Qué mascota es la menos popular?",
+                respuestaCorrecta: "Tortugas",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 6,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Peces', 'Conejos'],
+                    values: [8, 5, 3, 2],
+                    images: ['🐶', '🐱', '🐠', '🐰']
+                },
+                pregunta: "¿Cuántos estudiantes en total tienen mascotas?",
+                respuestaCorrecta: "18",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 7,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Hamsters', 'Pájaros'],
+                    values: [6, 7, 3, 5],
+                    images: ['🐶', '🐱', '🐹', '🐦']
+                },
+                pregunta: "¿Cuántos estudiantes más tienen gatos que perros?",
+                respuestaCorrecta: "1",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 8,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Peces', 'Tortugas'],
+                    values: [5, 8, 4, 2],
+                    images: ['🐶', '🐱', '🐠', '🐢']
+                },
+                pregunta: "¿Cuántos estudiantes tienen peces o tortugas?",
+                respuestaCorrecta: "6",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 9,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Conejos', 'Hamsters'],
+                    values: [7, 6, 4, 3],
+                    images: ['🐶', '🐱', '🐰', '🐹']
+                },
+                pregunta: "Si 3 estudiantes más consiguieran hamsters, ¿cuántos habría?",
+                respuestaCorrecta: "6",
+                tipoRespuesta: "arrastrar"
+            },
+            {
+                id: 10,
+                tipoGrafico: 'pictograma',
+                datos: {
+                    labels: ['Perros', 'Gatos', 'Pájaros', 'Tortugas'],
+                    values: [9, 4, 5, 1],
+                    images: ['🐶', '🐱', '🐦', '🐢']
+                },
+                pregunta: "¿Cuántos estudiantes no tienen perros?",
+                respuestaCorrecta: "10",
+                tipoRespuesta: "arrastrar"
+            }
+        ];
+
+        // Variables de estado
+        let tarjetaActual = 0;
+        let puntuacion = 0;
+        let respuestasCorrectas = 0;
+        let respuestaSeleccionada = null;
+        let juegoCompletado = false;
+
+        // Elementos DOM
+        const studentNameInput = document.getElementById('student-name');
+        const resetBtn = document.getElementById('reset-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const progressText = document.getElementById('progress-text');
+        const progressFill = document.getElementById('progress-fill');
+        const scoreContainer = document.getElementById('score-container');
+        const cardNumber = document.getElementById('card-number');
+        const question = document.getElementById('question');
+        const pictogramContainer = document.getElementById('pictogram-container');
+        const optionsContainer = document.getElementById('options-container');
+        const dropZone = document.getElementById('drop-zone');
+        const feedback = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const celebration = document.getElementById('celebration');
+        const exportContainer = document.getElementById('export-container');
+        const exportContent = document.getElementById('export-content');
+        const exportStudentName = document.getElementById('export-student-name');
+        const exportStars = document.getElementById('export-stars');
+        const exportScore = document.getElementById('export-score');
+        const exportCorrect = document.getElementById('export-correct');
+        const exportPercentage = document.getElementById('export-percentage');
+        const exportClose = document.getElementById('export-close');
+
+        // Inicializar la aplicación
+        function init() {
+            cargarProgreso();
+            actualizarInterfaz();
+            configurarEventos();
+            crearPictograma();
+        }
+
+        // Cargar progreso desde localStorage
+        function cargarProgreso() {
+            const progresoGuardado = localStorage.getItem('progresoPictogramas');
+            if (progresoGuardado) {
+                const progreso = JSON.parse(progresoGuardado);
+                tarjetaActual = progreso.tarjetaActual || 0;
+                puntuacion = progreso.puntuacion || 0;
+                respuestasCorrectas = progreso.respuestasCorrectas || 0;
+                juegoCompletado = progreso.juegoCompletado || false;
+                studentNameInput.value = progreso.nombreEstudiante || '';
+                
+                // Si el juego estaba completado, mostrar el botón de exportar
+                if (juegoCompletado) {
+                    exportBtn.style.display = 'inline-block';
+                }
+            }
+            actualizarEstrellas();
+        }
+
+        // Guardar progreso en localStorage
+        function guardarProgreso() {
+            const progreso = {
+                tarjetaActual,
+                puntuacion,
+                respuestasCorrectas,
+                juegoCompletado,
+                nombreEstudiante: studentNameInput.value,
+                fecha: new Date().toISOString()
+            };
+            localStorage.setItem('progresoPictogramas', JSON.stringify(progreso));
+        }
+
+        // Actualizar la interfaz de usuario
+        function actualizarInterfaz() {
+            const tarjeta = tarjetas[tarjetaActual];
+            
+            // Actualizar progreso
+            progressText.textContent = `Tarjeta ${tarjetaActual + 1} de ${tarjetas.length}`;
+            progressFill.style.width = `${((tarjetaActual + 1) / tarjetas.length) * 100}%`;
+            
+            // Actualizar número de tarjeta
+            cardNumber.textContent = `Tarjeta ${tarjetaActual + 1}`;
+            
+            // Actualizar pregunta
+            question.textContent = tarjeta.pregunta;
+            
+            // Limpiar y actualizar opciones
+            optionsContainer.innerHTML = '';
+            const opciones = generarOpciones(tarjeta);
+            opciones.forEach(opcion => {
+                const elementoOpcion = document.createElement('div');
+                elementoOpcion.className = 'option';
+                elementoOpcion.textContent = opcion;
+                elementoOpcion.draggable = true;
+                elementoOpcion.addEventListener('dragstart', manejarDragStart);
+                optionsContainer.appendChild(elementoOpcion);
+            });
+            
+            // Limpiar zona de arrastre
+            dropZone.innerHTML = '<span>Arrastra tu respuesta aquí</span>';
+            dropZone.className = 'drop-zone';
+            respuestaSeleccionada = null;
+            
+            // Limpiar retroalimentación
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            
+            // Actualizar estado de botones
+            prevBtn.disabled = tarjetaActual === 0;
+            nextBtn.disabled = true;
+            checkBtn.disabled = false;
+            
+            // Ocultar botón de exportar durante el juego
+            if (!juegoCompletado) {
+                exportBtn.style.display = 'none';
+            }
+            
+            // Actualizar estrellas
+            actualizarEstrellas();
+        }
+
+        // Generar opciones para la tarjeta actual
+        function generarOpciones(tarjeta) {
+            const opciones = [tarjeta.respuestaCorrecta];
+            
+            // Generar opciones incorrectas basadas en los datos del gráfico
+            const valores = [...new Set(tarjeta.datos.values.map(String))];
+            const etiquetas = [...new Set(tarjeta.datos.labels)];
+            
+            // Eliminar la respuesta correcta de las posibles opciones incorrectas
+            const valoresFiltrados = valores.filter(v => v !== tarjeta.respuestaCorrecta);
+            const etiquetasFiltradas = etiquetas.filter(e => e !== tarjeta.respuestaCorrecta);
+            
+            // Añadir algunas opciones incorrectas
+            while (opciones.length < 4) {
+                if (tarjeta.respuestaCorrecta.match(/^\d+$/)) {
+                    // Si la respuesta es numérica, usar otros números
+                    const opcionAleatoria = valoresFiltrados[Math.floor(Math.random() * valoresFiltrados.length)];
+                    if (opcionAleatoria && !opciones.includes(opcionAleatoria)) {
+                        opciones.push(opcionAleatoria);
+                    } else {
+                        // Si no hay suficientes opciones, generar números aleatorios
+                        const num = Math.floor(Math.random() * 15) + 1;
+                        if (!opciones.includes(String(num))) {
+                            opciones.push(String(num));
+                        }
+                    }
+                } else {
+                    // Si la respuesta es textual, usar otras etiquetas
+                    const opcionAleatoria = etiquetasFiltradas[Math.floor(Math.random() * etiquetasFiltradas.length)];
+                    if (opcionAleatoria && !opciones.includes(opcionAleatoria)) {
+                        opciones.push(opcionAleatoria);
+                    }
+                }
+            }
+            
+            // Mezclar las opciones
+            return mezclarArray(opciones);
+        }
+
+        // Mezclar array (algoritmo Fisher-Yates)
+        function mezclarArray(array) {
+            const nuevoArray = [...array];
+            for (let i = nuevoArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [nuevoArray[i], nuevoArray[j]] = [nuevoArray[j], nuevoArray[i]];
+            }
+            return nuevoArray;
+        }
+
+        // Crear pictograma visual
+        function crearPictograma() {
+            const tarjeta = tarjetas[tarjetaActual];
+            pictogramContainer.innerHTML = '';
+            
+            // Crear filas para cada categoría
+            tarjeta.datos.labels.forEach((label, index) => {
+                const row = document.createElement('div');
+                row.className = 'pictogram-row';
+                
+                // Etiqueta
+                const labelElement = document.createElement('div');
+                labelElement.className = 'pictogram-label';
+                labelElement.textContent = label;
+                row.appendChild(labelElement);
+                
+                // Iconos
+                const iconsContainer = document.createElement('div');
+                iconsContainer.className = 'pictogram-icons';
+                
+                // Crear tantos iconos como el valor
+                for (let i = 0; i < tarjeta.datos.values[index]; i++) {
+                    const icon = document.createElement('div');
+                    icon.className = 'pictogram-icon';
+                    icon.textContent = tarjeta.datos.images[index];
+                    iconsContainer.appendChild(icon);
+                }
+                
+                row.appendChild(iconsContainer);
+                pictogramContainer.appendChild(row);
+            });
+        }
+
+        // Configurar eventos
+        function configurarEventos() {
+            // Eventos de arrastrar y soltar
+            dropZone.addEventListener('dragover', manejarDragOver);
+            dropZone.addEventListener('dragenter', manejarDragEnter);
+            dropZone.addEventListener('dragleave', manejarDragLeave);
+            dropZone.addEventListener('drop', manejarDrop);
+            
+            // Eventos de botones
+            prevBtn.addEventListener('click', anteriorTarjeta);
+            checkBtn.addEventListener('click', verificarRespuesta);
+            nextBtn.addEventListener('click', siguienteTarjeta);
+            fullscreenBtn.addEventListener('click', togglePantallaCompleta);
+            resetBtn.addEventListener('click', reiniciarAplicacion);
+            exportBtn.addEventListener('click', mostrarExportacion);
+            exportClose.addEventListener('click', cerrarExportacion);
+            
+            // Guardar nombre cuando cambie
+            studentNameInput.addEventListener('input', guardarProgreso);
+            
+            // Evento para permitir teclado
+            document.addEventListener('keydown', manejarTeclado);
+        }
+
+        // Manejar inicio de arrastre
+        function manejarDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+            e.target.classList.add('dragging');
+        }
+
+        // Manejar arrastre sobre la zona de soltado
+        function manejarDragOver(e) {
+            e.preventDefault();
+        }
+
+        // Manejar entrada en la zona de soltado
+        function manejarDragEnter(e) {
+            e.preventDefault();
+            dropZone.classList.add('highlight');
+        }
+
+        // Manejar salida de la zona de soltado
+        function manejarDragLeave(e) {
+            e.preventDefault();
+            if (!dropZone.contains(e.relatedTarget)) {
+                dropZone.classList.remove('highlight');
+            }
+        }
+
+        // Manejar soltado en la zona
+        function manejarDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('highlight');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            respuestaSeleccionada = data;
+            
+            // Mostrar la respuesta seleccionada
+            dropZone.innerHTML = `<span>${data}</span>`;
+            
+            // Quitar clase dragging de todas las opciones
+            document.querySelectorAll('.option').forEach(opcion => {
+                opcion.classList.remove('dragging');
+            });
+        }
+
+        // Verificar respuesta
+        function verificarRespuesta() {
+            if (!respuestaSeleccionada) {
+                feedback.textContent = "¡Arrastra una respuesta primero!";
+                feedback.className = 'feedback';
+                return;
+            }
+            
+            const tarjeta = tarjetas[tarjetaActual];
+            const esCorrecta = respuestaSeleccionada === tarjeta.respuestaCorrecta;
+            
+            if (esCorrecta) {
+                feedback.textContent = "¡Correcto! 🎉";
+                feedback.className = 'feedback correct';
+                dropZone.className = 'drop-zone correct';
+                respuestasCorrectas++;
+                puntuacion += 10;
+                celebrar();
+            } else {
+                feedback.textContent = `Incorrecto. La respuesta correcta es: ${tarjeta.respuestaCorrecta}`;
+                feedback.className = 'feedback incorrect';
+                dropZone.className = 'drop-zone incorrect';
+            }
+            
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+            
+            guardarProgreso();
+            actualizarEstrellas();
+        }
+
+        // Animación de celebración
+        function celebrar() {
+            celebration.classList.add('active');
+            
+            // Crear confeti
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                celebration.appendChild(confetti);
+            }
+            
+            // Quitar la celebración después de 3 segundos
+            setTimeout(() => {
+                celebration.classList.remove('active');
+                celebration.innerHTML = '';
+            }, 3000);
+        }
+
+        // Navegar a la tarjeta anterior
+        function anteriorTarjeta() {
+            if (tarjetaActual > 0) {
+                tarjetaActual--;
+                actualizarInterfaz();
+                crearPictograma();
+            }
+        }
+
+        // Navegar a la siguiente tarjeta
+        function siguienteTarjeta() {
+            if (tarjetaActual < tarjetas.length - 1) {
+                tarjetaActual++;
+                actualizarInterfaz();
+                crearPictograma();
+            } else {
+                // Si es la última tarjeta, mostrar resumen
+                mostrarResumen();
+            }
+        }
+
+        // Mostrar resumen al completar todas las tarjetas
+        function mostrarResumen() {
+            juegoCompletado = true;
+            const porcentaje = Math.round((respuestasCorrectas / tarjetas.length) * 100);
+            
+            cardNumber.textContent = "¡Completado!";
+            question.textContent = `Has completado todas las tarjetas. Obtuviste ${respuestasCorrectas} de ${tarjetas.length} respuestas correctas (${porcentaje}%).`;
+            
+            // Ocultar elementos no necesarios
+            document.querySelector('.chart-container').style.display = 'none';
+            document.querySelector('.drag-drop-container').style.display = 'none';
+            feedback.style.display = 'none';
+            checkBtn.style.display = 'none';
+            nextBtn.textContent = "Volver a empezar";
+            nextBtn.onclick = reiniciarAplicacion;
+            
+            // Mostrar botón de exportar
+            exportBtn.style.display = 'inline-block';
+            
+            guardarProgreso();
+        }
+
+        // Reiniciar la aplicación
+        function reiniciarAplicacion() {
+            tarjetaActual = 0;
+            respuestasCorrectas = 0;
+            puntuacion = 0;
+            juegoCompletado = false;
+            
+            // Restaurar elementos ocultos
+            document.querySelector('.chart-container').style.display = 'flex';
+            document.querySelector('.drag-drop-container').style.display = 'flex';
+            feedback.style.display = 'block';
+            checkBtn.style.display = 'inline-block';
+            nextBtn.textContent = "Siguiente";
+            nextBtn.onclick = siguienteTarjeta;
+            
+            // Ocultar botón de exportar
+            exportBtn.style.display = 'none';
+            
+            actualizarInterfaz();
+            crearPictograma();
+            guardarProgreso();
+        }
+
+        // Mostrar ventana de exportación
+        function mostrarExportacion() {
+            const porcentaje = Math.round((respuestasCorrectas / tarjetas.length) * 100);
+            const nombreEstudiante = studentNameInput.value || 'Estudiante';
+            
+            // Actualizar contenido de exportación
+            exportStudentName.textContent = `Estudiante: ${nombreEstudiante}`;
+            exportScore.textContent = `${puntuacion}/100 puntos`;
+            exportCorrect.textContent = `${respuestasCorrectas}/${tarjetas.length}`;
+            exportPercentage.textContent = `${porcentaje}%`;
+            
+            // Actualizar estrellas de exportación
+            exportStars.innerHTML = '';
+            const estrellasLlenas = Math.floor((respuestasCorrectas / tarjetas.length) * 3);
+            for (let i = 0; i < 3; i++) {
+                const estrella = document.createElement('span');
+                estrella.className = 'export-star';
+                estrella.textContent = i < estrellasLlenas ? '★' : '☆';
+                exportStars.appendChild(estrella);
+            }
+            
+            // Mostrar ventana de exportación
+            exportContainer.style.display = 'flex';
+            
+            // Crear imagen después de un pequeño retraso para asegurar que el contenido se renderice
+            setTimeout(crearImagenExportacion, 500);
+        }
+
+        // Crear imagen de exportación
+        function crearImagenExportacion() {
+            html2canvas(exportContent).then(canvas => {
+                // Crear enlace de descarga
+                const enlace = document.createElement('a');
+                const nombreEstudiante = studentNameInput.value || 'Estudiante';
+                enlace.download = `Resultados_Pictogramas_${nombreEstudiante}.png`;
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+            });
+        }
+
+        // Cerrar ventana de exportación
+        function cerrarExportacion() {
+            exportContainer.style.display = 'none';
+        }
+
+        // Actualizar visualización de estrellas
+        function actualizarEstrellas() {
+            const estrellas = scoreContainer.querySelectorAll('.star');
+            const porcentaje = respuestasCorrectas / tarjetas.length;
+            
+            estrellas.forEach((estrella, index) => {
+                if (index < Math.floor(porcentaje * 3)) {
+                    estrella.classList.add('filled');
+                } else {
+                    estrella.classList.remove('filled');
+                }
+            });
+        }
+
+        // Manejar eventos de teclado para accesibilidad
+        function manejarTeclado(e) {
+            if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+                anteriorTarjeta();
+            } else if (e.key === 'ArrowRight' && !nextBtn.disabled) {
+                siguienteTarjeta();
+            } else if (e.key === 'Enter' && !checkBtn.disabled) {
+                verificarRespuesta();
+            }
+        }
+
+        // Alternar pantalla completa
+        function togglePantallaCompleta() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error al intentar entrar en pantalla completa: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Inicializar la aplicación cuando se carga la página
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

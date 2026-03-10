@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstadísticaMente - Nivel Primario</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Patrick+Hand&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.36.0/minified.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: false 
+            }
+        };
+    </script>
+    <style>
+    /* ESTILOS PARA GRÁFICOS CON CHART.JS */
+    .grafico-inmediato {
+        margin-top: 15px;
+        width: 100%;
+        min-height: 550px;
+    }
+
+    #chart-canvas {
+        width: 100%;
+        height: 500px;
+        background: white;
+        border-radius: 8px;
+        margin: 15px 0;
+        border: 2px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 10px;
+    }
+
+    #pictograma-container {
+        width: 100%;
+        min-height: 400px;
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* ESTILOS CORREGIDOS PARA CONTENEDORES DE RESULTADOS - EXPANSIÓN COMPLETA */
+    .resultado-contenedor {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        display: none;
+        /* ELIMINAR TODAS LAS RESTRICCIONES DE ALTURA */
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        /* ASEGURAR EXPANSIÓN COMPLETA */
+        min-height: auto !important;
+    }
+
+    .resultado-contenedor.expandido {
+        display: block !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .resultado-contenedor h4 {
+        color: #4361ee;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #4361ee;
+        padding-bottom: 5px;
+    }
+
+    .contenido-resultado {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #4361ee;
+        /* EXPANSIÓN COMPLETA DEL CONTENIDO */
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        min-height: auto !important;
+    }
+
+    /* CONTENEDOR ESPECÍFICO PARA PASOS DE RESOLUCIÓN - EXPANSIÓN COMPLETA */
+    #btn-ver-pasos-resultado {
+        display: none;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        /* ELIMINAR TODAS LAS RESTRICCIONES DE ALTURA */
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        min-height: auto !important;
+        /* ASEGURAR QUE SE EXPANDA COMPLETAMENTE */
+        position: relative;
+        z-index: 10;
+    }
+
+    #btn-ver-pasos-resultado.expandido {
+        display: block !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* NUEVOS ESTILOS PARA BOTÓN DE LECTURA DE RESOLUCIÓN */
+    .pasos-resolucion-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .lector-resolucion-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Comic Neue', cursive;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        white-space: nowrap;
+    }
+
+    .lector-resolucion-btn:hover {
+        background: #45a049;
+        transform: scale(1.05);
+    }
+
+    .lector-resolucion-btn.pausa {
+        background: #f44336;
+    }
+
+    .lector-resolucion-btn.pausa:hover {
+        background: #d32f2f;
+    }
+
+    /* Indicador de paso actual */
+    .paso-activo {
+        background-color: #e3f2fd !important;
+        border-left: 4px solid #2196F3 !important;
+        transition: all 0.3s ease;
+    }
+
+    /* ESTILOS CORREGIDOS PARA PASOS DE RESOLUCIÓN - EXPANSIÓN COMPLETA */
+    .pasos-resolucion-detallados {
+        /* ELIMINAR TODAS LAS RESTRICCIONES DE ALTURA */
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        min-height: auto !important;
+        width: 100%;
+        /* ASEGURAR QUE TODO EL CONTENIDO SEA VISIBLE */
+        display: block !important;
+    }
+
+    /* Mejoras para tablas en pasos de resolución */
+    .pasos-resolucion-detallados table {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0;
+        border-collapse: collapse;
+        /* ASEGURAR QUE LAS TABLAS SE EXPANDAN COMPLETAMENTE */
+        table-layout: auto;
+    }
+
+    .pasos-resolucion-detallados table th,
+    .pasos-resolucion-detallados table td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        text-align: left;
+        /* PERMITIR QUE LAS CELDAS SE EXPANDAN */
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    .pasos-resolucion-detallados table th {
+        background: #4361ee;
+        color: white;
+        font-weight: bold;
+    }
+
+    /* ASEGURAR QUE LAS LISTAS SE MUESTREN COMPLETAS */
+    .pasos-resolucion-detallados ol,
+    .pasos-resolucion-detallados ul {
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+
+    .pasos-resolucion-detallados li {
+        margin-bottom: 5px;
+    }
+
+    /* ESTILOS PARA ELEMENTOS DESTACADOS - EXPANSIÓN COMPLETA */
+    .pasos-resolucion-detallados .detalle-calculo,
+    .pasos-resolucion-detallados .explicacion,
+    .pasos-resolucion-detallados .tabla-info {
+        background: #e3f2fd;
+        padding: 12px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border-left: 4px solid #2196F3;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* RESULTADOS DESTACADOS */
+    .pasos-resolucion-detallados .resultado-valor {
+        font-size: 18pt !important;
+        font-weight: bold;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        text-align: center;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* ASEGURAR QUE TODOS LOS ELEMENTOS INTERNOS SE EXPANDAN */
+    .pasos-resolucion-detallados * {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Mejoras responsive */
+    @media (max-width: 768px) {
+        .pasos-resolucion-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .lector-resolucion-btn {
+            align-self: center;
+            margin-top: 10px;
+        }
+        
+        .function-buttons-vertical {
+            gap: 15px;
+        }
+        
+        .option-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* ASEGURAR EXPANSIÓN COMPLETA EN MÓVIL */
+        #btn-ver-pasos-resultado {
+            padding: 15px;
+        }
+
+        .contenido-resultado {
+            padding: 12px;
+        }
+    }
+
+    /* Animaciones suaves */
+    .function-item {
+        transition: all 0.3s ease;
+    }
+
+    .function-item:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Mejoras visuales para botones activos */
+    .option-btn.active {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Estilos para el textarea de datos */
+    #data-input {
+        transition: all 0.3s ease;
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    #data-input:focus {
+        border-color: #4361ee;
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+
+    /* CLASE ESPECIAL PARA FORZAR EXPANSIÓN COMPLETA */
+    .expansion-completa {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        min-height: auto !important;
+        display: block !important;
+    }
+
+    /* REMOVER CUALQUIER SCROLL INTERNO */
+    .sin-scroll {
+        overflow: visible !important;
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+    }
+
+    .sin-scroll::-webkit-scrollbar {
+        display: none !important;
+    }
+    /* ESTILOS PARA EL NUEVO BOTÓN DE COMANDOS DE VOZ */
+.voice-commands-btn {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    z-index: 10000;
+    background: #FF9800;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+    transition: all 0.3s ease;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.voice-commands-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+}
+
+.voice-commands-btn.listening {
+    background: #f44336;
+    animation: pulse 1.5s infinite;
+}
+
+.voice-commands-menu {
+    position: fixed;
+    bottom: 170px;
+    left: 20px;
+    z-index: 10000;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    min-width: 250px;
+    display: none;
+    border: 2px solid #FF9800;
+}
+
+.voice-commands-menu.show {
+    display: block;
+    animation: fadeInUp 0.3s ease;
+}
+
+.voice-commands-menu h4 {
+    margin: 0 0 12px 0;
+    color: #FF9800;
+    text-align: center;
+    font-family: 'Comic Neue', cursive;
+    border-bottom: 2px solid #FF9800;
+    padding-bottom: 8px;
+}
+
+.voice-command-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.voice-command-item:hover {
+    background: #FFF3E0;
+    transform: translateX(5px);
+}
+
+.voice-command-icon {
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+}
+
+.voice-command-text {
+    flex: 1;
+}
+
+.voice-command-desc {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 2px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Asegurar que no haya otros botones de lectura */
+#read-screen-btn,
+#context-help-btn,
+#pause-resume-btn {
+    display: none !important;
+}
+
+/* NUEVOS ESTILOS PARA DATOS DE EJEMPLO */
+.ejemplos-container {
+    margin-top: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.ejemplos-container:hover {
+    border-color: #4361ee;
+    background: #f0f4ff;
+}
+
+.ejemplos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.ejemplos-header h3 {
+    margin: 0;
+    color: #4361ee;
+    font-size: 16px;
+}
+
+.ejemplos-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #4361ee;
+    transition: transform 0.3s ease;
+}
+
+.ejemplos-toggle.rotated {
+    transform: rotate(180deg);
+}
+
+.ejemplos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.ejemplos-grid.expandido {
+    max-height: 500px;
+}
+
+.ejemplo-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.ejemplo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    border-color: #4361ee;
+}
+
+.ejemplo-card.cualitativo {
+    border-left: 4px solid #C2185B;
+}
+
+.ejemplo-card.cuantitativo {
+    border-left: 4px solid #4361ee;
+}
+
+.ejemplo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.ejemplo-titulo {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.ejemplo-tipo {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+}
+
+.ejemplo-tipo.cualitativo {
+    background: #C2185B;
+}
+
+.ejemplo-tipo.cuantitativo {
+    background: #4361ee;
+}
+
+.ejemplo-descripcion {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.ejemplo-datos {
+    font-size: 11px;
+    color: #888;
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ejemplo-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #999;
+}
+
+.ejemplo-cantidad {
+    font-weight: bold;
+}
+
+.ejemplo-seleccionado {
+    background: #e3f2fd;
+    border-color: #2196F3;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.ejemplo-seleccionado::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #4CAF50;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* BOTONES DE CARGA - ALINEADOS HORIZONTALMENTE */
+.load-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.load-btn {
+    flex: 1;
+    min-width: 150px;
+    max-width: 220px;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-family: 'Comic Neue', cursive;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.load-btn.primary {
+    background: linear-gradient(135deg, #4361ee, #3a56d4);
+    color: white;
+}
+
+.load-btn.secondary {
+    background: linear-gradient(135deg, #C2185B, #a81450);
+    color: white;
+}
+
+.load-btn.blue {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+}
+
+.load-btn.example {
+    background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+    color: white;
+}
+
+.load-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.load-btn:active {
+    transform: translateY(0);
+}
+
+/* ESTILOS PARA BOTONES DE VARIABLE DESHABILITADOS */
+.option-btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.option-btn.disabled::after {
+    content: "🔒";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 12px;
+}
+
+.option-btn.disabled:hover {
+    transform: none;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Responsive para botones */
+@media (max-width: 768px) {
+    .load-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .load-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* Responsive para ejemplos */
+@media (max-width: 768px) {
+    .ejemplos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ejemplo-card {
+        padding: 12px;
+    }
+}
+
+.back-btn {
+            background-color: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background-color: #A0154B;
+            transform: scale(1.05);
+        }
+</style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado -->
+        <header class="header">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="Sin título (4).png" class="logo" alt="EstadísticaMente - Inicio">
+                </a>
+            </div>
+            
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span id="userGreeting"></span>
+                <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+            </div>
+        </header>
+
+
+        <!-- Header offline discreto -->
+<div id="offline-header" class="offline-header">
+    <div class="status">
+        <span id="status-icon">🌐</span>
+        <span id="status-text">Conectado</span>
+    </div>
+    <div class="install-prompt" id="install-prompt" style="display: none;">
+        <button class="install-header-btn" onclick="installApp()">📱 Instalar App</button>
+    </div>
+</div>
+          <main class="main-contentn">
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                ← Volver al Inicio
+            </button>
+            </main>
+        <!-- Título principal -->
+        <div class="title-section">
+            <h1 class="main-title">Nivel Primario</h1>
+            <p class="subtitle">Aprende estadística de forma divertida e interactiva</p>
+        </div>
+
+        <!-- Contenido principal -->
+        <main class="main-contentn1">
+            <!-- Sección: Ingreso de datos -->
+            <section class="input-section">
+                <h2 class="section-subtitle">📊 Ingresa tus datos</h2>
+                
+                <!-- Botones de carga - AHORA ALINEADOS HORIZONTALMENTE -->
+                <div class="load-buttons">
+                    <button class="load-btn primary" onclick="cargarDatosSueltos()">
+                        📝 Cargar datos sueltos
+                    </button>
+                    <button class="load-btn secondary" onclick="cargarTablaFrecuencia()">
+                        📋 Cargar tabla de frecuencia
+                    </button>
+                    <button class="load-btn blue" id="voice-btn">
+                        🎤 Cargar datos por voz
+                    </button>
+                    <!-- NUEVO BOTÓN PARA DATOS DE EJEMPLO -->
+                    <button class="load-btn example" onclick="toggleEjemplos()">
+                        📚 Cargar datos de ejemplo
+                    </button>
+                </div>
+
+                <!-- CONTENEDOR DE DATOS DE EJEMPLO -->
+                <div id="ejemplos-container" class="ejemplos-container" style="display: none;">
+                    <div class="ejemplos-header">
+                        <h3>📚 Datos de Ejemplo</h3>
+                        <button class="ejemplos-toggle" onclick="toggleEjemplosGrid()">▼</button>
+                    </div>
+                    <div id="ejemplos-grid" class="ejemplos-grid">
+                        <!-- Los ejemplos se cargarán dinámicamente con JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Contenedor de tabla de frecuencia (oculto inicialmente) -->
+                <div id="tabla-frecuencia-container" class="tabla-frecuencia-container" style="display: none; margin-top: 20px;">
+                    <h3 style="color: #C2185B; text-align: center; margin-bottom: 15px;">📊 Crear Tabla de Frecuencia</h3>
+                    
+                    <div class="tabla-instructions">
+                        <p>💡 <strong>Instrucciones:</strong> Agrega los valores de la variable (X) y su frecuencia (Fr)</p>
+                    </div>
+
+                    <div class="tabla-frecuencia">
+                        <table class="tabla-datos" style="width: 100%; margin-bottom: 15px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%; background: #C2185B; color: white;">x (Variable)</th>
+                                    <th style="width: 45%; background: #C2185B; color: white;">Fr (Frecuencia)</th>
+                                    <th style="width: 10%; background: #C2185B; color: white;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-frecuencia-body">
+                                <!-- Las filas se agregarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="controles-tabla">
+                        <button type="button" class="btn-agregar" onclick="agregarFilaTabla()">
+                            ➕ Agregar Fila
+                        </button>
+                        <button type="button" class="btn-generar" onclick="generarDatosDesdeTabla()">
+                            ✅ Generar Datos
+                        </button>
+                        <button type="button" class="btn-cancelar" onclick="cancelarTablaFrecuencia()">
+                            ❌ Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Campo de entrada -->
+                <div class="input-container">
+                    <textarea id="data-input" placeholder="Ejemplo para números: 5, 7, 9, 12, 9&#10;Ejemplo para palabras: Rojo, Azul, Verde, Rojo, Azul"></textarea>
+                    <small class="input-info">
+                        💡 <strong>Tipos de datos:</strong><br>
+                        • <strong>Cuantitativos:</strong> Números (ej: 5, 7.5, 12)<br>
+                        • <strong>Cualitativos:</strong> Palabras (ej: Rojo, Azul, Verde)<br>
+                        • <strong>Separadores:</strong> Usa comas o espacios<br>
+                        • <strong>Decimales:</strong> Usa punto (ej: <code>3.5</code>)
+                    </small>
+                </div>
+            </section>
+
+            <!-- Sección: Elección de variable y gráfico -->
+            <section class="options-section">
+                <div class="option-group">
+                    <h2 class="section-subtitle">🎯 Elige el tipo de variable</h2>
+                    <div class="option-buttons">
+                        <button class="option-btn vertical primary" onclick="seleccionarVariable('quantitative')" id="btn-cuantitativa">
+                            <img src="img/numeros.png" alt="Números" class="btn-icon">
+                            <span class="btn-text">Cuantitativa</span>
+                            
+                        </button>
+                        
+                        <button class="option-btn vertical secondary" onclick="seleccionarVariable('qualitative')" id="btn-cualitativa">
+                            <img src="img/cubitos.png" alt="Palabras" class="btn-icon">
+                            <span class="btn-text">Cualitativa</span>
+                            
+                        </button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <h2 class="section-subtitle">📈 Elige el tipo de gráfico</h2>
+                    <div class="option-buttons">
+                        <button class="option-btn primary" onclick="seleccionarGrafico('bar')">
+                            <img src="img/diagrama.png" alt="Gráfico de Barras" class="btn-icon">
+                            Barras
+                        </button>
+
+                        <button class="option-btn secondary" onclick="seleccionarGrafico('pie')">
+                            <img src="img/grafico-de-torta.png" alt="Gráfico de Sectores" class="btn-icon">
+                            Sectores
+                        </button>
+
+                        <button class="option-btn secondary" onclick="seleccionarGrafico('pictograma')">
+                            <img src="img/grafico-humano.png" alt="Pictograma" class="btn-icon">
+                            Pictograma
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección: Funciones -->
+            <section class="functions-section">
+                <h2 class="section-subtitle">🚀 Funciones Disponibles</h2>
+                <div class="function-buttons-vertical">
+                    <!-- Gráfico -->
+                    <div class="function-item">
+                        <button class="function-btn blue" onclick="generarGrafico()" id="btn-generar-grafico">
+                            📊 Generar gráfico
+                        </button>
+                        
+                        <!-- CONTENEDOR DEL GRÁFICO -->
+                        <div class="grafico-inmediato">
+                            <div id="chart-canvas" class="hidden">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                            <div id="pictograma-container" class="hidden"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabla de frecuencias -->
+                    <div class="function-item">
+                        <button class="function-btn blue" onclick="mostrarTablaFrecuencias()" id="btn-mostrar-tabla">
+                            📋 Mostrar tabla de frecuencias
+                        </button>
+                        <div id="table-container" class="resultado-contenedor"></div>
+                    </div>
+                    
+                    <!-- Media -->
+                    <div class="function-item">
+                        <button class="function-btn blue" onclick="calcularMedia()" id="btn-calcular-media">
+                            📐 Calcular media
+                        </button>
+                        <div id="media-resultado" class="resultado-contenedor"></div>
+                    </div>
+                    
+                    <!-- Mediana -->
+                    <div class="function-item">
+                        <button class="function-btn blue" onclick="calcularMediana()" id="btn-calcular-mediana">
+                            📏 Calcular mediana
+                        </button>
+                        <div id="mediana-resultado" class="resultado-contenedor"></div>
+                    </div>
+                    
+                    <!-- Moda -->
+                    <div class="function-item">
+                        <button class="function-btn blue" onclick="calcularModa()" id="btn-calcular-moda">
+                            🔢 Calcular moda
+                        </button>
+                        <div id="moda-resultado" class="resultado-contenedor"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección final -->
+            <section class="final-section">
+                <!-- Ver pasos de resolución -->
+                <div class="function-item">
+                    <div class="pasos-resolucion-header">
+                        <button class="function-btn" onclick="verPasosResolucion()" id="btn-ver-pasos" style="background: #C2185B; color: rgb(255, 255, 255);">
+                            📝 Ver pasos de resolución
+                        </button>
+                        <button class="lector-resolucion-btn" id="btn-leer-resolucion" onclick="toggleLecturaResolucion()">
+                            🔊 Leer resolución
+                        </button>
+                    </div>
+                    <div id="btn-ver-pasos-resultado" class="resultado-contenedor"></div>
+                </div>
+                
+                <!-- Descargar resultados -->
+                <div class="function-item">
+                    <button class="function-btn" onclick="descargarResultados()" id="download-pdf-btn" style="background: #4361ee; color: rgb(255, 255, 255);">
+                        💾 Descargar resultados (PDF)
+                    </button>
+                </div>
+
+                <!-- Recursos adicionales -->
+                <div class="resources-buttons">
+                    <button class="level-btn primary" onclick="abrirMaterialTeorico()">
+                        📚 Material teórico
+                    </button>
+                    <button class="level-btn secondary" onclick="abrirActividadesInteractivas()">
+                        🎮 Actividades interactivas
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Chatbot de Profe Marce -->
+    <div id="profe-marce-avatar" class="chat-avatar" onclick="toggleChat()">
+        <img src="img/profemarce.png" alt="Profe Marce">
+        <div class="chat-notification" id="chat-notification" style="display: none;">💬</div>
+    </div>
+
+    <div id="chat-window" class="chat-window hidden">
+        <div class="chat-header">
+            <img src="img/profemarce.png" alt="Avatar Profe Marce" class="chat-avatar-img">
+            <h3>Profe Marce</h3>
+            <button id="close-chat" class="close-chat-btn">✖</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" id="chat-input" placeholder="Escribí tu duda..." autocomplete="off">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+    // MEJORAS PARA LA EXPERIENCIA DE USUARIO
+
+    // Verificar autenticación al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 EstadísticaMente - Nivel Primario inicializado');
+        
+        const userData = localStorage.getItem('estadisticamente_user');
+        const userInfo = document.getElementById('userInfo');
+        const userGreeting = document.getElementById('userGreeting');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        if (userData) {
+            const user = JSON.parse(userData);
+            userInfo.style.display = 'flex';
+            userGreeting.textContent = `Hola, ${user.username} (${user.userType === 'student' ? 'Estudiante' : 'Docente'})`;
+        } else {
+            // Si no hay sesión, redirigir al login
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        // Manejar cierre de sesión
+        logoutBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: '¿Cerrar sesión?',
+                text: '¿Estás seguro de que quieres salir?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4361ee',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, salir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('estadisticamente_user');
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+
+        // Inicializar tooltips para botones
+        inicializarTooltips();
+        
+        // Cargar datos de ejemplo
+        cargarDatosEjemplo();
+        
+        // Agregar evento para validar datos cuando cambia el textarea
+        const dataInput = document.getElementById('data-input');
+        dataInput.addEventListener('input', validarDatosYActualizarBotones);
+    });
+
+    // Función para inicializar tooltips
+    function inicializarTooltips() {
+        const tooltips = {
+            'voice-btn': 'Ingresa datos usando comandos de voz',
+            'btn-generar-grafico': 'Crea un gráfico con los datos ingresados',
+            'btn-mostrar-tabla': 'Muestra la tabla de frecuencias',
+            'btn-calcular-media': 'Calcula el promedio de los datos',
+            'btn-calcular-mediana': 'Encuentra el valor central',
+            'btn-calcular-moda': 'Encuentra el valor más frecuente',
+            'btn-ver-pasos': 'Muestra el proceso paso a paso',
+            'download-pdf-btn': 'Descarga todos los resultados en PDF'
+        };
+
+        Object.keys(tooltips).forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.title = tooltips[id];
+            }
+        });
+    }
+
+    // ===========================================
+    // VALIDACIÓN DE DATOS Y CONTROL DE BOTONES
+    // ===========================================
+
+    // Función para validar si los datos son numéricos
+    function sonDatosNumericos(datos) {
+        if (!datos || datos.length === 0) return false;
+        
+        // Limpiar y dividir los datos
+        const datosLimpios = datos.split(/[,;\s]+/).filter(item => item.trim() !== '');
+        
+        if (datosLimpios.length === 0) return false;
+        
+        // Verificar que todos los elementos sean números
+        for (let dato of datosLimpios) {
+            // Permitir números con decimales (punto decimal)
+            if (isNaN(parseFloat(dato)) || !isFinite(dato)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    // Función para validar datos y actualizar estado de botones
+    function validarDatosYActualizarBotones() {
+        const dataInput = document.getElementById('data-input');
+        const datos = dataInput.value.trim();
+        const btnCuantitativa = document.getElementById('btn-cuantitativa');
+        
+        if (datos === '') {
+            // Si no hay datos, habilitar ambos botones
+            btnCuantitativa.classList.remove('disabled');
+            btnCuantitativa.title = 'Seleccionar variable cuantitativa';
+            return;
+        }
+        
+        const sonNumericos = sonDatosNumericos(datos);
+        
+        if (!sonNumericos) {
+            // Si los datos no son numéricos, deshabilitar botón cuantitativo
+            btnCuantitativa.classList.add('disabled');
+            btnCuantitativa.title = 'No se puede elegir variable cuantitativa con datos no numéricos';
+        } else {
+            // Si los datos son numéricos, habilitar botón cuantitativo
+            btnCuantitativa.classList.remove('disabled');
+            btnCuantitativa.title = 'Seleccionar variable cuantitativa';
+        }
+    }
+
+    // ===========================================
+    // FUNCIONALIDAD PARA DATOS DE EJEMPLO
+    // ===========================================
+
+    // Variable global para almacenar datos de ejemplo
+    let datosEjemplo = [];
+
+    // Función para cargar datos de ejemplo (SOLO UNO DE CADA TIPO)
+    function cargarDatosEjemplo() {
+        datosEjemplo = [
+            {
+                id: 'colores',
+                titulo: 'Colores Favoritos',
+                tipo: 'cualitativo',
+                descripcion: 'Encuesta sobre colores favoritos en una clase',
+                datos: 'Rojo, Azul, Verde, Rojo, Amarillo, Azul, Rojo, Verde, Azul, Rojo, Amarillo, Verde, Azul, Rojo, Verde',
+                cantidad: 15,
+                variableRecomendada: 'qualitative',
+                graficoRecomendado: 'bar'
+            },
+            {
+                id: 'edades',
+                titulo: 'Edades de Estudiantes',
+                tipo: 'cuantitativo',
+                descripcion: 'Edades de estudiantes de primaria',
+                datos: '8, 9, 8, 10, 9, 8, 9, 10, 8, 9, 10, 9, 8, 9, 10, 8, 9, 10',
+                cantidad: 18,
+                variableRecomendada: 'quantitative',
+                graficoRecomendado: 'bar'
+            }
+        ];
+
+        // Renderizar los ejemplos en la interfaz
+        renderizarEjemplos();
+    }
+
+    // Función para renderizar los ejemplos en la interfaz
+    function renderizarEjemplos() {
+        const ejemplosGrid = document.getElementById('ejemplos-grid');
+        if (!ejemplosGrid) return;
+
+        ejemplosGrid.innerHTML = '';
+
+        datosEjemplo.forEach(ejemplo => {
+            const ejemploCard = document.createElement('div');
+            ejemploCard.className = `ejemplo-card ${ejemplo.tipo}`;
+            ejemploCard.setAttribute('data-id', ejemplo.id);
+            ejemploCard.onclick = () => seleccionarEjemplo(ejemplo.id);
+
+            ejemploCard.innerHTML = `
+                <div class="ejemplo-header">
+                    <div class="ejemplo-titulo">${ejemplo.titulo}</div>
+                    <div class="ejemplo-tipo ${ejemplo.tipo}">${ejemplo.tipo === 'cualitativo' ? 'Cualitativo' : 'Cuantitativo'}</div>
+                </div>
+                <div class="ejemplo-descripcion">${ejemplo.descripcion}</div>
+                <div class="ejemplo-datos">${ejemplo.datos}</div>
+                <div class="ejemplo-info">
+                    <span class="ejemplo-cantidad">${ejemplo.cantidad} datos</span>
+                    <span class="ejemplo-grafico">📊 ${ejemplo.graficoRecomendado === 'bar' ? 'Barras' : ejemplo.graficoRecomendado === 'pie' ? 'Sectores' : 'Pictograma'}</span>
+                </div>
+            `;
+
+            ejemplosGrid.appendChild(ejemploCard);
+        });
+    }
+
+    // Función para mostrar/ocultar el contenedor de ejemplos
+    function toggleEjemplos() {
+        const ejemplosContainer = document.getElementById('ejemplos-container');
+        if (ejemplosContainer) {
+            const isVisible = ejemplosContainer.style.display !== 'none';
+            ejemplosContainer.style.display = isVisible ? 'none' : 'block';
+            
+            // Si se muestra, expandir automáticamente la grilla
+            if (!isVisible) {
+                const ejemplosGrid = document.getElementById('ejemplos-grid');
+                const toggleBtn = document.querySelector('.ejemplos-toggle');
+                if (ejemplosGrid && !ejemplosGrid.classList.contains('expandido')) {
+                    ejemplosGrid.classList.add('expandido');
+                    toggleBtn.classList.add('rotated');
+                }
+            }
+        }
+    }
+
+    // Función para expandir/contraer la grilla de ejemplos
+    function toggleEjemplosGrid() {
+        const ejemplosGrid = document.getElementById('ejemplos-grid');
+        const toggleBtn = document.querySelector('.ejemplos-toggle');
+        
+        if (ejemplosGrid && toggleBtn) {
+            ejemplosGrid.classList.toggle('expandido');
+            toggleBtn.classList.toggle('rotated');
+        }
+    }
+
+    // Función para seleccionar un ejemplo
+    function seleccionarEjemplo(id) {
+        const ejemplo = datosEjemplo.find(e => e.id === id);
+        if (!ejemplo) return;
+
+        // Remover selección anterior
+        document.querySelectorAll('.ejemplo-card').forEach(card => {
+            card.classList.remove('ejemplo-seleccionado');
+        });
+
+        // Marcar como seleccionado
+        const cardSeleccionada = document.querySelector(`.ejemplo-card[data-id="${id}"]`);
+        if (cardSeleccionada) {
+            cardSeleccionada.classList.add('ejemplo-seleccionado');
+        }
+
+        // Cargar datos en el textarea
+        const dataInput = document.getElementById('data-input');
+        dataInput.value = ejemplo.datos;
+
+        // Actualizar datos globales
+        window.datosCargados = ejemplo.datos.split(', ').map(item => {
+            // Convertir a número si es cuantitativo
+            return ejemplo.tipo === 'cuantitativo' ? parseFloat(item) : item;
+        });
+
+        // Validar y actualizar botones después de cargar ejemplo
+        validarDatosYActualizarBotones();
+
+        // Seleccionar automáticamente el tipo de variable recomendado
+        seleccionarVariable(ejemplo.variableRecomendada);
+
+        // Seleccionar automáticamente el gráfico recomendado
+        seleccionarGrafico(ejemplo.graficoRecomendado);
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Datos de ejemplo cargados!',
+            html: `
+                <div style="text-align: left;">
+                    <p><strong>${ejemplo.titulo}</strong></p>
+                    <ul>
+                        <li>Tipo: <strong>${ejemplo.tipo === 'cualitativo' ? 'Cualitativo' : 'Cuantitativo'}</strong></li>
+                        <li>Cantidad de datos: <strong>${ejemplo.cantidad}</strong></li>
+                        <li>Variable: <strong>${ejemplo.variableRecomendada === 'qualitative' ? 'Cualitativa' : 'Cuantitativa'}</strong></li>
+                        <li>Gráfico recomendado: <strong>${ejemplo.graficoRecomendado === 'bar' ? 'Barras' : ejemplo.graficoRecomendado === 'pie' ? 'Sectores' : 'Pictograma'}</strong></li>
+                    </ul>
+                </div>
+            `,
+            confirmButtonText: '¡Entendido!',
+            confirmButtonColor: '#4361ee',
+            timer: 4000
+        });
+
+        // Efecto visual en el textarea
+        dataInput.style.borderColor = '#9C27B0';
+        dataInput.style.boxShadow = '0 0 0 2px rgba(156, 39, 176, 0.2)';
+        setTimeout(() => {
+            dataInput.style.borderColor = '';
+            dataInput.style.boxShadow = '';
+        }, 2000);
+
+        console.log(`✅ Ejemplo cargado: ${ejemplo.titulo}`, window.datosCargados);
+    }
+
+    // ===========================================
+    // FUNCIÓN MODIFICADA PARA SELECCIONAR VARIABLE
+    // ===========================================
+
+    // Función para seleccionar tipo de variable (MODIFICADA)
+    function seleccionarVariable(tipo) {
+        const dataInput = document.getElementById('data-input');
+        const datos = dataInput.value.trim();
+        
+        // Si se intenta seleccionar cuantitativa pero los datos no son numéricos
+        if (tipo === 'quantitative' && !sonDatosNumericos(datos) && datos !== '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No se puede seleccionar variable cuantitativa',
+                html: `
+                    <div style="text-align: left;">
+                        <p>Los datos ingresados contienen valores no numéricos:</p>
+                        <ul>
+                            <li><strong>Datos cualitativos:</strong> Palabras, colores, categorías</li>
+                            <li><strong>Datos cuantitativos:</strong> Solo números</li>
+                        </ul>
+                        <p>Para usar variable cuantitativa, ingresa solo números.</p>
+                    </div>
+                `,
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        // Continuar con la selección normal si pasa la validación
+        window.tipoVariable = tipo;
+        
+        // Actualizar estado visual de los botones
+        const btnCuantitativa = document.getElementById('btn-cuantitativa');
+        const btnCualitativa = document.getElementById('btn-cualitativa');
+        
+        // Remover clase active de ambos botones
+        btnCuantitativa.classList.remove('active');
+        btnCualitativa.classList.remove('active');
+        
+        // Agregar clase active al botón seleccionado
+        if (tipo === 'quantitative') {
+            btnCuantitativa.classList.add('active');
+        } else {
+            btnCualitativa.classList.add('active');
+        }
+        
+        console.log(`✅ Variable seleccionada: ${tipo}`);
+        
+        // Mostrar mensaje informativo
+        Swal.fire({
+            icon: 'success',
+            title: `Variable ${tipo === 'quantitative' ? 'Cuantitativa' : 'Cualitativa'} seleccionada`,
+            text: `Ahora puedes generar gráficos y cálculos para datos ${tipo === 'quantitative' ? 'numéricos' : 'cualitativos'}`,
+            confirmButtonText: '¡Perfecto!',
+            confirmButtonColor: '#4361ee',
+            timer: 2000
+        });
+    }
+
+    // FUNCIONES MEJORADAS
+
+    function abrirActividadesInteractivas() {
+        Swal.fire({
+            title: '🎮 Actividades Interactivas',
+            html: `
+                <div style="text-align: left;">
+                    <p><strong>Próximamente actividades emocionantes:</strong></p>
+                    <ul>
+                        <li>🧩 <strong>Juego de clasificación:</strong> Clasifica datos cualitativos y cuantitativos</li>
+                        <li>🎯 <strong>Reto de frecuencias:</strong> Calcula frecuencias contra el tiempo</li>
+                        <li>📊 <strong>Constructor de gráficos:</strong> Crea tus propios gráficos interactivos</li>
+                        <li>🏆 <strong>Desafíos estadísticos:</strong> Resuelve problemas con datos reales</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #4361ee;">
+                        <strong>¡Muy pronto disponible!</strong>
+                    </p>
+                </div>
+            `,
+            icon: 'info',
+            confirmButtonText: '¡Entendido!',
+            confirmButtonColor: '#4361ee'
+        });
+    }
+
+    function abrirMaterialTeorico() {
+        window.open('material.html', '_blank');
+    }
+
+    // VARIABLES GLOBALES MEJORADAS
+    let datosTablaFrecuencia = [];
+    let lectorResolucionActivo = false;
+    let speechSynthesis = window.speechSynthesis;
+    let colaPasos = [];
+    let pasoActual = 0;
+    let utteranceActual = null;
+    let timeoutPausa = null;
+
+    // FUNCIÓN PARA CARGAR LA TABLA DE FRECUENCIA (MEJORADA)
+    function cargarTablaFrecuencia() {
+        // Ocultar otros contenedores si es necesario
+        const contenedorSueltos = document.getElementById('datos-sueltos-container');
+        if (contenedorSueltos) contenedorSueltos.style.display = 'none';
+        
+        const contenedorEjemplos = document.getElementById('ejemplos-container');
+        if (contenedorEjemplos) contenedorEjemplos.style.display = 'none';
+        
+        // Mostrar el contenedor de tabla
+        const contenedorTabla = document.getElementById('tabla-frecuencia-container');
+        contenedorTabla.style.display = 'block';
+        
+        // Limpiar datos anteriores
+        datosTablaFrecuencia = [];
+        
+        // Agregar 3 filas iniciales vacías
+        const tablaBody = document.getElementById('tabla-frecuencia-body');
+        tablaBody.innerHTML = '';
+        
+        for (let i = 0; i < 3; i++) {
+            agregarFilaTabla();
+        }
+        
+        // Enfocar el primer input con animación
+        setTimeout(() => {
+            const primerInput = document.getElementById('valor-0');
+            if (primerInput) {
+                primerInput.focus();
+                primerInput.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    primerInput.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }, 100);
+
+        // Mostrar instrucciones contextuales
+        Swal.fire({
+            title: '📋 Tabla de Frecuencia',
+            html: `
+                <div style="text-align: left;">
+                    <p><strong>Instrucciones:</strong></p>
+                    <ol>
+                        <li>Ingresa cada valor único en la columna <strong>Variable (x)</strong></li>
+                        <li>Ingresa la frecuencia (cuántas veces aparece) en <strong>Fr</strong></li>
+                        <li>Usa <strong>Enter</strong> para navegar entre campos</li>
+                        <li>Haz clic en <strong>✅ Generar Datos</strong> cuando termines</li>
+                    </ol>
+                    <p><strong>Ejemplo:</strong></p>
+                    <ul>
+                        <li>Rojo → 5 (significa "Rojo" aparece 5 veces)</li>
+                        <li>10 → 3 (significa "10" aparece 3 veces)</li>
+                    </ul>
+                </div>
+            `,
+            icon: 'info',
+            confirmButtonText: '¡Entendido!',
+            confirmButtonColor: '#C2185B'
+        });
+    }
+
+    // FUNCIÓN PARA AGREGAR UNA FILA A LA TABLA (MEJORADA)
+    function agregarFilaTabla() {
+        const tablaBody = document.getElementById('tabla-frecuencia-body');
+        const filaIndex = tablaBody.children.length;
+        
+        const fila = document.createElement('tr');
+        fila.style.opacity = '0';
+        fila.style.transform = 'translateY(-10px)';
+        
+        fila.innerHTML = `
+            <td>
+                <input type="text" class="input-valor" id="valor-${filaIndex}" 
+                       placeholder="Ej: 5, A, Rojo..." 
+                       style="width: 90%; padding: 8px; border: 2px solid #F8BBD0; border-radius: 6px; font-family: 'Comic Neue', cursive; transition: all 0.3s ease;">
+            </td>
+            <td>
+                <input type="number" class="input-frecuencia" id="frecuencia-${filaIndex}" 
+                       placeholder="Ej: 10" min="1"
+                       style="width: 90%; padding: 8px; border: 2px solid #F8BBD0; border-radius: 6px; font-family: 'Comic Neue', cursive; transition: all 0.3s ease;">
+            </td>
+            <td style="text-align: center;">
+                <button type="button" class="btn-eliminar" onclick="eliminarFilaTabla(${filaIndex})" 
+                        style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
+                    ×
+                </button>
+            </td>
+        `;
+        
+        tablaBody.appendChild(fila);
+        
+        // Animación de entrada
+        setTimeout(() => {
+            fila.style.opacity = '1';
+            fila.style.transform = 'translateY(0)';
+        }, 50);
+        
+        // Agregar evento Enter para navegar entre campos
+        const inputs = fila.getElementsByTagName('input');
+        inputs[0].addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                inputs[1].focus();
+            }
+        });
+        inputs[1].addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                agregarFilaTabla();
+            }
+        });
+
+        // Efectos hover mejorados
+        inputs[0].addEventListener('focus', function() {
+            this.style.borderColor = '#C2185B';
+            this.style.boxShadow = '0 0 0 2px rgba(194, 24, 91, 0.2)';
+        });
+        inputs[0].addEventListener('blur', function() {
+            this.style.borderColor = '#F8BBD0';
+            this.style.boxShadow = 'none';
+        });
+
+        inputs[1].addEventListener('focus', function() {
+            this.style.borderColor = '#C2185B';
+            this.style.boxShadow = '0 0 0 2px rgba(194, 24, 91, 0.2)';
+        });
+        inputs[1].addEventListener('blur', function() {
+            this.style.borderColor = '#F8BBD0';
+            this.style.boxShadow = 'none';
+        });
+    }
+
+    // FUNCIÓN PARA ELIMINAR UNA FILA (MEJORADA)
+    function eliminarFilaTabla(index) {
+        const tablaBody = document.getElementById('tabla-frecuencia-body');
+        if (tablaBody.children.length > 1) {
+            const fila = tablaBody.children[index];
+            fila.style.transform = 'translateX(-100%)';
+            fila.style.opacity = '0';
+            
+            setTimeout(() => {
+                tablaBody.removeChild(fila);
+                renumerarFilas();
+            }, 300);
+        } else {
+            Swal.fire({
+                title: '¡Espera!',
+                text: 'Debe haber al menos una fila en la tabla.',
+                icon: 'warning',
+                confirmButtonColor: '#C2185B'
+            });
+        }
+    }
+
+    // FUNCIÓN PARA RENUMERAR LAS FILAS (MEJORADA)
+    function renumerarFilas() {
+        const tablaBody = document.getElementById('tabla-frecuencia-body');
+        const filas = tablaBody.getElementsByTagName('tr');
+        
+        for (let i = 0; i < filas.length; i++) {
+            const inputs = filas[i].getElementsByTagName('input');
+            inputs[0].id = `valor-${i}`;
+            inputs[1].id = `frecuencia-${i}`;
+            
+            const botonEliminar = filas[i].querySelector('.btn-eliminar');
+            botonEliminar.onclick = function() { eliminarFilaTabla(i); };
+        }
+    }
+
+    // FUNCIÓN PARA GENERAR DATOS DESDE LA TABLA (MEJORADA)
+    function generarDatosDesdeTabla() {
+        console.log('🔍 Ejecutando generarDatosDesdeTabla...');
+        
+        const tablaBody = document.getElementById('tabla-frecuencia-body');
+        const filas = tablaBody.getElementsByTagName('tr');
+        
+        datosTablaFrecuencia = [];
+        let datosValidos = true;
+        let totalFrecuencia = 0;
+        let datosAgrupados = {};
+        let filasConError = [];
+
+        // Validar y recolectar datos
+        for (let i = 0; i < filas.length; i++) {
+            const inputs = filas[i].getElementsByTagName('input');
+            const valor = inputs[0].value.trim();
+            const frecuencia = parseInt(inputs[1].value);
+
+            console.log(`Fila ${i}: valor="${valor}", frecuencia=${frecuencia}`);
+
+            if (valor && !isNaN(frecuencia) && frecuencia > 0) {
+                // Guardar datos agrupados para mostrar resumen
+                datosAgrupados[valor] = frecuencia;
+                totalFrecuencia += frecuencia;
+                
+                // Agregar cada valor repetido según su frecuencia
+                for (let j = 0; j < frecuencia; j++) {
+                    datosTablaFrecuencia.push(valor);
+                }
+                
+                // Quitar bordes rojos si los había
+                inputs[0].style.borderColor = '#F8BBD0';
+                inputs[1].style.borderColor = '#F8BBD0';
+                
+            } else if (valor || frecuencia) {
+                datosValidos = false;
+                filasConError.push(i + 1);
+                inputs[0].style.borderColor = '#dc3545';
+                inputs[1].style.borderColor = '#dc3545';
+            }
+        }
+
+        if (!datosValidos) {
+            Swal.fire({
+                title: '❌ Error en los datos',
+                html: `Las siguientes filas tienen errores: <strong>${filasConError.join(', ')}</strong><br><br>
+                       Asegúrate de que:<br>
+                       • Ambos campos estén completos<br>
+                       • La frecuencia sea un número mayor a 0`,
+                icon: 'error',
+                confirmButtonColor: '#C2185B'
+            });
+            return;
+        }
+
+        if (datosTablaFrecuencia.length > 0) {
+            // Ocultar la tabla de entrada con animación
+            const contenedorTabla = document.getElementById('tabla-frecuencia-container');
+            contenedorTabla.style.opacity = '0';
+            contenedorTabla.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                contenedorTabla.style.display = 'none';
+            }, 300);
+            
+            // ✅ ENVIAR DATOS AL TEXTAREA
+            const dataInput = document.getElementById('data-input');
+            dataInput.value = datosTablaFrecuencia.join(', ');
+            
+            // Efecto visual en el textarea
+            dataInput.style.borderColor = '#4CAF50';
+            dataInput.style.boxShadow = '0 0 0 2px rgba(76, 175, 80, 0.2)';
+            setTimeout(() => {
+                dataInput.style.borderColor = '';
+                dataInput.style.boxShadow = '';
+            }, 2000);
+            
+            // Actualizar datos globales para usar en gráficos
+            window.datosCargados = datosTablaFrecuencia;
+            
+            // Validar y actualizar botones después de cargar datos
+            validarDatosYActualizarBotones();
+            
+            // Mostrar mensaje de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Tabla cargada exitosamente!',
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>Resumen:</strong></p>
+                        <ul>
+                            <li>Total de datos: <strong>${totalFrecuencia}</strong></li>
+                            <li>Valores únicos: <strong>${Object.keys(datosAgrupados).length}</strong></li>
+                            <li>Datos enviados al campo de entrada</li>
+                        </ul>
+                    </div>
+                `,
+                confirmButtonColor: '#C2185B',
+                timer: 3000,
+                showConfirmButton: true
+            });
+            
+            console.log('✅ Datos cargados desde tabla:', datosTablaFrecuencia);
+            
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Datos incompletos',
+                text: 'Debe ingresar al menos una fila completa con datos válidos.',
+                confirmButtonColor: '#C2185B'
+            });
+        }
+    }
+
+    // FUNCIÓN PARA CANCELAR TABLA (MEJORADA)
+    function cancelarTablaFrecuencia() {
+        const contenedorTabla = document.getElementById('tabla-frecuencia-container');
+        contenedorTabla.style.opacity = '0';
+        contenedorTabla.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            contenedorTabla.style.display = 'none';
+            datosTablaFrecuencia = [];
+        }, 300);
+    }
+
+    // ===========================================
+    // LÓGICA ESPECÍFICA PARA EL LECTOR DE RESOLUCIÓN CON PAUSAS (MEJORADA)
+    // ===========================================
+
+    function toggleLecturaResolucion() {
+        const btn = document.getElementById('btn-leer-resolucion');
+        const contenedorPasos = document.getElementById('btn-ver-pasos-resultado');
+        
+        if (!contenedorPasos || contenedorPasos.style.display === 'none' || contenedorPasos.innerHTML.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Primero genera los pasos',
+                text: 'Debes hacer clic en "Ver pasos de resolución" antes de poder leerlos.',
+                confirmButtonColor: '#C2185B'
+            });
+            return;
+        }
+
+        if (lectorResolucionActivo) {
+            pausarLecturaResolucion();
+            btn.textContent = '🔊 Leer resolución';
+            btn.classList.remove('pausa');
+            lectorResolucionActivo = false;
+        } else {
+            iniciarLecturaResolucion();
+            btn.textContent = '⏸️ Pausar lectura';
+            btn.classList.add('pausa');
+            lectorResolucionActivo = true;
+        }
+    }
+
+    function iniciarLecturaResolucion() {
+        const contenedorPasos = document.getElementById('btn-ver-pasos-resultado');
+        if (!contenedorPasos) return;
+
+        // Obtener los pasos individuales
+        colaPasos = extraerPasosIndividuales(contenedorPasos);
+        
+        if (colaPasos.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'No hay contenido para leer',
+                text: 'No se encontraron pasos de resolución para leer.',
+                confirmButtonColor: '#C2185B'
+            });
+            return;
+        }
+
+        // Reiniciar contador
+        pasoActual = 0;
+        
+        // Cancelar cualquier lectura anterior
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        
+        // Limpiar timeout anterior si existe
+        if (timeoutPausa) {
+            clearTimeout(timeoutPausa);
+        }
+        
+        // Iniciar la lectura del primer paso
+        leerSiguientePaso();
+    }
+
+    function extraerPasosIndividuales(contenedor) {
+        // Clonar el contenedor para no afectar el DOM original
+        const clone = contenedor.cloneNode(true);
+        
+        // Remover elementos que no queremos leer (botones, etc.)
+        const elementosNoLeer = clone.querySelectorAll('button, .btn, .lector-resolucion-btn');
+        elementosNoLeer.forEach(el => el.remove());
+        
+        // Función para eliminar emojis del texto
+        function eliminarEmojis(texto) {
+            // Patrón regex para detectar la mayoría de emojis
+            const patronEmojis = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu;
+            return texto.replace(patronEmojis, '').trim();
+        }
+        
+        // Obtener todos los elementos que podrían representar pasos individuales
+        const elementosPosibles = clone.querySelectorAll('p, li, div, span');
+        
+        let pasos = [];
+        
+        // Patrones para identificar pasos
+        const patronesPaso = [
+            /paso\s*\d+/i,
+            /paso\s*[a-z]/i,
+            /\d+\./,
+            /•/,
+            /- /,
+            /\*/,
+            /→/,
+            /primero|segundo|tercero|cuarto|quinto|sexto|séptimo|octavo|noveno|décimo/i
+        ];
+        
+        // Buscar elementos que contengan indicadores de paso
+        elementosPosibles.forEach(elemento => {
+            let texto = elemento.textContent.trim();
+            
+            // ELIMINAR EMOJIS DEL TEXTO ANTES DE PROCESAR
+            texto = eliminarEmojis(texto);
+            
+            if (texto && texto.length > 10) { // Filtrar textos muy cortos
+                // Verificar si el texto parece ser un paso
+                let esPaso = false;
+                
+                // Verificar patrones
+                for (let patron of patronesPaso) {
+                    if (patron.test(texto)) {
+                        esPaso = true;
+                        break;
+                    }
+                }
+                
+                // Si no coincide con patrones pero el elemento está en una lista, considerarlo paso
+                if (!esPaso && (elemento.tagName === 'LI' || elemento.parentElement.tagName === 'UL' || elemento.parentElement.tagName === 'OL')) {
+                    esPaso = true;
+                }
+                
+                if (esPaso) {
+                    pasos.push({
+                        texto: texto, // Texto ya sin emojis
+                        elementoOriginal: encontrarElementoOriginal(contenedor, elemento.textContent.trim()) // Mantener referencia original
+                    });
+                }
+            }
+        });
+        
+        // Si no encontramos pasos estructurados, dividir por puntos o saltos de línea
+        if (pasos.length === 0) {
+            let textoCompleto = clone.textContent.replace(/\s+/g, ' ').trim();
+            
+            // ELIMINAR EMOJIS DEL TEXTO COMPLETO
+            textoCompleto = eliminarEmojis(textoCompleto);
+            
+            if (textoCompleto) {
+                // Dividir por puntos seguidos de espacio y mayúscula
+                const oraciones = textoCompleto.split(/(?<=[.!?])\s+(?=[A-Z])/);
+                
+                oraciones.forEach((oracion, index) => {
+                    const textoLimpio = eliminarEmojis(oracion.trim());
+                    if (textoLimpio.length > 0) {
+                        pasos.push({
+                            texto: textoLimpio,
+                            elementoOriginal: null
+                        });
+                    }
+                });
+            }
+        }
+        
+        // Si aún no hay pasos, usar el texto completo como un solo paso
+        if (pasos.length === 0) {
+            let textoCompleto = clone.textContent.replace(/\s+/g, ' ').trim();
+            
+            // ELIMINAR EMOJIS DEL TEXTO COMPLETO
+            textoCompleto = eliminarEmojis(textoCompleto);
+            
+            if (textoCompleto) {
+                pasos.push({
+                    texto: textoCompleto,
+                    elementoOriginal: null
+                });
+            }
+        }
+        
+        return pasos;
+    }
+
+    function encontrarElementoOriginal(contenedor, texto) {
+        const elementos = contenedor.querySelectorAll('*');
+        for (let elemento of elementos) {
+            if (elemento.textContent.trim() === texto) {
+                return elemento;
+            }
+        }
+        return null;
+    }
+
+    function leerSiguientePaso() {
+        if (pasoActual >= colaPasos.length) {
+            // Fin de la lectura
+            finalizarLecturaResolucion();
+            return;
+        }
+        
+        const paso = colaPasos[pasoActual];
+        
+        // Resaltar el paso actual en la interfaz si es posible
+        if (paso.elementoOriginal) {
+            // Remover resaltado anterior
+            document.querySelectorAll('.paso-activo').forEach(el => {
+                el.classList.remove('paso-activo');
+            });
+            
+            // Aplicar resaltado al paso actual
+            paso.elementoOriginal.classList.add('paso-activo');
+            
+            // Hacer scroll para que sea visible
+            paso.elementoOriginal.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+        
+        // Crear y configurar el utterance para este paso
+        utteranceActual = new SpeechSynthesisUtterance(paso.texto);
+        utteranceActual.lang = 'es-ES';
+        utteranceActual.rate = 0.9;
+        utteranceActual.pitch = 1;
+        utteranceActual.volume = 1;
+        
+        // Configurar eventos
+        utteranceActual.onend = function() {
+            console.log(`Paso ${pasoActual + 1} leído:`, paso.texto.substring(0, 50) + '...');
+            
+            // Avanzar al siguiente paso después de una pausa
+            pasoActual++;
+            
+            // Pausa entre pasos (1.5 segundos)
+            timeoutPausa = setTimeout(() => {
+                leerSiguientePaso();
+            }, 1500);
+        };
+        
+        utteranceActual.onerror = function(event) {
+            console.error('Error en lectura del paso:', event);
+            
+            // Intentar con el siguiente paso
+            pasoActual++;
+            timeoutPausa = setTimeout(() => {
+                leerSiguientePaso();
+            }, 1000);
+        };
+        
+        // Iniciar la lectura de este paso
+        speechSynthesis.speak(utteranceActual);
+    }
+
+    function pausarLecturaResolucion() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.pause();
+        }
+        
+        // Limpiar timeout de pausa entre pasos
+        if (timeoutPausa) {
+            clearTimeout(timeoutPausa);
+        }
+    }
+
+    function reanudarLecturaResolucion() {
+        if (speechSynthesis.paused) {
+            speechSynthesis.resume();
+        } else if (!speechSynthesis.speaking && pasoActual < colaPasos.length) {
+            // Si no estaba hablando pero hay pasos pendientes, continuar
+            leerSiguientePaso();
+        }
+    }
+
+    function finalizarLecturaResolucion() {
+        const btn = document.getElementById('btn-leer-resolucion');
+        btn.textContent = '🔊 Leer resolución';
+        btn.classList.remove('pausa');
+        lectorResolucionActivo = false;
+        utteranceActual = null;
+        
+        // Limpiar timeout
+        if (timeoutPausa) {
+            clearTimeout(timeoutPausa);
+        }
+        
+        // Remover resaltado
+        document.querySelectorAll('.paso-activo').forEach(el => {
+            el.classList.remove('paso-activo');
+        });
+        
+        console.log('Lectura de resolución completada');
+    }
+
+    // Detener la lectura si el usuario cambia de página
+    window.addEventListener('beforeunload', function() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        if (timeoutPausa) {
+            clearTimeout(timeoutPausa);
+        }
+    });
+
+    // También detener la lectura si se cierra la ventana
+    window.addEventListener('unload', function() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        if (timeoutPausa) {
+            clearTimeout(timeoutPausa);
+        }
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="frequencies.js"></script>
+    <script src="statistics.js"></script>
+    <!-- Reemplazar charts.js por charts-chartjs.js -->
+    <script src="charts-chartjs.js"></script>
+    <script src="nivelprimario.js"></script>      
+    <script src="download.js"></script>          
+    <script src="voz.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>

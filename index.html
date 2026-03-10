@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstadísticaMente - Pensar con datos, decidir con criterio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Patrick+Hand&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Librerías necesarias para el chatbot -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    
+<!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+
+<!-- Meta tags para PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EstadísticaMente">
+<link rel="apple-touch-icon" href="./img/profemarce.png">
+
+<meta name="msapplication-TileImage" content="./img/profemarce.png">
+<meta name="msapplication-TileColor" content="#C2185B">
+<meta name="theme-color" content="#C2185B">
+
+<!-- Meta tags para la store -->
+<meta name="application-name" content="EstadísticaMente">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Preload de recursos críticos -->
+<link rel="preload" href="./styles.css" as="style">
+<link rel="preload" href="./script.js" as="script">
+
+    <style>
+    /* INSTALAR APP SIEMPRE MENOS CUANDO YA ESTÁ INSTALADA */
+    .install-app-banner {
+        background: linear-gradient(135deg, #C2185B 0%, #A0154B 100%);
+        color: white;
+        padding: 10px 20px;
+        margin: 0;
+        font-family: 'Comic Neue', cursive;
+        font-size: 14px;
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(194, 24, 91, 0.3);
+        border-bottom: 2px solid #F8BBD0;
+    }
+
+    .install-app-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .install-app-text {
+        font-weight: bold;
+    }
+
+    .install-app-btn {
+        background: rgba(255,255,255,0.9);
+        color: #C2185B;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: 'Comic Neue', cursive;
+        font-weight: bold;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .install-app-btn:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .close-install-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+    }
+
+    .close-install-btn:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    /* Ocultar cuando la app está instalada */
+    .app-installed .install-app-banner {
+        display: none !important;
+    }
+    </style>
+
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+            typeset: false 
+        }
+    };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con logo -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="Sin título (4).png" class="logo">
+            </div>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span id="userGreeting"></span>
+                <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <!-- INSTALAR APP SIEMPRE MENOS CUANDO YA ESTÁ INSTALADA -->
+        <div id="install-app-banner" class="install-app-banner">
+            <div class="install-app-content">
+                <span class="install-app-text">📱 ¿Instalar la app?</span>
+                <button class="install-app-btn" onclick="installApp()">Instalar App</button>
+            </div>
+            <button class="close-install-btn" onclick="closeInstallBanner()">×</button>
+        </div>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <h1 class="section-title">Selecciona el nivel en el que quieres trabajar</h1>
+            
+            <!-- Imagen ilustrativa -->
+            <div class="illustration">
+                <img src="seleccionar.png" alt="Persona con interrogante" class="illustration-img">
+            </div>
+            
+            <!-- Botones de nivel -->
+            <div class="buttons-container">
+                <button class="level-btn primary" onclick="window.location.href='nivelinicial.html'">
+                 Nivel Primario
+                </button>
+                <button class="level-btn secondary" onclick="window.location.href='integracion-dashboard.html'">
+                    Nivel Secundario
+                </button>
+                <button class="level-btn secondary" onclick="abrirCreadorDashboards()">
+                    Nivel Superior
+                </button>
+            </div>
+        </main>
+
+        <!-- Pie de página -->
+        <footer class="footer">
+            <div class="footer-content">
+               <p style="margin-bottom: 10px;">
+🧠 EstadísticaMente es una herramienta educativa desarrollada por, Marcela Balzarelli y Pablo Barchiesi. 
+            </div>
+        </footer>
+    </div>
+
+    <!-- Chatbot de Profe Marce -->
+    <div id="profe-marce-avatar" class="chat-avatar" onclick="toggleChat()">
+        <img src="img/profemarce.png" alt="Profe Marce">
+    </div>
+
+    <div id="chat-window" class="chat-window hidden">
+        <div class="chat-header">
+            <img src="img/profemarce.png" alt="Avatar Profe Marce" class="chat-avatar-img">
+            <h3>Profe Marce</h3>
+            <button id="close-chat" class="close-chat-btn">✖</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" id="chat-input" placeholder="Escribí tu duda..." autocomplete="off">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+    // INSTALAR APP SIEMPRE MENOS CUANDO YA ESTÁ INSTALADA
+    let deferredPrompt;
+    let appInstalled = false;
+
+    // Verificar si ya está instalada
+    function checkIfAppInstalled() {
+        // Método 1: Verificar display mode
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            appInstalled = true;
+        }
+        
+        // Método 2: Verificar si se ejecuta como app
+        if (window.navigator.standalone) {
+            appInstalled = true;
+        }
+        
+        // Método 3: Verificar referrer
+        if (document.referrer.includes('android-app://')) {
+            appInstalled = true;
+        }
+        
+        if (appInstalled) {
+            document.documentElement.classList.add('app-installed');
+            console.log('✅ App ya está instalada - Ocultando banner');
+        }
+    }
+
+    function showInstallBanner() {
+        // NO mostrar si ya está instalada
+        if (appInstalled) return;
+        
+        const banner = document.getElementById('install-app-banner');
+        banner.style.display = 'flex';
+        
+        console.log('📱 Mostrando banner de instalación');
+    }
+
+    function closeInstallBanner() {
+        const banner = document.getElementById('install-app-banner');
+        banner.style.display = 'none';
+        console.log('❌ Banner cerrado por el usuario');
+    }
+
+    function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('✅ App instalada - Ocultando banner permanentemente');
+                    appInstalled = true;
+                    document.documentElement.classList.add('app-installed');
+                    closeInstallBanner();
+                } else {
+                    console.log('❌ Usuario rechazó la instalación');
+                }
+                deferredPrompt = null;
+            });
+        }
+    }
+
+    // EVENTO PRINCIPAL: Mostrar banner SIEMPRE que se pueda instalar
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Verificar si ya está instalada antes de mostrar
+        checkIfAppInstalled();
+        
+        if (!appInstalled) {
+            // Mostrar inmediatamente
+            showInstallBanner();
+        }
+    });
+
+    // Verificar al cargar si ya está instalada
+    window.addEventListener('load', function() {
+        checkIfAppInstalled();
+        
+        // Service Worker para funcionalidad offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function(registration) {
+                    console.log('✅ App lista para funcionar offline');
+                })
+                .catch(function(error) {
+                    console.log('❌ Error Service Worker:', error);
+                });
+        }
+    });
+
+    // También verificar cuando cambia la visibilidad (por si acaso)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            checkIfAppInstalled();
+        }
+    });
+
+    // Tu código existente de autenticación
+    document.addEventListener('DOMContentLoaded', function() {
+        const userData = localStorage.getItem('estadisticamente_user');
+        const userInfo = document.getElementById('userInfo');
+        const userGreeting = document.getElementById('userGreeting');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        if (userData) {
+            const user = JSON.parse(userData);
+            userInfo.style.display = 'flex';
+            userGreeting.textContent = `Hola, ${user.username} (${user.userType === 'student' ? 'Estudiante' : 'Docente'})`;
+        } else {
+            window.location.href = 'login.html';
+        }
+        
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('estadisticamente_user');
+            window.location.href = 'login.html';
+        });
+    });
+    </script>
+
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

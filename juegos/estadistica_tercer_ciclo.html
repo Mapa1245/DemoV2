@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadística en Contexto Real</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-info input {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .progress-container {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            margin: 0 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #51cf66, #ffd43b);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        .card-container {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .card {
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h2 {
+            color: #4e54c8;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .medidas-centrales {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .medidas-centrales h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .medidas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .medida {
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .medida .valor {
+            font-weight: bold;
+            color: #4e54c8;
+            font-size: 1.1rem;
+        }
+
+        .contexto {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4e54c8;
+        }
+
+        .contexto h3 {
+            color: #4e54c8;
+            margin-bottom: 10px;
+        }
+
+        .data-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .table-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .table-container h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .data-table th {
+            background: #4e54c8;
+            color: white;
+            font-weight: bold;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .graph-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+
+        .graph-canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .question-container {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .question-container h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            border-color: #4e54c8;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            border-color: #4e54c8;
+            background: #e3f2fd;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            display: flex;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            display: flex;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #4e54c8;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #3a3fa0;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #545b62;
+        }
+
+        .btn-accent {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-accent:hover:not(:disabled) {
+            background: #ff5252;
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .certificado {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .certificado h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .certificado p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .star {
+            font-size: 3rem;
+            color: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .star.filled {
+            color: #ffd43b;
+            transform: scale(1.2);
+            text-shadow: 0 0 10px rgba(255, 212, 59, 0.5);
+        }
+
+        .results-graph {
+            width: 100%;
+            max-width: 400px;
+            margin: 25px auto;
+            height: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .results-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .export-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .export-overlay.active {
+            display: flex;
+        }
+
+        .export-preview {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+
+        @media (max-width: 768px) {
+            .data-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+
+            .medidas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-buttons {
+                flex-direction: column;
+            }
+
+            .certificado h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>📊 Estadística en Contexto Real</h1>
+            </div>
+            <div class="user-info">
+                <input type="text" id="studentName" placeholder="Escribe tu nombre">
+                <button class="btn btn-secondary" id="resetBtn">Reiniciar</button>
+            </div>
+        </header>
+        
+        <div class="progress-container">
+            <span id="progressText">Tarjeta 1 de 10</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span id="scoreText">Puntuación: 0/0</span>
+        </div>
+        
+        <div class="card-container" id="main-content">
+            <!-- Las tarjetas se generarán aquí automáticamente -->
+        </div>
+    </div>
+
+    <!-- Overlay para previsualización de exportación -->
+    <div class="export-overlay" id="exportOverlay">
+        <div class="export-preview" id="exportPreview">
+            <!-- Contenido del certificado para exportar -->
+        </div>
+    </div>
+
+    <script>
+        // Funciones para calcular medidas de tendencia central
+        function calcularMedia(valores) {
+            const suma = valores.reduce((a, b) => a + b, 0);
+            return (suma / valores.length).toFixed(1);
+        }
+
+        function calcularMediana(valores) {
+            const sorted = [...valores].sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 !== 0 ? sorted[mid] : ((sorted[mid - 1] + sorted[mid]) / 2).toFixed(1);
+        }
+
+        function calcularModa(valores) {
+            const freq = {};
+            valores.forEach(v => freq[v] = (freq[v] || 0) + 1);
+            const maxFreq = Math.max(...Object.values(freq));
+            const modas = Object.keys(freq).filter(k => freq[k] === maxFreq);
+            return modas.length === valores.length ? "No hay moda" : modas.join(", ");
+        }
+
+        // Datos de las tarjetas
+        const tarjetas = [
+            {
+                id: 1,
+                tipoGrafico: 'barras',
+                datos: {
+                    titulo: 'Calificaciones de Matemáticas',
+                    labels: ['Ana', 'Luis', 'María', 'Carlos', 'Sofía', 'Pedro', 'Laura', 'Diego'],
+                    valores: [85, 92, 78, 88, 95, 82, 90, 87],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#4BC0C0', '#C9CBCF']
+                },
+                contexto: "Calificaciones del examen final de matemáticas. La media nos da el promedio del grupo, la mediana el rendimiento típico, y la moda la calificación más frecuente.",
+                pregunta: "Si el profesor quiere saber cuál es el rendimiento típico de la clase, ¿qué medida debería considerar?",
+                opciones: [
+                    "La mediana (87.5) - Representa el valor central",
+                    "La media (87.1) - Promedio de todos los estudiantes",
+                    "La moda (No hay) - No hay calificación repetida",
+                    "Todas las medidas son importantes"
+                ],
+                respuestaCorrecta: "La mediana (87.5) - Representa el valor central"
+            },
+            {
+                id: 2,
+                tipoGrafico: 'circular',
+                datos: {
+                    titulo: 'Preferencias de Actividades Extracurriculares',
+                    labels: ['Deportes', 'Música', 'Arte', 'Ciencia', 'Teatro'],
+                    valores: [25, 18, 15, 12, 10],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                },
+                contexto: "Estudiantes inscritos en diferentes actividades extracurriculares. La moda indica la actividad más popular, útil para planificar recursos.",
+                pregunta: "¿Qué actividad requiere más recursos según las medidas de tendencia central?",
+                opciones: [
+                    "Deportes - Es la moda con 25 estudiantes",
+                    "Música - 18 estudiantes inscritos",
+                    "Arte - 15 estudiantes participan",
+                    "Todas necesitan recursos similares"
+                ],
+                respuestaCorrecta: "Deportes - Es la moda con 25 estudiantes"
+            },
+            {
+                id: 3,
+                tipoGrafico: 'barras',
+                datos: {
+                    titulo: 'Libros Leídos en el Año',
+                    labels: ['0-2 libros', '3-5 libros', '6-8 libros', '9-11 libros', '12+ libros'],
+                    valores: [8, 15, 12, 6, 4],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                },
+                contexto: "Cantidad de libros leídos por estudiantes durante el año escolar. La moda indica el hábito de lectura más común.",
+                pregunta: "¿Qué rango de libros representa el hábito de lectura más frecuente?",
+                opciones: [
+                    "3-5 libros - Es la moda con 15 estudiantes",
+                    "6-8 libros - 12 estudiantes en este rango",
+                    "0-2 libros - 8 estudiantes leen poco",
+                    "12+ libros - Solo 4 estudiantes"
+                ],
+                respuestaCorrecta: "3-5 libros - Es la moda con 15 estudiantes"
+            },
+            {
+                id: 4,
+                tipoGrafico: 'barras-dobles',
+                datos: {
+                    titulo: 'Asistencia Mensual a Clases',
+                    labels: ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D'],
+                    valores1: [22, 18, 25, 20],
+                    valores2: [24, 20, 28, 23],
+                    series: ['Primer Semestre', 'Segundo Semestre'],
+                    colores: ['#36A2EB', '#FF6384']
+                },
+                contexto: "Promedio de asistencia mensual por grupo. La media nos permite comparar el rendimiento entre grupos.",
+                pregunta: "¿Qué grupo muestra la mayor mejora en asistencia?",
+                opciones: [
+                    "Grupo C - Aumentó 3 estudiantes de promedio",
+                    "Grupo A - Aumentó 2 estudiantes",
+                    "Grupo B - Aumentó 2 estudiantes",
+                    "Grupo D - Aumentó 3 estudiantes"
+                ],
+                respuestaCorrecta: "Grupo C - Aumentó 3 estudiantes de promedio"
+            },
+            {
+                id: 5,
+                tipoGrafico: 'circular',
+                datos: {
+                    titulo: 'Distribución por Edades en el Colegio',
+                    labels: ['11 años', '12 años', '13 años', '14 años'],
+                    valores: [45, 60, 55, 40],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                },
+                contexto: "Distribución de estudiantes por edades. La moda indica el grupo de edad más numeroso.",
+                pregunta: "¿Qué grupo de edad es el más numeroso en el colegio?",
+                opciones: [
+                    "12 años - Es la moda con 60 estudiantes",
+                    "13 años - 55 estudiantes",
+                    "11 años - 45 estudiantes",
+                    "14 años - 40 estudiantes"
+                ],
+                respuestaCorrecta: "12 años - Es la moda con 60 estudiantes"
+            },
+            {
+                id: 6,
+                tipoGrafico: 'barras',
+                datos: {
+                    titulo: 'Puntajes en Olimpiada de Ciencias',
+                    labels: ['60-70', '71-80', '81-90', '91-100'],
+                    valores: [5, 12, 18, 8],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                },
+                contexto: "Distribución de puntajes en la olimpiada de ciencias. La mediana indica el rendimiento típico.",
+                pregunta: "¿Qué rango de puntaje representa el rendimiento más común?",
+                opciones: [
+                    "81-90 puntos - Es la moda con 18 estudiantes",
+                    "71-80 puntos - 12 estudiantes",
+                    "91-100 puntos - 8 estudiantes",
+                    "60-70 puntos - 5 estudiantes"
+                ],
+                respuestaCorrecta: "81-90 puntos - Es la moda con 18 estudiantes"
+            },
+            {
+                id: 7,
+                tipoGrafico: 'barras-dobles',
+                datos: {
+                    titulo: 'Horas de Estudio Semanal',
+                    labels: ['Grupo 1', 'Grupo 2', 'Grupo 3', 'Grupo 4'],
+                    valores1: [8, 10, 12, 9],
+                    valores2: [10, 12, 15, 11],
+                    series: ['Inicio de Año', 'Fin de Año'],
+                    colores: ['#36A2EB', '#FF6384']
+                },
+                contexto: "Promedio de horas de estudio semanal por grupo. La media permite comparar la evolución del esfuerzo.",
+                pregunta: "¿Qué grupo muestra el mayor aumento en horas de estudio?",
+                opciones: [
+                    "Grupo 3 - Aumentó 3 horas semanales",
+                    "Grupo 2 - Aumentó 2 horas",
+                    "Grupo 1 - Aumentó 2 horas",
+                    "Grupo 4 - Aumentó 2 horas"
+                ],
+                respuestaCorrecta: "Grupo 3 - Aumentó 3 horas semanales"
+            },
+            {
+                id: 8,
+                tipoGrafico: 'circular',
+                datos: {
+                    titulo: 'Preferencias de Merienda Saludable',
+                    labels: ['Fruta', 'Yogur', 'Sándwich', 'Nueces', 'Queso'],
+                    valores: [35, 25, 20, 12, 8],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                },
+                contexto: "Preferencias de meriendas saludables entre estudiantes. La moda indica la opción más popular.",
+                pregunta: "¿Qué merienda es la más preferida por los estudiantes?",
+                opciones: [
+                    "Fruta - Es la moda con 35% de preferencia",
+                    "Yogur - 25% de los estudiantes",
+                    "Sándwich - 20% de preferencia",
+                    "Nueces - 12% de los estudiantes"
+                ],
+                respuestaCorrecta: "Fruta - Es la moda con 35% de preferencia"
+            },
+            {
+                id: 9,
+                tipoGrafico: 'barras',
+                datos: {
+                    titulo: 'Participación en Proyectos Comunitarios',
+                    labels: ['0 proyectos', '1 proyecto', '2 proyectos', '3 proyectos', '4+ proyectos'],
+                    valores: [15, 20, 18, 10, 5],
+                    colores: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                },
+                contexto: "Cantidad de proyectos comunitarios en los que participaron los estudiantes. La moda muestra el nivel de participación más común.",
+                pregunta: "¿Cuál es el nivel de participación más frecuente?",
+                opciones: [
+                    "1 proyecto - Es la moda con 20 estudiantes",
+                    "2 proyectos - 18 estudiantes",
+                    "0 proyectos - 15 estudiantes no participaron",
+                    "3 proyectos - 10 estudiantes"
+                ],
+                respuestaCorrecta: "1 proyecto - Es la moda con 20 estudiantes"
+            },
+            {
+                id: 10,
+                tipoGrafico: 'barras-dobles',
+                datos: {
+                    titulo: 'Uso de Biblioteca por Grados',
+                    labels: ['5° Grado', '6° Grado', '7° Grado', '8° Grado'],
+                    valores1: [45, 38, 52, 41],
+                    valores2: [50, 45, 58, 48],
+                    series: ['Visitas Mensuales 2023', 'Visitas Mensuales 2024'],
+                    colores: ['#36A2EB', '#FF6384']
+                },
+                contexto: "Promedio de visitas mensuales a la biblioteca por grado. La media permite analizar el crecimiento en el uso.",
+                pregunta: "¿Qué grado muestra el mayor aumento en el uso de la biblioteca?",
+                opciones: [
+                    "7° Grado - Aumentó 6 visitas mensuales",
+                    "6° Grado - Aumentó 7 visitas",
+                    "5° Grado - Aumentó 5 visitas",
+                    "8° Grado - Aumentó 7 visitas"
+                ],
+                respuestaCorrecta: "6° Grado - Aumentó 7 visitas"
+            }
+        ];
+
+        let estadoApp = {
+            tarjetaActual: 1,
+            respuestas: {},
+            puntuacion: 0,
+            nombreEstudiante: ''
+        };
+
+        // INICIALIZACIÓN PRINCIPAL
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Iniciando aplicación...");
+            generarTodasLasTarjetas();
+            mostrarTarjeta(1);
+            configurarEventosGlobales();
+            actualizarInterfaz();
+        });
+
+        function generarTodasLasTarjetas() {
+            const container = document.getElementById('main-content');
+            container.innerHTML = '';
+
+            tarjetas.forEach(tarjeta => {
+                const esUltima = tarjeta.id === tarjetas.length;
+                const medidas = calcularMedidasTarjeta(tarjeta);
+                
+                const cardHTML = `
+                    <div class="card" id="card-${tarjeta.id}">
+                        <div class="card-header">
+                            <h2>${tarjeta.datos.titulo}</h2>
+                        </div>
+                        
+                        <div class="medidas-centrales">
+                            <h4>📈 Medidas de Tendencia Central</h4>
+                            <div class="medidas-grid">
+                                <div class="medida">
+                                    <div>Media</div>
+                                    <div class="valor">${medidas.media}</div>
+                                    <small>Promedio general</small>
+                                </div>
+                                <div class="medida">
+                                    <div>Mediana</div>
+                                    <div class="valor">${medidas.mediana}</div>
+                                    <small>Valor central</small>
+                                </div>
+                                <div class="medida">
+                                    <div>Moda</div>
+                                    <div class="valor">${medidas.moda}</div>
+                                    <small>Más frecuente</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contexto">
+                            <h3>📋 Situación Contextual</h3>
+                            <p>${tarjeta.contexto}</p>
+                        </div>
+
+                        <div class="data-container">
+                            <div class="table-container">
+                                <h3>📊 Datos Recopilados</h3>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>${obtenerEncabezadoTabla(tarjeta)}</th>
+                                            <th>${tarjeta.tipoGrafico === 'circular' ? 'Porcentaje' : 'Cantidad'}</th>
+                                            ${tarjeta.tipoGrafico === 'barras-dobles' ? '<th>Segundo Período</th>' : ''}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${generarFilasTabla(tarjeta)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="graph-container">
+                                <canvas id="graph-${tarjeta.id}" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="question-container">
+                            <h3>💡 ${tarjeta.pregunta}</h3>
+                        </div>
+
+                        <div class="options-container">
+                            ${tarjeta.opciones.map((opcion, i) => `
+                                <div class="option" data-value="${opcion}">${String.fromCharCode(65 + i)}) ${opcion}</div>
+                            `).join('')}
+                        </div>
+
+                        <div class="feedback" id="feedback-${tarjeta.id}">
+                            <span>✅</span>
+                            <span id="feedback-text-${tarjeta.id}"></span>
+                        </div>
+
+                        <div class="navigation">
+                            <button class="btn btn-secondary" id="prevBtn-${tarjeta.id}" ${tarjeta.id === 1 ? 'disabled' : ''}>
+                                ← Anterior
+                            </button>
+                            <button class="btn btn-primary" id="checkBtn-${tarjeta.id}">
+                                ✓ Verificar
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn-${tarjeta.id}" disabled>
+                                ${esUltima ? 'Terminar 🎓' : 'Siguiente →'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML += cardHTML;
+            });
+
+            // Pantalla de resultados
+            container.innerHTML += `
+                <div class="results-container" id="results-screen">
+                    <div class="certificado" id="certificadoContent">
+                        <h2>🎓 Certificado de Estadística</h2>
+                        <p><strong>Estudiante:</strong> <span id="certificado-name">${estadoApp.nombreEstudiante || 'Estudiante'}</span></p>
+                        <p>Ha completado exitosamente el curso de Estadística en Contexto Real</p>
+                        <div class="stars-container" id="stars-container"></div>
+                        <p><strong>Puntuación Final:</strong> <span id="certificado-score">0</span>/10</p>
+                        <p><strong>Fecha:</strong> <span id="certificado-fecha">${new Date().toLocaleDateString()}</span></p>
+                    </div>
+                    <div class="results-graph">
+                        <canvas id="results-chart"></canvas>
+                    </div>
+                    <div class="results-buttons">
+                        <button class="btn btn-accent" id="exportBtn">
+                            📸 Exportar Certificado
+                        </button>
+                        <button class="btn btn-primary" id="restartBtn">
+                            🔄 Comenzar de Nuevo
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function calcularMedidasTarjeta(tarjeta) {
+            let valores = [];
+            
+            if (tarjeta.tipoGrafico === 'barras-dobles') {
+                valores = tarjeta.datos.valores2;
+            } else {
+                valores = tarjeta.datos.valores;
+            }
+
+            return {
+                media: calcularMedia(valores),
+                mediana: calcularMediana(valores),
+                moda: calcularModa(valores)
+            };
+        }
+
+        function obtenerEncabezadoTabla(tarjeta) {
+            const encabezados = {
+                'barras': 'Categoría',
+                'circular': 'Categoría', 
+                'barras-dobles': 'Grupo'
+            };
+            return encabezados[tarjeta.tipoGrafico] || 'Categoría';
+        }
+
+        function generarFilasTabla(tarjeta) {
+            if (tarjeta.tipoGrafico === 'barras-dobles') {
+                return tarjeta.datos.labels.map((label, i) => `
+                    <tr>
+                        <td>${label}</td>
+                        <td>${tarjeta.datos.valores1[i]}</td>
+                        <td>${tarjeta.datos.valores2[i]}</td>
+                    </tr>
+                `).join('');
+            } else if (tarjeta.tipoGrafico === 'circular') {
+                const total = tarjeta.datos.valores.reduce((a, b) => a + b, 0);
+                return tarjeta.datos.labels.map((label, i) => {
+                    const porcentaje = ((tarjeta.datos.valores[i] / total) * 100).toFixed(1);
+                    return `
+                        <tr>
+                            <td>${label}</td>
+                            <td>${porcentaje}%</td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                return tarjeta.datos.labels.map((label, i) => `
+                    <tr>
+                        <td>${label}</td>
+                        <td>${tarjeta.datos.valores[i]}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function mostrarTarjeta(id) {
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            const tarjetaActual = document.getElementById(`card-${id}`);
+            if (tarjetaActual) {
+                tarjetaActual.classList.add('active');
+                estadoApp.tarjetaActual = id;
+                
+                setTimeout(() => generarGrafico(id), 100);
+                actualizarInterfaz();
+            }
+        }
+
+        function generarGrafico(id) {
+            const tarjeta = tarjetas.find(t => t.id === id);
+            if (!tarjeta) return;
+
+            const canvas = document.getElementById(`graph-${id}`);
+            if (!canvas) return;
+
+            if (canvas.chart) {
+                canvas.chart.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            if (tarjeta.tipoGrafico === 'barras') {
+                canvas.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: tarjeta.datos.labels,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: tarjeta.datos.valores,
+                            backgroundColor: tarjeta.datos.colores,
+                            borderColor: tarjeta.datos.colores.map(color => color.replace('0.8', '1')),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: tarjeta.datos.titulo }
+                        },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } else if (tarjeta.tipoGrafico === 'circular') {
+                const total = tarjeta.datos.valores.reduce((a, b) => a + b, 0);
+                const porcentajes = tarjeta.datos.valores.map(val => ((val / total) * 100).toFixed(1));
+                
+                const labelsConPorcentajes = tarjeta.datos.labels.map((label, index) => 
+                    `${label}: ${porcentajes[index]}%`
+                );
+
+                canvas.chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labelsConPorcentajes,
+                        datasets: [{
+                            data: tarjeta.datos.valores,
+                            backgroundColor: tarjeta.datos.colores,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: tarjeta.datos.titulo }
+                        }
+                    }
+                });
+            } else if (tarjeta.tipoGrafico === 'barras-dobles') {
+                canvas.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: tarjeta.datos.labels,
+                        datasets: [
+                            {
+                                label: tarjeta.datos.series[0],
+                                data: tarjeta.datos.valores1,
+                                backgroundColor: tarjeta.datos.colores[0],
+                                borderWidth: 1
+                            },
+                            {
+                                label: tarjeta.datos.series[1],
+                                data: tarjeta.datos.valores2,
+                                backgroundColor: tarjeta.datos.colores[1],
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: tarjeta.datos.titulo }
+                        },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+        }
+
+        function configurarEventosGlobales() {
+            tarjetas.forEach(tarjeta => {
+                document.getElementById(`prevBtn-${tarjeta.id}`).addEventListener('click', () => {
+                    mostrarTarjeta(tarjeta.id - 1);
+                });
+
+                document.getElementById(`checkBtn-${tarjeta.id}`).addEventListener('click', () => {
+                    verificarRespuesta(tarjeta.id);
+                });
+
+                document.getElementById(`nextBtn-${tarjeta.id}`).addEventListener('click', () => {
+                    if (tarjeta.id < tarjetas.length) {
+                        mostrarTarjeta(tarjeta.id + 1);
+                    } else {
+                        mostrarResultados();
+                    }
+                });
+
+                const opciones = document.querySelectorAll(`#card-${tarjeta.id} .option`);
+                opciones.forEach(option => {
+                    option.addEventListener('click', function() {
+                        opciones.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        estadoApp.respuestas[tarjeta.id] = this.dataset.value;
+                    });
+                });
+            });
+
+            document.getElementById('studentName').addEventListener('input', function(e) {
+                estadoApp.nombreEstudiante = e.target.value;
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', reiniciarApp);
+            document.getElementById('restartBtn').addEventListener('click', reiniciarApp);
+            document.getElementById('exportBtn').addEventListener('click', exportarCertificado);
+        }
+
+        function verificarRespuesta(id) {
+            const tarjeta = tarjetas.find(t => t.id === id);
+            const respuestaUsuario = estadoApp.respuestas[id];
+            const esCorrecta = respuestaUsuario === tarjeta.respuestaCorrecta;
+
+            const feedback = document.getElementById(`feedback-${id}`);
+            const feedbackText = document.getElementById(`feedback-text-${id}`);
+
+            if (esCorrecta) {
+                feedback.className = 'feedback correct';
+                feedbackText.textContent = '¡Correcto! Has interpretado bien los datos.';
+                if (!estadoApp.respuestas[`correcto_${id}`]) {
+                    estadoApp.puntuacion++;
+                    estadoApp.respuestas[`correcto_${id}`] = true;
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackText.textContent = `Incorrecto. La respuesta correcta es: ${tarjeta.respuestaCorrecta}`;
+            }
+
+            document.getElementById(`nextBtn-${id}`).disabled = false;
+            actualizarInterfaz();
+        }
+
+        function mostrarResultados() {
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            document.getElementById('results-screen').classList.add('active');
+            
+            // Actualizar certificado
+            document.getElementById('certificado-name').textContent = estadoApp.nombreEstudiante || 'Estudiante';
+            document.getElementById('certificado-score').textContent = estadoApp.puntuacion;
+            document.getElementById('final-score').textContent = estadoApp.puntuacion;
+            
+            // Generar estrellas
+            const starsContainer = document.getElementById('stars-container');
+            starsContainer.innerHTML = '';
+            const estrellas = Math.ceil((estadoApp.puntuacion / tarjetas.length) * 5);
+            
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = i < estrellas ? 'star filled' : 'star';
+                star.textContent = '★';
+                starsContainer.appendChild(star);
+            }
+
+            // Generar gráfico de resultados
+            generarGraficoResultados();
+        }
+
+        function generarGraficoResultados() {
+            const canvas = document.getElementById('results-chart');
+            if (!canvas) return;
+
+            if (canvas.chart) {
+                canvas.chart.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            const correctas = estadoApp.puntuacion;
+            const incorrectas = tarjetas.length - correctas;
+
+            canvas.chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Respuestas Correctas', 'Respuestas Incorrectas'],
+                    datasets: [{
+                        data: [correctas, incorrectas],
+                        backgroundColor: ['#51cf66', '#ff6b6b'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Resultados'
+                        }
+                    }
+                }
+            });
+        }
+
+        function exportarCertificado() {
+            const certificadoContent = document.getElementById('certificadoContent');
+            
+            // Crear contenido optimizado para exportación
+            const exportPreview = document.getElementById('exportPreview');
+            exportPreview.innerHTML = `
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 40px; border-radius: 15px; text-align: center; width: 600px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🎓 Certificado de Estadística</h2>
+                    <p style="font-size: 1.3rem; margin: 15px 0;"><strong>Estudiante:</strong> ${estadoApp.nombreEstudiante || 'Estudiante'}</p>
+                    <p style="font-size: 1.2rem; margin: 15px 0;">Ha completado exitosamente el curso de Estadística en Contexto Real</p>
+                    <div style="display: flex; justify-content: center; gap: 15px; margin: 25px 0;">
+                        ${Array(5).fill(0).map((_, i) => 
+                            `<span style="font-size: 3rem; color: ${i < Math.ceil((estadoApp.puntuacion / tarjetas.length) * 5) ? '#ffd43b' : '#ddd'}">★</span>`
+                        ).join('')}
+                    </div>
+                    <p style="font-size: 1.3rem; margin: 15px 0;"><strong>Puntuación Final:</strong> ${estadoApp.puntuacion}/10</p>
+                    <p style="font-size: 1.1rem; margin: 15px 0;"><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                        <p style="margin: 5px 0;">¡Felicidades por tu excelente desempeño!</p>
+                    </div>
+                </div>
+            `;
+
+            // Mostrar overlay de previsualización
+            document.getElementById('exportOverlay').classList.add('active');
+
+            // Capturar y descargar la imagen
+            setTimeout(() => {
+                html2canvas(exportPreview, {
+                    backgroundColor: null,
+                    scale: 2,
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    const nombreArchivo = `certificado_estadistica_${estadoApp.nombreEstudiante || 'estudiante'}.png`;
+                    link.download = nombreArchivo;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                    
+                    // Ocultar overlay después de descargar
+                    setTimeout(() => {
+                        document.getElementById('exportOverlay').classList.remove('active');
+                    }, 1000);
+                });
+            }, 500);
+        }
+
+        function reiniciarApp() {
+            if (confirm('¿Estás seguro de que quieres reiniciar? Perderás tu progreso.')) {
+                estadoApp = {
+                    tarjetaActual: 1,
+                    respuestas: {},
+                    puntuacion: 0,
+                    nombreEstudiante: estadoApp.nombreEstudiante
+                };
+                mostrarTarjeta(1);
+                actualizarInterfaz();
+                
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.feedback').forEach(fb => fb.className = 'feedback');
+            }
+        }
+
+        function actualizarInterfaz() {
+            document.getElementById('progressText').textContent = `Tarjeta ${estadoApp.tarjetaActual} de ${tarjetas.length}`;
+            document.getElementById('progressFill').style.width = `${(estadoApp.tarjetaActual / tarjetas.length) * 100}%`;
+            document.getElementById('scoreText').textContent = `Puntuación: ${estadoApp.puntuacion}/${tarjetas.length}`;
+        }
+    </script>
+</body>
+</html>

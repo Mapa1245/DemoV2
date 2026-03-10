@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frutas Divertidas - Aprende Estadística</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FF9800;
+            --accent-color: #2196F3;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle, #e8f5e9 20%, transparent 20%), 
+                              radial-gradient(circle, #e8f5e9 20%, transparent 20%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .user-info input {
+            padding: 10px 15px;
+            border: 2px solid var(--accent-color);
+            border-radius: 25px;
+            font-size: 1rem;
+            width: 200px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .card-container {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 25px;
+            width: 100%;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            flex-grow: 1;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-weight: bold;
+            color: var(--accent-color);
+            white-space: nowrap;
+        }
+
+        .data-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            margin: 20px 0;
+            text-align: center;
+            color: var(--text-color);
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .option:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.03);
+        }
+
+        .option.selected {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn-check {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-check:hover {
+            background-color: #388E3C;
+            transform: scale(1.05);
+        }
+
+        .btn-next, .btn-prev {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-next:hover, .btn-prev:hover {
+            background-color: #F57C00;
+            transform: scale(1.05);
+        }
+
+        .btn-finish {
+            background-color: #9C27B0;
+            color: white;
+        }
+
+        .btn-finish:hover {
+            background-color: #7B1FA2;
+            transform: scale(1.05);
+        }
+
+        .btn-fullscreen, .btn-reset, .btn-export {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-fullscreen:hover, .btn-reset:hover, .btn-export:hover {
+            background-color: #1976D2;
+            transform: scale(1.05);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background-color: #E8F5E9;
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background-color: #FFEBEE;
+            color: var(--error-color);
+            border: 2px solid var(--error-color);
+        }
+
+        .score-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #e0e0e0;
+            transition: color 0.3s ease;
+        }
+
+        .star.filled {
+            color: #FFD700;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Modal de finalización */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: modalAppear 0.5s ease;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background-color: #f0f0f0;
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .modal-stars {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .modal-star {
+            font-size: 2.5rem;
+            color: #e0e0e0;
+        }
+
+        .modal-star.filled {
+            color: #FFD700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .celebration {
+            animation: celebrate 0.5s ease;
+        }
+
+        /* Modo pantalla completa */
+        body:fullscreen {
+            padding: 40px;
+        }
+
+        body:fullscreen .container {
+            max-width: 1200px;
+        }
+
+        body:fullscreen .chart-container {
+            height: 400px;
+        }
+
+        /* Responsive para tablets */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+            }
+            
+            .navigation-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-info {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .user-info input {
+                width: 100%;
+            }
+            
+            .progress-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .progress-bar {
+                width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍎 Frutas Divertidas 🍌</h1>
+            <p class="subtitle">¡Aprende estadística interpretando gráficos sobre frutas!</p>
+        </header>
+        
+        <div class="user-info">
+            <input type="text" id="student-name" placeholder="Escribe tu nombre">
+            <button class="btn-fullscreen" id="fullscreen-btn">Pantalla Completa</button>
+            <button class="btn-reset" id="reset-btn">Reiniciar</button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">Tarjeta 1 de 10</span>
+        </div>
+        
+        <div class="card-container">
+            <div class="data-container" id="data-container">
+                <!-- Aquí se mostrarán gráficos y tablas -->
+            </div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options-container" id="options-container"></div>
+            
+            <div class="buttons-container">
+                <div class="navigation-buttons">
+                    <button class="btn-prev" id="prev-btn">← Anterior</button>
+                    <button class="btn-next" id="next-btn">Siguiente →</button>
+                </div>
+                <button class="btn-check" id="check-btn">Verificar Respuesta</button>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="score-container" id="score-container">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de finalización -->
+    <div class="modal-overlay" id="completion-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">×</button>
+            <h2>¡Felicidades! 🎉</h2>
+            <p>Has completado todas las preguntas</p>
+            <p>Tu puntuación: <span id="final-score">0</span> de 10</p>
+            
+            <div class="modal-stars" id="modal-stars">
+                <span class="modal-star">★</span>
+                <span class="modal-star">★</span>
+                <span class="modal-star">★</span>
+                <span class="modal-star">★</span>
+                <span class="modal-star">★</span>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn-export" id="export-btn">Exportar Resultados</button>
+                <button class="btn-reset" id="modal-reset-btn">Jugar Otra Vez</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de las tarjetas
+        const tarjetas = [
+            {
+                id: 1,
+                tipoGrafico: 'barras',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Frutillas'], 
+                    values: [12, 18, 8, 15],
+                    colors: ['#FF5252', '#FF9800', '#FFEB3B', '#F44336']
+                },
+                pregunta: "¿Qué fruta es la más popular entre los estudiantes?",
+                respuestaCorrecta: "Naranjas",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 2,
+                tipoGrafico: 'circular',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Uvas'], 
+                    values: [25, 35, 20, 20],
+                    colors: ['#FF5252', '#FF9800', '#4CAF50', '#9C27B0']
+                },
+                pregunta: "¿Qué porcentaje de estudiantes prefiere las uvas?",
+                respuestaCorrecta: "20%",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 3,
+                tipoGrafico: 'tabla',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Peras', 'Sandías'], 
+                    values: [10, 15, 12, 8, 20]
+                },
+                pregunta: "¿Cuántos estudiantes prefieren las peras?",
+                respuestaCorrecta: "8",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 4,
+                tipoGrafico: 'pictograma',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas'], 
+                    values: [15, 10, 12],
+                    icon: '🍎'
+                },
+                pregunta: "¿Cuántas manzanas hay en total?",
+                respuestaCorrecta: "15",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 5,
+                tipoGrafico: 'circular',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Frutillas', 'Uvas'], 
+                    values: [20, 25, 15, 25, 15],
+                    colors: ['#FF5252', '#FF9800', '#795548', '#9C27B0', '#2196F3']
+                },
+                pregunta: "¿Qué dos frutas tienen la misma preferencia?",
+                respuestaCorrecta: "Naranjas y Frutillas",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 6,
+                tipoGrafico: 'barras',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Mangos'], 
+                    values: [8, 12, 10, 6],
+                    colors: ['#FF5252', '#FF9800', '#4CAF50', '#2196F3']
+                },
+                pregunta: "¿Cuál es la diferencia entre la fruta más popular y la menos popular?",
+                respuestaCorrecta: "6",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 7,
+                tipoGrafico: 'tabla',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas'], 
+                    values: [9, 12, 6]
+                },
+                pregunta: "¿Cuántas bananas hay en total?",
+                respuestaCorrecta: "6",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 8,
+                tipoGrafico: 'barras',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Frutillas', 'Uvas'], 
+                    values: [14, 18, 10, 16, 12],
+                    colors: ['#FF5252', '#FF9800', '#4CAF50', '#9C27B0', '#2196F3']
+                },
+                pregunta: "¿Cuál es la fruta que ocupa el segundo lugar en preferencia?",
+                respuestaCorrecta: "Frutillas",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 9,
+                tipoGrafico: 'circular',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas'], 
+                    values: [40, 35, 25],
+                    colors: ['#FF5252', '#FF9800', '#795548']
+                },
+                pregunta: "¿Qué porcentaje de estudiantes prefiere las manzanas?",
+                respuestaCorrecta: "40%",
+                tipoRespuesta: "seleccion"
+            },
+            {
+                id: 10,
+                tipoGrafico: 'tabla',
+                datos: { 
+                    labels: ['Manzanas', 'Naranjas', 'Bananas', 'Frutillas', 'Uvas', 'Mangos'], 
+                    values: [10, 15, 8, 12, 9, 6]
+                },
+                pregunta: "¿Cuál es el total de estudiantes que prefieren frutas cítricas (naranjas)?",
+                respuestaCorrecta: "15",
+                tipoRespuesta: "seleccion"
+            }
+        ];
+
+        // Variables de estado
+        let tarjetaActual = 0;
+        let respuestaSeleccionada = null;
+        let respuestasCorrectas = 0;
+        let chart = null;
+        let juegoCompletado = false;
+
+        // Elementos del DOM
+        const dataContainer = document.getElementById('data-container');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const checkButton = document.getElementById('check-btn');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const feedbackElement = document.getElementById('feedback');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const scoreContainer = document.getElementById('score-container');
+        const studentNameInput = document.getElementById('student-name');
+        const fullscreenButton = document.getElementById('fullscreen-btn');
+        const resetButton = document.getElementById('reset-btn');
+        const exportButton = document.getElementById('export-btn');
+        const completionModal = document.getElementById('completion-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modalResetButton = document.getElementById('modal-reset-btn');
+        const finalScoreElement = document.getElementById('final-score');
+        const modalStars = document.getElementById('modal-stars');
+
+        // Plugin personalizado para mostrar porcentajes SOLO en gráficos circulares
+        const porcentajePlugin = {
+            id: 'porcentajePlugin',
+            afterDraw(chart, args, options) {
+                // Solo aplicar a gráficos circulares (pie charts)
+                if (chart.config.type !== 'pie') {
+                    return;
+                }
+                
+                const { ctx, data } = chart;
+                const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                
+                ctx.save();
+                ctx.font = 'bold 16px Nunito';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#000';
+                
+                chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
+                    const { x, y } = datapoint.tooltipPosition();
+                    const percentage = Math.round((data.datasets[0].data[index] / total) * 100);
+                    
+                    // Solo mostrar porcentaje si es mayor a 5% para evitar superposición
+                    if (percentage >= 5) {
+                        ctx.fillText(percentage + '%', x, y);
+                    }
+                });
+                
+                ctx.restore();
+            }
+        };
+
+        // Registrar el plugin
+        Chart.register(porcentajePlugin);
+
+        // Inicializar la aplicación
+        function init() {
+            cargarProgreso();
+            mostrarTarjeta(tarjetaActual);
+            
+            // Event listeners
+            checkButton.addEventListener('click', verificarRespuesta);
+            prevButton.addEventListener('click', anteriorTarjeta);
+            nextButton.addEventListener('click', siguienteTarjeta);
+            fullscreenButton.addEventListener('click', togglePantallaCompleta);
+            resetButton.addEventListener('click', reiniciarApp);
+            exportButton.addEventListener('click', exportarResultados);
+            studentNameInput.addEventListener('input', guardarProgreso);
+            closeModalButton.addEventListener('click', cerrarModal);
+            modalResetButton.addEventListener('click', reiniciarApp);
+            
+            // Actualizar estrellas
+            actualizarEstrellas();
+        }
+
+        // Mostrar tarjeta actual
+        function mostrarTarjeta(indice) {
+            const tarjeta = tarjetas[indice];
+            
+            // Actualizar pregunta
+            questionElement.textContent = tarjeta.pregunta;
+            
+            // Crear visualización de datos (gráfico o tabla)
+            crearVisualizacionDatos(tarjeta);
+            
+            // Crear opciones de respuesta
+            crearOpcionesRespuesta(tarjeta);
+            
+            // Actualizar progreso
+            actualizarProgreso(indice);
+            
+            // Reiniciar selección y feedback
+            respuestaSeleccionada = null;
+            feedbackElement.style.display = 'none';
+            
+            // Limpiar selección anterior
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Actualizar estado de botones
+            prevButton.disabled = indice === 0;
+            
+            // Cambiar texto y estado del botón siguiente en la última tarjeta
+            if (indice === tarjetas.length - 1) {
+                nextButton.disabled = false;
+                nextButton.textContent = "Finalizar";
+                nextButton.classList.remove('btn-next');
+                nextButton.classList.add('btn-finish');
+            } else {
+                nextButton.disabled = false;
+                nextButton.textContent = "Siguiente →";
+                nextButton.classList.remove('btn-finish');
+                nextButton.classList.add('btn-next');
+            }
+            
+            checkButton.disabled = false;
+            
+            // Guardar progreso
+            guardarProgreso();
+        }
+
+        // Crear visualización de datos según el tipo
+        function crearVisualizacionDatos(tarjeta) {
+            dataContainer.innerHTML = '';
+            
+            // Crear contenedor para el gráfico
+            const chartDiv = document.createElement('div');
+            chartDiv.className = 'chart-container';
+            const canvas = document.createElement('canvas');
+            chartDiv.appendChild(canvas);
+            
+            // Crear tabla de datos
+            const tableDiv = document.createElement('div');
+            tableDiv.className = 'table-container';
+            const table = document.createElement('table');
+            
+            // Cabecera de la tabla
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const thFruta = document.createElement('th');
+            thFruta.textContent = 'Fruta';
+            
+            // Determinar la columna correcta según el tipo de gráfico
+            const thValor = document.createElement('th');
+            if (tarjeta.tipoGrafico === 'circular') {
+                thValor.textContent = 'Porcentaje';
+            } else {
+                thValor.textContent = 'Cantidad de Estudiantes';
+            }
+            
+            headerRow.appendChild(thFruta);
+            headerRow.appendChild(thValor);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Cuerpo de la tabla
+            const tbody = document.createElement('tbody');
+            
+            tarjeta.datos.labels.forEach((label, index) => {
+                const row = document.createElement('tr');
+                const tdFruta = document.createElement('td');
+                tdFruta.textContent = label;
+                const tdValor = document.createElement('td');
+                
+                // Mostrar porcentaje o cantidad según el tipo de gráfico
+                if (tarjeta.tipoGrafico === 'circular') {
+                    tdValor.textContent = tarjeta.datos.values[index] + '%';
+                } else {
+                    tdValor.textContent = tarjeta.datos.values[index];
+                }
+                
+                row.appendChild(tdFruta);
+                row.appendChild(tdValor);
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            tableDiv.appendChild(table);
+            
+            // Añadir ambos a dataContainer
+            dataContainer.appendChild(chartDiv);
+            dataContainer.appendChild(tableDiv);
+            
+            // Crear gráfico según el tipo
+            if (chart) {
+                chart.destroy();
+            }
+            
+            const ctx = canvas.getContext('2d');
+            
+            switch(tarjeta.tipoGrafico) {
+                case 'barras':
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: tarjeta.datos.labels,
+                            datasets: [{
+                                label: 'Cantidad',
+                                data: tarjeta.datos.values,
+                                backgroundColor: tarjeta.datos.colors,
+                                borderColor: tarjeta.datos.colors.map(color => color),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value;
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${context.raw}`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    break;
+                    
+                case 'circular':
+                    chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: tarjeta.datos.labels,
+                            datasets: [{
+                                data: tarjeta.datos.values,
+                                backgroundColor: tarjeta.datos.colors,
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    labels: {
+                                        font: {
+                                            size: 14,
+                                            family: 'Nunito'
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = Math.round((context.raw / total) * 100);
+                                            return `${context.label}: ${percentage}%`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    break;
+                    
+                case 'pictograma':
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: tarjeta.datos.labels,
+                            datasets: [{
+                                label: 'Cantidad',
+                                data: tarjeta.datos.values,
+                                backgroundColor: '#4CAF50',
+                                borderColor: '#388E3C',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                    break;
+                    
+                case 'tabla':
+                    // Para tablas, solo mostramos la tabla y ocultamos el gráfico
+                    chartDiv.style.display = 'none';
+                    break;
+            }
+        }
+
+        // Crear opciones de respuesta
+        function crearOpcionesRespuesta(tarjeta) {
+            optionsContainer.innerHTML = '';
+            
+            // Generar opciones basadas en el tipo de pregunta y tarjeta específica
+            let opciones = [];
+            
+            if (tarjeta.tipoRespuesta === 'seleccion') {
+                // Para cada tarjeta, generar opciones específicas
+                switch(tarjeta.id) {
+                    case 1:
+                        opciones = ['Manzanas', 'Naranjas', 'Bananas', 'Frutillas'];
+                        break;
+                    case 2:
+                        opciones = ['10%', '20%', '25%', '35%'];
+                        break;
+                    case 3:
+                        opciones = ['8', '10', '12', '15', '20'];
+                        break;
+                    case 4:
+                        opciones = ['10', '12', '15', '18'];
+                        break;
+                    case 5:
+                        opciones = ['Manzanas y Bananas', 'Naranjas y Frutillas', 'Bananas y Uvas', 'Manzanas y Uvas'];
+                        break;
+                    case 6:
+                        opciones = ['4', '6', '8', '10'];
+                        break;
+                    case 7:
+                        opciones = ['6', '9', '12', '15'];
+                        break;
+                    case 8:
+                        opciones = ['Manzanas', 'Naranjas', 'Frutillas', 'Uvas'];
+                        break;
+                    case 9:
+                        opciones = ['25%', '35%', '40%', '45%'];
+                        break;
+                    case 10:
+                        opciones = ['6', '8', '10', '15'];
+                        break;
+                }
+            }
+            
+            // Mezclar opciones para que la correcta no siempre esté en la misma posición
+            opciones = mezclarArray(opciones);
+            
+            // Crear elementos de opción
+            opciones.forEach(opcion => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = opcion;
+                optionElement.addEventListener('click', () => seleccionarOpcion(optionElement, opcion));
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        // Mezclar array (algoritmo Fisher-Yates)
+        function mezclarArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Seleccionar una opción
+        function seleccionarOpcion(elemento, opcion) {
+            // Quitar selección anterior
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva opción
+            elemento.classList.add('selected');
+            respuestaSeleccionada = opcion;
+        }
+
+        // Verificar respuesta
+        function verificarRespuesta() {
+            if (respuestaSeleccionada === null) {
+                alert('Por favor, selecciona una respuesta antes de verificar.');
+                return;
+            }
+            
+            const tarjeta = tarjetas[tarjetaActual];
+            const esCorrecta = respuestaSeleccionada === tarjeta.respuestaCorrecta;
+            
+            // Mostrar feedback
+            feedbackElement.textContent = esCorrecta 
+                ? '¡Correcto! 🎉 ¡Buen trabajo!' 
+                : `Incorrecto. La respuesta correcta es: ${tarjeta.respuestaCorrecta}`;
+            
+            feedbackElement.className = `feedback ${esCorrecta ? 'correct' : 'incorrect'}`;
+            feedbackElement.style.display = 'block';
+            
+            // Actualizar contador de respuestas correctas
+            if (esCorrecta) {
+                respuestasCorrectas++;
+                actualizarEstrellas();
+                
+                // Animación de celebración
+                feedbackElement.classList.add('celebration');
+                setTimeout(() => {
+                    feedbackElement.classList.remove('celebration');
+                }, 500);
+            }
+            
+            // Deshabilitar botón de verificación
+            checkButton.disabled = true;
+            
+            // Guardar progreso
+            guardarProgreso();
+        }
+
+        // Navegar a la tarjeta anterior
+        function anteriorTarjeta() {
+            if (tarjetaActual > 0) {
+                tarjetaActual--;
+                mostrarTarjeta(tarjetaActual);
+            }
+        }
+
+        // Navegar a la siguiente tarjeta o finalizar
+        function siguienteTarjeta() {
+            if (tarjetaActual < tarjetas.length - 1) {
+                tarjetaActual++;
+                mostrarTarjeta(tarjetaActual);
+            } else {
+                // Mostrar modal de finalización
+                finalScoreElement.textContent = respuestasCorrectas;
+                actualizarEstrellasModal();
+                completionModal.style.display = 'flex';
+                juegoCompletado = true;
+                guardarProgreso();
+            }
+        }
+
+        // Cerrar el modal
+        function cerrarModal() {
+            completionModal.style.display = 'none';
+        }
+
+        // Actualizar barra de progreso
+        function actualizarProgreso(indice) {
+            const porcentaje = ((indice + 1) / tarjetas.length) * 100;
+            progressFill.style.width = `${porcentaje}%`;
+            progressText.textContent = `Tarjeta ${indice + 1} de ${tarjetas.length}`;
+        }
+
+        // Actualizar estrellas según el puntaje
+        function actualizarEstrellas() {
+            const estrellas = document.querySelectorAll('.star');
+            const porcentajeCorrectas = (respuestasCorrectas / tarjetas.length) * 100;
+            
+            // Calcular cuántas estrellas mostrar
+            let estrellasLlenas = 0;
+            if (porcentajeCorrectas >= 90) estrellasLlenas = 5;
+            else if (porcentajeCorrectas >= 70) estrellasLlenas = 4;
+            else if (porcentajeCorrectas >= 50) estrellasLlenas = 3;
+            else if (porcentajeCorrectas >= 30) estrellasLlenas = 2;
+            else if (porcentajeCorrectas >= 10) estrellasLlenas = 1;
+            
+            // Actualizar visualización de estrellas
+            estrellas.forEach((estrella, index) => {
+                if (index < estrellasLlenas) {
+                    estrella.classList.add('filled');
+                } else {
+                    estrella.classList.remove('filled');
+                }
+            });
+        }
+
+        // Actualizar estrellas en el modal
+        function actualizarEstrellasModal() {
+            const estrellas = document.querySelectorAll('.modal-star');
+            const porcentajeCorrectas = (respuestasCorrectas / tarjetas.length) * 100;
+            
+            // Calcular cuántas estrellas mostrar
+            let estrellasLlenas = 0;
+            if (porcentajeCorrectas >= 90) estrellasLlenas = 5;
+            else if (porcentajeCorrectas >= 70) estrellasLlenas = 4;
+            else if (porcentajeCorrectas >= 50) estrellasLlenas = 3;
+            else if (porcentajeCorrectas >= 30) estrellasLlenas = 2;
+            else if (porcentajeCorrectas >= 10) estrellasLlenas = 1;
+            
+            // Actualizar visualización de estrellas
+            estrellas.forEach((estrella, index) => {
+                if (index < estrellasLlenas) {
+                    estrella.classList.add('filled');
+                } else {
+                    estrella.classList.remove('filled');
+                }
+            });
+        }
+
+        // Guardar progreso en localStorage
+        function guardarProgreso() {
+            const progreso = {
+                tarjetaActual,
+                respuestasCorrectas,
+                nombreEstudiante: studentNameInput.value,
+                juegoCompletado
+            };
+            localStorage.setItem('frutasDivertidasProgreso', JSON.stringify(progreso));
+        }
+
+        // Cargar progreso desde localStorage
+        function cargarProgreso() {
+            const progresoGuardado = localStorage.getItem('frutasDivertidasProgreso');
+            if (progresoGuardado) {
+                const progreso = JSON.parse(progresoGuardado);
+                tarjetaActual = progreso.tarjetaActual || 0;
+                respuestasCorrectas = progreso.respuestasCorrectas || 0;
+                studentNameInput.value = progreso.nombreEstudiante || '';
+                juegoCompletado = progreso.juegoCompletado || false;
+                
+                // Si el juego estaba completado, mostrar modal de finalización
+                if (juegoCompletado) {
+                    finalScoreElement.textContent = respuestasCorrectas;
+                    actualizarEstrellasModal();
+                    completionModal.style.display = 'flex';
+                }
+            }
+        }
+
+        // Alternar modo pantalla completa
+        function togglePantallaCompleta() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error al intentar entrar en modo pantalla completa: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Reiniciar la aplicación
+        function reiniciarApp() {
+            if (confirm('¿Estás seguro de que quieres reiniciar? Perderás todo tu progreso.')) {
+                tarjetaActual = 0;
+                respuestasCorrectas = 0;
+                respuestaSeleccionada = null;
+                juegoCompletado = false;
+                studentNameInput.value = '';
+                localStorage.removeItem('frutasDivertidasProgreso');
+                mostrarTarjeta(tarjetaActual);
+                actualizarEstrellas();
+                completionModal.style.display = 'none';
+            }
+        }
+
+        // Exportar resultados como imagen
+        function exportarResultados() {
+            const nombre = studentNameInput.value || 'Estudiante';
+            const porcentaje = Math.round((respuestasCorrectas / tarjetas.length) * 100);
+            
+            // Crear un canvas para la imagen de resultados
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            // Fondo colorido
+            ctx.fillStyle = '#E8F5E9';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Decoraciones
+            ctx.fillStyle = '#4CAF50';
+            ctx.beginPath();
+            ctx.arc(100, 100, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#FF9800';
+            ctx.beginPath();
+            ctx.arc(700, 150, 50, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#2196F3';
+            ctx.beginPath();
+            ctx.arc(150, 500, 70, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Título
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 40px Nunito';
+            ctx.textAlign = 'center';
+            ctx.fillText('Resultados de Frutas Divertidas', canvas.width / 2, 80);
+            
+            // Nombre del estudiante
+            ctx.font = '30px Nunito';
+            ctx.fillText(`Estudiante: ${nombre}`, canvas.width / 2, 150);
+            
+            // Puntuación
+            ctx.font = 'bold 36px Nunito';
+            ctx.fillText(`Puntuación: ${respuestasCorrectas} de ${tarjetas.length}`, canvas.width / 2, 220);
+            ctx.fillText(`Porcentaje: ${porcentaje}%`, canvas.width / 2, 270);
+            
+            // Estrellas
+            const estrellasLlenas = Math.round((porcentaje / 100) * 5);
+            ctx.fillStyle = '#FFD700';
+            for (let i = 0; i < 5; i++) {
+                if (i < estrellasLlenas) {
+                    ctx.fillText('★', 300 + i * 50, 350);
+                } else {
+                    ctx.fillStyle = '#E0E0E0';
+                    ctx.fillText('★', 300 + i * 50, 350);
+                }
+            }
+            
+            // Mensaje personalizado
+            ctx.fillStyle = '#333';
+            ctx.font = '28px Nunito';
+            let mensaje = '';
+            if (porcentaje >= 90) mensaje = '¡Excelente trabajo! 🎉';
+            else if (porcentaje >= 70) mensaje = '¡Muy bien hecho! 👍';
+            else if (porcentaje >= 50) mensaje = '¡Buen esfuerzo! 😊';
+            else mensaje = '¡Sigue practicando! 💪';
+            
+            ctx.fillText(mensaje, canvas.width / 2, 420);
+            
+            // Fecha
+            const fecha = new Date().toLocaleDateString();
+            ctx.font = '20px Nunito';
+            ctx.fillText(`Fecha: ${fecha}`, canvas.width / 2, 480);
+            
+            // Dibujos decorativos
+            ctx.fillStyle = '#FF5252';
+            ctx.beginPath();
+            ctx.arc(650, 450, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#FFEB3B';
+            ctx.beginPath();
+            ctx.arc(100, 300, 35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Convertir a imagen y descargar
+            const enlace = document.createElement('a');
+            enlace.download = `Resultados_Frutas_Divertidas_${nombre}.png`;
+            enlace.href = canvas.toDataURL();
+            enlace.click();
+        }
+
+        // Inicializar la aplicación cuando se carga la página
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstadísticaMente - Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Patrick+Hand&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para la página de login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #C2185B 0%, #4361ee 100%);
+            padding: 2rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .login-logo {
+            width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2.2rem;
+            color: #C2185B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #F8BBD0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #C2185B;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1);
+        }
+        
+        .login-btn {
+            background: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .login-btn:hover {
+            background: #A0154B;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(194, 24, 91, 0.3);
+        }
+        
+        .login-footer {
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .login-footer a {
+            color: #4361ee;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .user-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .user-type-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #F8BBD0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .user-type-btn.active {
+            background: #C2185B;
+            color: white;
+            border-color: #C2185B;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            background: #e8f8ef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <img src="Sin título (4).png" alt="EstadísticaMente" class="login-logo">
+            <h1 class="login-title">Iniciar Sesión</h1>
+            <p class="login-subtitle">Accede a tu cuenta de EstadísticaMente</p>
+            
+            <div class="user-type-selector">
+                <button class="user-type-btn active" data-type="student">Estudiante</button>
+                <button class="user-type-btn" data-type="teacher">Docente</button>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Usuario o Email</label>
+                    <input type="text" id="username" class="form-input" placeholder="Ingresa tu usuario o email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
+                </div>
+                
+                <div class="form-group" style="text-align: center;">
+                    <input type="checkbox" id="remember" style="margin-right: 8px;">
+                    <label for="remember" style="display: inline; font-weight: normal;">Recordar mi sesión</label>
+                </div>
+                
+                <button type="submit" class="login-btn">Iniciar Sesión</button>
+                
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+            </form>
+            
+            <div class="login-footer">
+                <p>¿No tienes una cuenta? <a href="#" id="registerLink">Regístrate aquí</a></p>
+                <p><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const userTypeButtons = document.querySelectorAll('.user-type-btn');
+        const registerLink = document.getElementById('registerLink');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        
+        let currentUserType = 'student';
+        
+        // Manejar selección de tipo de usuario
+        userTypeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                userTypeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentUserType = button.getAttribute('data-type');
+            });
+        });
+        
+        // Manejar envío del formulario
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validación básica
+            if (!username || !password) {
+                showError('Por favor, completa todos los campos');
+                return;
+            }
+            
+            // Simular autenticación (en una aplicación real, esto se haría con una API)
+            if (authenticateUser(username, password, currentUserType)) {
+                showSuccess('Inicio de sesión exitoso');
+                
+                // Redirigir después de un breve retraso
+                setTimeout(() => {
+                    // Guardar información del usuario en localStorage
+                    const userData = {
+                        username: username,
+                        userType: currentUserType,
+                        loginTime: new Date().toISOString()
+                    };
+                    localStorage.setItem('estadisticamente_user', JSON.stringify(userData));
+                    
+                    // Redirigir a la página principal
+                    window.location.href = 'index.html';
+                }, 1500);
+            } else {
+                showError('Usuario o contraseña incorrectos');
+            }
+        });
+        
+        // Función de autenticación simulada
+        function authenticateUser(username, password, userType) {
+            // En una aplicación real, esto se conectaría a un backend
+            // Por ahora, simulamos algunos usuarios de prueba
+            
+            const testUsers = {
+                student: {
+                    'estudiante1': 'password123',
+                    'alumno': 'alumno123',
+                    'maria': 'maria123'
+                },
+                teacher: {
+                    'profesor': 'profesor123',
+                    'docente': 'docente123',
+                    'marcela': 'marcela123'
+                }
+            };
+            
+            return testUsers[userType] && testUsers[userType][username] === password;
+        }
+        
+        // Mostrar mensaje de error
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+        
+        // Mostrar mensaje de éxito
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+        
+        // Manejar enlaces
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Funcionalidad de registro en desarrollo. Por ahora, utiliza uno de los usuarios de prueba:\n\nEstudiantes: estudiante1 / password123\nDocentes: profesor / profesor123');
+        });
+        
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Funcionalidad de recuperación de contraseña en desarrollo. Por ahora, utiliza uno de los usuarios de prueba:\n\nEstudiantes: estudiante1 / password123\nDocentes: profesor / profesor123');
+        });
+        
+        // Verificar si ya hay una sesión activa
+        window.addEventListener('DOMContentLoaded', () => {
+            const userData = localStorage.getItem('estadisticamente_user');
+            if (userData) {
+                // Si ya hay una sesión, redirigir directamente
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
